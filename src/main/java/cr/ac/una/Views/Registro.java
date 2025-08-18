@@ -2,6 +2,8 @@ package cr.ac.una.Views;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Registro extends JFrame {
     private JPanel MainPanel;
@@ -15,10 +17,13 @@ public class Registro extends JFrame {
     private JLabel ChangeLabel;
     private JPasswordField PasswordTF;
 
+    // Constructor
     public Registro() {
         UserTF.setPreferredSize(new Dimension(200, 30));
         PasswordTF.setPreferredSize(new Dimension(200, 30));
         RegistrarseBTN.setPreferredSize(new Dimension(100, 30));
+        RegistrarseBTN.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        ChangeLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         setContentPane(MainPanel);
         ImageIcon icon = new ImageIcon(getClass().getResource("/LogIn.png"));
@@ -30,8 +35,21 @@ public class Registro extends JFrame {
         setVisible(true);
 
         RegistrarseBTN.addActionListener(e -> onClickRegistrarseBTN());
+        ChangeLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                // Opcional
+                dispose();
+                CambiarCtr CC = new CambiarCtr();
+                CC.setVisible(true);
+            }
+        });
     }
 
+    public JPanel getMainPanel() { return MainPanel; }
+
+    // Metodó para iniciar y validar sección
     public void onClickRegistrarseBTN() {
         String user = UserTF.getText().trim();
         String pass = PasswordTF.getText().trim();
@@ -43,13 +61,5 @@ public class Registro extends JFrame {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
-
-    public void onClickChangeLabel(){
-        ChangeLabel.setBackground(Color.GREEN);
-    }
-
-    public JPanel getMainPanel() {
-        return MainPanel;
     }
 }
