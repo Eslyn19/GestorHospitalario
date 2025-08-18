@@ -18,7 +18,7 @@ public class Registro extends JFrame {
     public Registro() {
         UserTF.setPreferredSize(new Dimension(200, 30));
         PasswordTF.setPreferredSize(new Dimension(200, 30));
-        RegistrarseBTN.setPreferredSize(new Dimension(200, 30));
+        RegistrarseBTN.setPreferredSize(new Dimension(100, 30));
 
         setContentPane(MainPanel);
         ImageIcon icon = new ImageIcon(getClass().getResource("/LogIn.png"));

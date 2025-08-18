@@ -7,7 +7,7 @@
     </constraints>
     <properties>
       <background color="-1707777"/>
-      <foreground color="-15234587"/>
+      <foreground color="-1707777"/>
     </properties>
     <border type="none"/>
     <children>
@@ -37,11 +37,16 @@
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <background color="-10558016"/>
+                  <background color="-1707777"/>
                   <borderPainted value="false"/>
                   <defaultCapable value="false"/>
                   <focusPainted value="false"/>
-                  <text value="Iniciar sección"/>
+                  <foreground color="-1246977"/>
+                  <icon value="SignUp.png"/>
+                  <opaque value="true"/>
+                  <requestFocusEnabled value="true"/>
+                  <text value=""/>
+                  <verifyInputWhenFocusTarget value="true"/>
                 </properties>
               </component>
               <component id="5c820" class="javax.swing.JLabel" binding="ChangeLabel">
@@ -50,7 +55,7 @@
                 </constraints>
                 <properties>
                   <background color="-16777216"/>
-                  <font name="Consolas" size="12" style="1"/>
+                  <font name="Book Antiqua" size="12" style="1"/>
                   <foreground color="-16777216"/>
                   <text value="Cambiar contraseña"/>
                 </properties>
@@ -79,11 +84,10 @@
             <children>
               <component id="26213" class="javax.swing.JTextField" binding="UserTF">
                 <constraints>
-                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                    <preferred-size width="150" height="-1"/>
-                  </grid>
+                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <margin top="2" left="9" bottom="2" right="6"/>
                   <text value=""/>
                 </properties>
               </component>
@@ -102,10 +106,12 @@
                   <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <background color="-16777216"/>
-                  <font name="Consolas" size="16"/>
-                  <foreground color="-16777216"/>
+                  <background color="-16776930"/>
+                  <font name="Calibri Light" size="16"/>
+                  <foreground color="-16776930"/>
+                  <icon value="UserIcon.png"/>
                   <text value="Usuario"/>
+                  <verticalAlignment value="0"/>
                 </properties>
               </component>
               <component id="6997f" class="javax.swing.JLabel">
@@ -114,8 +120,9 @@
                 </constraints>
                 <properties>
                   <background color="-16777216"/>
-                  <font name="Consolas" size="16"/>
-                  <foreground color="-16777216"/>
+                  <font name="Calibri Light" size="16"/>
+                  <foreground color="-16776930"/>
+                  <icon value="PasswordIcon.png"/>
                   <text value="Contraseña"/>
                 </properties>
               </component>
@@ -151,6 +158,7 @@
             </constraints>
             <properties>
               <background color="-1246977"/>
+              <foreground color="-16776930"/>
             </properties>
             <border type="none"/>
             <children>
@@ -159,9 +167,10 @@
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="2" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <background color="-3683892"/>
-                  <font name="Consolas" size="20" style="1"/>
-                  <foreground color="-16777216"/>
+                  <background color="-16776930"/>
+                  <enabled value="false"/>
+                  <font name="Calibri Light" size="20" style="1"/>
+                  <foreground color="-1246977"/>
                   <text value="Bienvenido!"/>
                 </properties>
               </component>
