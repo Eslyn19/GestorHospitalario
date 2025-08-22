@@ -36,7 +36,7 @@ public class CambiarCtr extends JFrame {
         setIconImage(image.getImage());
         setTitle("Cambiar Contraseña");
         setSize(400, 300);
-        setLocation(750, 400);
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
 
@@ -57,9 +57,7 @@ public class CambiarCtr extends JFrame {
         });
     }
 
-
     // Al cambiar clave hacer una nueva instancia de Registro() **
-
 
     public void Eliminar(){
         ActualPassTF.setText("");

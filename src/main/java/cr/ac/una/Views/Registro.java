@@ -30,7 +30,7 @@ public class Registro extends JFrame {
         setIconImage(icon.getImage());
         setTitle("Iniciar Sesion");
         setSize(700, 600);
-        setLocation(550, 140);
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
 
