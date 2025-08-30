@@ -1,9 +1,16 @@
-package cr.ac.una.Views;
+package cr.ac.una.presentation_layer.Views;
+
+import cr.ac.una.data_access_layer.DoctorFileStore;
+import cr.ac.una.domain_layer.Doctor;
+import cr.ac.una.presentation_layer.Controller.DoctorController;
+import cr.ac.una.presentation_layer.Model.DoctorTableModel;
+import cr.ac.una.service_layer.DoctorService;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 
 public class Registro extends JFrame {
     private JPanel MainPanel;
@@ -49,17 +56,56 @@ public class Registro extends JFrame {
 
     public JPanel getMainPanel() { return MainPanel; }
 
-    // Metodó para iniciar y validar sección
+    // Método para iniciar y validar sesión
     public void onClickRegistrarseBTN() {
         String user = UserTF.getText().trim();
-        String pass = PasswordTF.getText().trim();
+        String pass = new String(PasswordTF.getPassword()).trim();
 
         try {
             if (user.isEmpty() || pass.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
+                return;
             }
+
+            // Validar credenciales de administrador
+            if (!user.equals("admin")) {
+                JOptionPane.showMessageDialog(this, "Usuario incorrecto. Solo se permite el usuario 'admin'.");
+                return;
+            }
+            
+            if (!pass.equals("root")) {
+                JOptionPane.showMessageDialog(this, "Contraseña incorrecta. La contraseña debe ser 'root'.");
+                return;
+            }
+
+            // Autenticación exitosa
+            JOptionPane.showMessageDialog(this, 
+                "¡Inicio de sesión exitoso!\nBienvenido Administrador", 
+                "Acceso Autorizado", JOptionPane.INFORMATION_MESSAGE);
+
+            // Close login window and open main panel
+            dispose();
+            openMainPanel();
+
         } catch (Exception ex) {
             ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, 
+                "Error: " + ex.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void openMainPanel() {
+        try {
+            // Open main panel with tabbed interface
+            PanelPrincipal mainPanel = new PanelPrincipal();
+            mainPanel.selectDoctorTab(); // Automatically select doctors tab
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, 
+                "Error al abrir el panel principal: " + ex.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
