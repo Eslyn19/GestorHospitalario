@@ -18,9 +18,14 @@ import cr.ac.una.service_layer.PacienteService;
 import cr.ac.una.service_layer.IService;
 import cr.ac.una.utilities.FileManagement;
 
+import cr.ac.una.presentation_layer.Views.DashboardView.DashboardView;
+import cr.ac.una.presentation_layer.Controller.DashboardController;
+import cr.ac.una.data_access_layer.RecetaFileStore;
+
 import javax.swing.*;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.io.File;
 
 public class PanelAdministrador extends JFrame {
     private JPanel PanelBase;
@@ -64,24 +69,40 @@ public class PanelAdministrador extends JFrame {
 
         // Configurar el TabbedPane con iconos
         PanelTabs = new JTabbedPane();
-        
+
         // Cargar iconos
         ImageIcon doctorIcon = new ImageIcon(getClass().getResource("/Doctores.png"));
         ImageIcon farmaceutaIcon = new ImageIcon(getClass().getResource("/Farmaceutas.png"));
         ImageIcon pacienteIcon = new ImageIcon(getClass().getResource("/Paciente.png"));
         ImageIcon medicamentoIcon = new ImageIcon(getClass().getResource("/medicamentos.png"));
-        
+
         // Redimensionar iconos para las pestañas
         ImageIcon doctorIconScaled = new ImageIcon(doctorIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
         ImageIcon farmaceutaIconScaled = new ImageIcon(farmaceutaIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
         ImageIcon pacienteIconScaled = new ImageIcon(pacienteIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
         ImageIcon medicamentoIconScaled = new ImageIcon(medicamentoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
-        
+
         // Agregar pestañas con iconos
         PanelTabs.addTab("Doctores", doctorIconScaled, doctorview.getPanelBase(), "Doctores");
         PanelTabs.addTab("Farmacéuticos", farmaceutaIconScaled, farmaceutaview.getPanelBase(), "Farmacéuticos");
         PanelTabs.addTab("Pacientes", pacienteIconScaled, pacienteview.getPanelBase(), "Pacientes");
         PanelTabs.addTab("Medicamentos", medicamentoIconScaled, medicamentoview.getPanelBase(), "Medicamentos");
+
+        // --- NUEVA PESTAÑA: DASHBOARD ---
+        try {
+            // Crear dashboard (usa data/recetas.xml — ajusta la ruta si la tienes en otra carpeta)
+            DashboardView dashboardView = new DashboardView();
+            RecetaFileStore recetaStore = new RecetaFileStore(new File("data/recetas.xml"));
+            DashboardController dashboardController = new DashboardController(recetaStore, dashboardView);
+
+            ImageIcon dashIcon = new ImageIcon(getClass().getResource("/Dashboard.png"));
+            ImageIcon dashIconScaled = new ImageIcon(dashIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
+            PanelTabs.addTab("Dashboard", dashIconScaled, dashboardView.getPanelBase(), "Dashboard");
+        } catch (Exception ex) {
+            // Si por alguna razón falla cargar el dashboard (icono, ruta, etc.) lo registramos y continuamos
+            ex.printStackTrace();
+        }
+        // -----------------------------------
 
         // Configurar el panel base
         PanelBase = new JPanel();
@@ -103,4 +124,3 @@ public class PanelAdministrador extends JFrame {
         setVisible(true);
     }
 }
-
