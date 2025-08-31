@@ -1,9 +1,5 @@
 package cr.ac.una.presentation_layer.Views;
 
-import cr.ac.una.Main;
-import cr.ac.una.domain_layer.Doctor;
-import cr.ac.una.presentation_layer.Controller.DoctorController;
-import cr.ac.una.service_layer.IService;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -44,7 +40,7 @@ public class Registro extends JFrame {
                 super.mouseClicked(e);
                 // Opcional
                 dispose();
-                CambiarCtr CC = new CambiarCtr();
+                CambiarClave CC = new CambiarClave();
                 CC.setVisible(true);
             }
         });

@@ -1,0 +1,22 @@
+<usuarios>
+    <!-- Administrador -->
+    <usuario>
+        <id>admin</id>
+        <clave>root</clave>
+    </usuario>
+    <!-- Médico -->
+    <usuario>
+        <id>medico01</id>
+        <clave>medico01</clave>
+        <nombre>Carlos Pérez</nombre>
+        <rol>medico</rol>
+        <especialidad>Cardiología</especialidad>
+    </usuario>
+    <!-- Farmaceuta -->
+    <usuario>
+        <id>farm01</id>
+        <clave>farm01</clave>
+        <nombre>Andrés Ramírez</nombre>
+        <rol>farmaceuta</rol>
+    </usuario>
+</usuarios>
