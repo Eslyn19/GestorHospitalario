@@ -55,10 +55,10 @@ public class DoctorView extends JFrame{
         addListeners();
         bind(doctorController, doctorTableModel, datos);
 
-        Color gray = new Color(166,166,166);
-        configurarPanel(UpperPanel, "Medico", gray, new Font("Arial", Font.BOLD, 13), Color.BLACK);
-        configurarPanel(MidPanel, "Búsqueda", gray, new Font("Arial", Font.BOLD, 13), Color.BLACK);
-        configurarPanel(LowerPanel, "Listado", gray, new Font("Arial", Font.BOLD, 13), Color.BLACK);
+        Color white = new Color(255, 255, 255);
+        configurarPanel(UpperPanel, "Medico", white, new Font("Arial", Font.BOLD, 13), Color.WHITE);
+        configurarPanel(MidPanel, "Búsqueda", white, new Font("Arial", Font.BOLD, 13), Color.WHITE);
+        configurarPanel(LowerPanel, "Listado", white, new Font("Arial", Font.BOLD, 13), Color.WHITE);
 
         ID_textfield.setPreferredSize(new Dimension(20, 25));
         EspecialidadTF.setPreferredSize(new Dimension(20, 25));

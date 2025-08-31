@@ -58,10 +58,10 @@ public class PacienteView extends JFrame{
         addListeners();
         bind(pacienteController, pacienteTableModel, datos);
 
-        Color gray = new Color(166,166,166);
-        configurarPanel(UpperPanel, "Paciente", gray, new Font("Arial", Font.BOLD, 13), Color.BLACK);
-        configurarPanel(MidPanel, "Búsqueda", gray, new Font("Arial", Font.BOLD, 13), Color.BLACK);
-        configurarPanel(LowerPanel, "Listado", gray, new Font("Arial", Font.BOLD, 13), Color.BLACK);
+        Color white = new Color(255,255,255);
+        configurarPanel(UpperPanel, "Paciente", white, new Font("Arial", Font.BOLD, 13), Color.WHITE);
+        configurarPanel(MidPanel, "Búsqueda", white, new Font("Arial", Font.BOLD, 13), Color.WHITE);
+        configurarPanel(LowerPanel, "Listado", white, new Font("Arial", Font.BOLD, 13), Color.WHITE);
 
         ID_textfield.setPreferredSize(new Dimension(20, 25));
         nombreTF.setPreferredSize(new Dimension(20, 25));
@@ -124,7 +124,7 @@ public class PacienteView extends JFrame{
         try {
             requireBound();
             DatosForm d = readForm();
-            pacienteController.agregar(d.ID, d.nombre, d.fechaNacimiento, d.telefono);
+            pacienteController.agregar(d.ID, d.nombre, d.apellido, d.fechaNacimiento, d.telefono);
             onClear();
         } catch (Exception ex) {
             showError("Error al agregar: " + ex.getMessage(), ex);
@@ -135,7 +135,7 @@ public class PacienteView extends JFrame{
         try {
             requireBound();
             DatosForm d = readForm();
-            pacienteController.Actualizar(d.ID, d.nombre, d.fechaNacimiento, d.telefono);
+            pacienteController.Actualizar(d.ID, d.nombre, d.apellido, d.fechaNacimiento, d.telefono);
             onClear();
         } catch (Exception ex) {
             showError("Error al actualizar: " + ex.getMessage(), ex);
@@ -163,6 +163,7 @@ public class PacienteView extends JFrame{
     private void onClear(){
         ID_textfield.setText("");
         nombreTF.setText("");
+        ApellidoTF.setText("");
         FechaTF.setText("");
         TelefonoTF.setText("");
         ID_textfield.requestFocus();
@@ -178,23 +179,26 @@ public class PacienteView extends JFrame{
 
         ID_textfield.setText(String.valueOf(paciente.getID()));
         nombreTF.setText(paciente.getNombre());
+        ApellidoTF.setText(paciente.getApellido());
         FechaTF.setText(paciente.getFechaNacimiento());
         TelefonoTF.setText(paciente.getTelefono());
     }
 
     private static class DatosForm {
-        int ID; String nombre; String fechaNacimiento; String telefono;
+        int ID; String nombre; String apellido; String fechaNacimiento; String telefono;
     }
 
     private DatosForm readForm() {
         DatosForm d = new DatosForm();
         d.ID = orDefault(parseInt(ID_textfield.getText()), -1);
         d.nombre = safe(nombreTF.getText());
+        d.apellido = safe(ApellidoTF.getText());
         d.fechaNacimiento = safe(FechaTF.getText());
         d.telefono = safe(TelefonoTF.getText());
 
         if (d.ID <= 0) throw new IllegalArgumentException("El ID debe ser mayor que 0.");
         if (d.nombre.isEmpty()) throw new IllegalArgumentException("El nombre es obligatorio.");
+        if (d.apellido.isEmpty()) throw new IllegalArgumentException("El apellido es obligatorio.");
         if (d.fechaNacimiento.isEmpty()) throw new IllegalArgumentException("La fecha de nacimiento es obligatoria.");
         if (d.telefono.isEmpty()) throw new IllegalArgumentException("El teléfono es obligatorio.");
         

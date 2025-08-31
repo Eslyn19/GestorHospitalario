@@ -13,21 +13,23 @@ public class PacienteController {
         this.pacienteIService = pacienteIService;
     }
 
-    public void agregar(int id, String nombre, String fechaNacimiento, String telefono){
+    public void agregar(int id, String nombre, String apellido, String fechaNacimiento, String telefono){
         validarId(id);
         validarNombre(nombre);
+        validarApellido(apellido);
         validarFechaNacimiento(fechaNacimiento);
         validarTelefono(telefono);
-        Paciente newPaciente = new Paciente(id, nombre, fechaNacimiento, telefono);
+        Paciente newPaciente = new Paciente(id, nombre, apellido, fechaNacimiento, telefono);
         pacienteIService.agregar(newPaciente);
     }
 
-    public void Actualizar(int id, String nombre, String fechaNacimiento, String telefono){
+    public void Actualizar(int id, String nombre, String apellido, String fechaNacimiento, String telefono){
         validarId(id);
         validarNombre(nombre);
+        validarApellido(apellido);
         validarFechaNacimiento(fechaNacimiento);
         validarTelefono(telefono);
-        Paciente newPaciente = new Paciente(id, nombre, fechaNacimiento, telefono);
+        Paciente newPaciente = new Paciente(id, nombre, apellido, fechaNacimiento, telefono);
         pacienteIService.actualizar(newPaciente);
     }
 
@@ -53,6 +55,11 @@ public class PacienteController {
     private void validarNombre(String nombre) {
         if (nombre == null || nombre.trim().isEmpty())
             throw new IllegalArgumentException("El nombre es obligatorio.");
+    }
+
+    private void validarApellido(String apellido) {
+        if (apellido == null || apellido.trim().isEmpty())
+            throw new IllegalArgumentException("El apellido es obligatorio.");
     }
 
     private void validarFechaNacimiento(String fechaNacimiento) {

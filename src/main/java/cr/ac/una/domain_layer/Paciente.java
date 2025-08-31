@@ -12,6 +12,9 @@ public class Paciente {
     @XmlAttribute(name = "nombre")
     private String nombre;
     
+    @XmlAttribute(name = "apellido")
+    private String apellido;
+    
     @XmlAttribute(name = "fechaNacimiento")
     private String fechaNacimiento;
     
@@ -21,9 +24,10 @@ public class Paciente {
     // Constructores
     public Paciente() {}
     
-    public Paciente(int ID, String nombre, String fechaNacimiento, String telefono) {
+    public Paciente(int ID, String nombre, String apellido, String fechaNacimiento, String telefono) {
         this.ID = ID;
         this.nombre = nombre;
+        this.apellido = apellido;
         this.fechaNacimiento = fechaNacimiento;
         this.telefono = telefono;
     }
@@ -34,6 +38,9 @@ public class Paciente {
     
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
+    
+    public String getApellido() { return apellido; }
+    public void setApellido(String apellido) { this.apellido = apellido; }
     
     public String getFechaNacimiento() { return fechaNacimiento; }
     public void setFechaNacimiento(String fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
@@ -54,6 +61,7 @@ public class Paciente {
         return "Paciente{" +
                 "ID=" + ID +
                 ", nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
                 ", fechaNacimiento='" + fechaNacimiento + '\'' +
                 ", telefono='" + telefono + '\'' +
                 '}';

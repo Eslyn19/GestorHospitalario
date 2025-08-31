@@ -23,6 +23,7 @@ import cr.ac.una.presentation_layer.Controller.DashboardController;
 import cr.ac.una.data_access_layer.RecetaFileStore;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.io.File;
