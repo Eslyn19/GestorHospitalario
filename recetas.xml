@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<recetas>
+    <receta id="R-001" fecha="2025-06-15" estado="confeccionada">
+        <detalle>
+            <medicamento codigo="MED-111" cantidad="10"/>
+            <medicamento codigo="MED-222" cantidad="5"/>
+        </detalle>
+    </receta>
+
+    <receta id="R-002" fecha="2025-07-03" estado="pendiente">
+        <detalle>
+            <medicamento codigo="MED-222" cantidad="3"/>
+        </detalle>
+    </receta>
+</recetas>
