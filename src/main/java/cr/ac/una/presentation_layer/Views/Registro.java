@@ -1,5 +1,9 @@
-package cr.ac.una.Views;
+package cr.ac.una.presentation_layer.Views;
 
+import cr.ac.una.Main;
+import cr.ac.una.domain_layer.Doctor;
+import cr.ac.una.presentation_layer.Controller.DoctorController;
+import cr.ac.una.service_layer.IService;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -34,7 +38,6 @@ public class Registro extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
 
-        RegistrarseBTN.addActionListener(e -> onClickRegistrarseBTN());
         ChangeLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -48,18 +51,4 @@ public class Registro extends JFrame {
     }
 
     public JPanel getMainPanel() { return MainPanel; }
-
-    // Metodó para iniciar y validar sección
-    public void onClickRegistrarseBTN() {
-        String user = UserTF.getText().trim();
-        String pass = PasswordTF.getText().trim();
-
-        try {
-            if (user.isEmpty() || pass.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
 }

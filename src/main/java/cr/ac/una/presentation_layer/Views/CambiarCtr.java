@@ -1,4 +1,4 @@
-package cr.ac.una.Views;
+package cr.ac.una.presentation_layer.Views;
 
 import javax.swing.*;
 import java.awt.*;
