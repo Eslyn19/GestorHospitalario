@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class CambiarCtr extends JFrame {
+public class CambiarClave extends JFrame {
     private JPanel MainPanel;
     private JPanel TopPanel;
     private JPanel MidPanel;
@@ -22,7 +22,7 @@ public class CambiarCtr extends JFrame {
     private JPasswordField newPassTF;
 
     // Constructor
-    public CambiarCtr() {
+    public CambiarClave() {
         ConfirmarBTN.setPreferredSize(new Dimension(50, 30));
         DeclineBTN.setPreferredSize(new Dimension(50, 20));
         newPassTF.setPreferredSize(new Dimension(200, 30));
