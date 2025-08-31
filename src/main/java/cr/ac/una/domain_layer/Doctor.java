@@ -1,9 +1,6 @@
 package cr.ac.una.domain_layer;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.*;
 
 @XmlRootElement(name = "doctor")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -19,11 +16,6 @@ public class Doctor extends Persona{
     public Doctor(int _ID, String _nombre, String _apellido, String _clave, String especialidad) {
         super(_ID, _nombre, _apellido, _clave);
         Especialidad = especialidad;
-    }
-
-    public Doctor(String especialidad) { 
-        super();
-        Especialidad = especialidad; 
     }
 
     // Setter & getter

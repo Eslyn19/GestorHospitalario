@@ -1,11 +1,18 @@
 package cr.ac.una;
 
-import cr.ac.una.data_access_layer.DoctorFileStore;
-import cr.ac.una.presentation_layer.Views.Registro;
+import cr.ac.una.domain_layer.Doctor;
+import cr.ac.una.presentation_layer.Controller.DoctorController;
+import cr.ac.una.presentation_layer.Model.DoctorTableModel;
+import cr.ac.una.presentation_layer.Views.DoctorView;
+//import cr.ac.una.presentation_layer.Views.Registro;
+import cr.ac.una.presentation_layer.Views.PanelPrincipal;
 import cr.ac.una.service_layer.DoctorService;
+import cr.ac.una.service_layer.IService;
+import cr.ac.una.utilities.FileManagement;
 
 import javax.swing.*;
-import java.io.File;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
 /*
 
@@ -17,15 +24,9 @@ Credits for the resources provided for the project
 
 public class Main {
     public static void main(String[] args) {
-
-        // Initialize data storage
-        File xmlFile = new File("data/doctores.xml");
-        DoctorFileStore fileStore = new DoctorFileStore(xmlFile);
-        DoctorService doctorService = new DoctorService(fileStore);
-        
-        // Start the application with the registration window
-        SwingUtilities.invokeLater(() -> {
-            new Registro();
-        });
+//        Registro registro = new Registro();
+//        registro.setVisible(true);
+        PanelPrincipal panelPrincipal = new PanelPrincipal();
+        panelPrincipal.setVisible(true);
     }
 }

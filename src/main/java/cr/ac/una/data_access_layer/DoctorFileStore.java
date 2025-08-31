@@ -46,7 +46,6 @@ public class DoctorFileStore implements IFileStore<Doctor> {
                 }
             }
         } catch (Exception ex) {
-            System.err.println("[WARN] Error leyendo " + xmlFile + ": " + ex.getMessage());
             ex.printStackTrace();
         }
         return out;
@@ -77,7 +76,6 @@ public class DoctorFileStore implements IFileStore<Doctor> {
             xw.flush();
             xw.close();
         } catch (Exception ex) {
-            System.err.println("[WARN] Error escribiendo " + xmlFile);
             ex.printStackTrace();
         }
     }

@@ -192,6 +192,9 @@ public class DoctorView extends JFrame{
 
         if (d.ID <= 0) throw new IllegalArgumentException("El ID debe ser mayor que 0.");
         if (d.nombre.isEmpty()) throw new IllegalArgumentException("El nombre es obligatorio.");
+        if (d.apellido.isEmpty()) throw new IllegalArgumentException("El apellido es obligatorio.");
+        if (d.especialidad.isEmpty()) throw new IllegalArgumentException("La especialidad es obligatoria.");
+        
         return d;
     }
 

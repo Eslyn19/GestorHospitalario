@@ -15,9 +15,7 @@ public class DoctorTableModel extends AbstractTableModel implements IServiceObse
 
     public void setRows(List<Doctor> data) {
         rows.clear();
-        if (data != null) {
-            rows.addAll(data);
-        }
+        if (data != null) rows.addAll(data);
         fireTableDataChanged();
     }
 
