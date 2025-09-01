@@ -181,6 +181,7 @@ public class DoctorView extends JFrame{
                 "Error de búsqueda",
                 JOptionPane.ERROR_MESSAGE);
         }
+        BuscarIDTF.setText("");
     }
 
     public void bind(DoctorController controller, DoctorTableModel model, List<Doctor> datosIniciales) {

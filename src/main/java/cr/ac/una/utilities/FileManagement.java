@@ -2,10 +2,7 @@ package cr.ac.una.utilities;
 
 import com.sun.istack.NotNull;
 import cr.ac.una.data_access_layer.*;
-import cr.ac.una.domain_layer.Doctor;
-import cr.ac.una.domain_layer.Farmaceuta;
-import cr.ac.una.domain_layer.Medicamento;
-import cr.ac.una.domain_layer.Paciente;
+import cr.ac.una.domain_layer.*;
 
 import java.io.File;
 
@@ -34,5 +31,11 @@ public class FileManagement {
     public static IFileStore<Medicamento> getMedicamentoFileStore(String filename){
         File medicamentosXml = new File(basDir, filename);
         return new MedicamentoFileStore(medicamentosXml);
+    }
+    
+    @NotNull
+    public static AdminFileStore getAdminFileStore(String filename){
+        File adminXml = new File(basDir, filename);
+        return new AdminFileStore(adminXml);
     }
 }

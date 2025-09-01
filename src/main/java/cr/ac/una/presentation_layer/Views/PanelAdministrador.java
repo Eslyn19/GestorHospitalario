@@ -33,6 +33,7 @@ public class PanelAdministrador extends JFrame {
     private JTabbedPane PanelTabs;
 
     public PanelAdministrador() {
+        setResizable(false);
         // Iniciar la clase de doctores
         IService<Doctor> doctorservice = new DoctorService(FileManagement.getDoctoresFileStore("doctores.xml"));
         DoctorController doctorcontroller = new DoctorController(doctorservice);
@@ -101,7 +102,6 @@ public class PanelAdministrador extends JFrame {
             ImageIcon dashIconScaled = new ImageIcon(dashIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
             PanelTabs.addTab("Dashboard", dashIconScaled, dashboardView.getPanelBase(), "Dashboard");
         } catch (Exception ex) {
-            // Si por alguna razón falla cargar el dashboard (icono, ruta, etc.) lo registramos y continuamos
             ex.printStackTrace();
         }
         // -----------------------------------

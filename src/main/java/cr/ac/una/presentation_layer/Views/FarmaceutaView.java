@@ -128,9 +128,6 @@ public class FarmaceutaView extends JFrame{
         }
     }
     
-    /**
-     * Maneja el evento de búsqueda por ID
-     */
     private void onBuscar() {
         try {
             String idTexto = BuscarIDTF.getText().trim();
@@ -191,6 +188,7 @@ public class FarmaceutaView extends JFrame{
                 "Error de búsqueda",
                 JOptionPane.ERROR_MESSAGE);
         }
+        BuscarIDTF.setText("");
     }
 
     public void bind(FarmaceutaController controller, FarmaceutaTableModel model, List<Farmaceuta> datosIniciales) {
