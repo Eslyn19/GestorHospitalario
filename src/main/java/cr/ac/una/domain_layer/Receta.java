@@ -1,5 +1,6 @@
 package cr.ac.una.domain_layer;
 
+
 import jakarta.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;

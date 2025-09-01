@@ -16,14 +16,22 @@ public class FarmaceutaController {
     public void agregar(int id, String nombre, String apellido){
         validarId(id);
         validarNombre(nombre, apellido);
-        Farmaceuta newFarmaceuta = new Farmaceuta(id, nombre, apellido, "");
+        Farmaceuta newFarmaceuta = new Farmaceuta(id, nombre, apellido, String.valueOf(id));
         farmaceutaIService.agregar(newFarmaceuta);
     }
 
     public void Actualizar(int id, String nombre, String apellido){
         validarId(id);
         validarNombre(nombre, apellido);
-        Farmaceuta newFarmaceuta = new Farmaceuta(id, nombre, apellido, "");
+        Farmaceuta newFarmaceuta = new Farmaceuta(id, nombre, apellido, String.valueOf(id));
+        farmaceutaIService.actualizar(newFarmaceuta);
+    }
+    
+    public void ActualizarConClave(int id, String nombre, String apellido, String clave){
+        validarId(id);
+        validarNombre(nombre, apellido);
+        validarClave(clave);
+        Farmaceuta newFarmaceuta = new Farmaceuta(id, nombre, apellido, clave);
         farmaceutaIService.actualizar(newFarmaceuta);
     }
 
@@ -49,5 +57,10 @@ public class FarmaceutaController {
     private void validarNombre(String nombre, String apellido) {
         if (nombre == null || apellido == null || nombre.trim().isEmpty() || apellido.trim().isEmpty())
             throw new IllegalArgumentException("El nombre y apellido es obligatorio.");
+    }
+    
+    private void validarClave(String clave) {
+        if (clave == null || clave.trim().isEmpty())
+            throw new IllegalArgumentException("La clave es obligatoria.");
     }
 }

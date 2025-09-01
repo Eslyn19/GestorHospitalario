@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PacienteTableModel extends AbstractTableModel implements IServiceObserver<Paciente> {
-    private final String[] cols = {"ID", "Nombre", "Fecha Nacimiento", "Teléfono"};
-    private final Class<?>[] types = { Integer.class, String.class, String.class, String.class};
+    private final String[] cols = {"ID", "Nombre", "Apellido", "Fecha Nacimiento", "Teléfono"};
+    private final Class<?>[] types = { Integer.class, String.class, String.class, String.class, String.class};
     private final List<Paciente> rows = new ArrayList<>();
 
     public void setRows(List<Paciente> data) {
@@ -33,8 +33,9 @@ public class PacienteTableModel extends AbstractTableModel implements IServiceOb
         switch (columnIndex) {
             case 0: return paciente.getID();
             case 1: return paciente.getNombre();
-            case 2: return paciente.getFechaNacimiento();
-            case 3: return paciente.getTelefono();
+            case 2: return paciente.getApellido();
+            case 3: return paciente.getFechaNacimiento();
+            case 4: return paciente.getTelefono();
             default: return null;
         }
     }

@@ -53,10 +53,10 @@ public class MedicamentoView extends JFrame{
         addListeners();
         bind(medicamentoController, medicamentoTableModel, datos);
 
-        Color gray = new Color(166,166,166);
-        configurarPanel(UpperPanel, "Medicamento", gray, new Font("Arial", Font.BOLD, 13), Color.BLACK);
-        configurarPanel(MidPanel, "Búsqueda", gray, new Font("Arial", Font.BOLD, 13), Color.BLACK);
-        configurarPanel(LowerPanel, "Listado", gray, new Font("Arial", Font.BOLD, 13), Color.BLACK);
+        Color white = new Color(255, 255, 255);
+        configurarPanel(UpperPanel, "Medicamento", white, new Font("Arial", Font.BOLD, 13), Color.WHITE);
+        configurarPanel(MidPanel, "Búsqueda", white, new Font("Arial", Font.BOLD, 13), Color.WHITE);
+        configurarPanel(LowerPanel, "Listado", white, new Font("Arial", Font.BOLD, 13), Color.WHITE);
 
         codigoTF.setPreferredSize(new Dimension(20, 25));
         nombreTF.setPreferredSize(new Dimension(20, 25));
