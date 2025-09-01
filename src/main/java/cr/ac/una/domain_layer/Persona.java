@@ -1,7 +1,7 @@
 package cr.ac.una.domain_layer;
 
 import jakarta.xml.bind.annotation.*;
-
+// duda aqui de que porque estos
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({Doctor.class})
 public abstract class Persona {
