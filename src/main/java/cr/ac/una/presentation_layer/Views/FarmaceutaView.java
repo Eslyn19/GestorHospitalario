@@ -34,7 +34,7 @@ public class FarmaceutaView extends JFrame{
     private JScrollPane JSrollPane;
     private JTextField BuscarIDTF;
     private JButton BuscarBTN;
-    private JButton ReporteBTN;
+    private JButton CambiarClaveBTN;
     private JPanel BuscarMedicoPanel;
     private JPanel SpacePanel;
     private JLabel IDBuscarLabel;
@@ -90,7 +90,107 @@ public class FarmaceutaView extends JFrame{
         ActualizarBTN.addActionListener(e -> onUpdate());
         EliminarBTN.addActionListener(e -> onDelete());
         LimpiarBTN.addActionListener(e -> onClear());
+        CambiarClaveBTN.addActionListener(e -> onCambiarClave());
+        BuscarBTN.addActionListener(e -> onBuscar());
         TablaMedicos.getSelectionModel().addListSelectionListener(this::onTableSelection);
+    }
+    
+    /**
+     * Maneja el evento de cambiar clave
+     */
+    private void onCambiarClave() {
+        // Verificar si hay un farmacéuta seleccionado en la tabla
+        int selectedRow = TablaMedicos.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, 
+                "Por favor seleccione un farmacéuta de la tabla para cambiar su clave.", 
+                "Seleccionar Farmacéuta", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Obtener el farmacéuta seleccionado
+        Farmaceuta selectedFarmaceuta = farmaceutaTableModel.getAt(selectedRow);
+        if (selectedFarmaceuta != null) {
+            // Mostrar información del farmacéuta cuya clave se va a cambiar
+            int confirm = JOptionPane.showConfirmDialog(this,
+                "¿Desea cambiar la clave del farmacéuta " + selectedFarmaceuta.getNombre() + " " + selectedFarmaceuta.getApellido() + 
+                " (ID: " + selectedFarmaceuta.getID() + ")?",
+                "Confirmar Cambio de Clave",
+                JOptionPane.YES_NO_OPTION);
+                
+            if (confirm == JOptionPane.YES_OPTION) {
+                // Abrir ventana de cambiar clave pasando el farmacéuta y el controlador
+                SwingUtilities.invokeLater(() -> {
+                    CambiarClave ventanaCambiarClave = new CambiarClave(selectedFarmaceuta, farmaceutaController);
+                });
+            }
+        }
+    }
+    
+    /**
+     * Maneja el evento de búsqueda por ID
+     */
+    private void onBuscar() {
+        try {
+            String idTexto = BuscarIDTF.getText().trim();
+            
+            // Validar que se haya ingresado un ID
+            if (idTexto.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                    "Por favor ingrese un ID para buscar",
+                    "Campo vacío",
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            // Convertir a entero
+            int id;
+            try {
+                id = Integer.parseInt(idTexto);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this,
+                    "El ID debe ser un número válido",
+                    "ID inválido",
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Buscar el farmacéuta por ID
+            Farmaceuta farmaceuta = farmaceutaController.leerPorId(id);
+            
+            if (farmaceuta != null) {
+                // Mostrar los datos del farmacéuta en un JOptionPane
+                String mensaje = String.format(
+                    "Farmacéuta encontrado:\n\n" +
+                    "ID: %d\n" +
+                    "Nombre: %s\n" +
+                    "Apellido: %s\n" +
+                    "Clave: %s",
+                    farmaceuta.getID(),
+                    farmaceuta.getNombre(),
+                    farmaceuta.getApellido(),
+                    farmaceuta.getClave()
+                );
+                
+                JOptionPane.showMessageDialog(this,
+                    mensaje,
+                    "Farmacéuta ID: " + id,
+                    JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                // Farmacéuta no existe
+                JOptionPane.showMessageDialog(this,
+                    "No se encontró ningún farmacéuta con el ID: " + id,
+                    "Farmacéuta no encontrado",
+                    JOptionPane.WARNING_MESSAGE);
+            }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Error al buscar el farmacéuta: " + e.getMessage(),
+                "Error de búsqueda",
+                JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void bind(FarmaceutaController controller, FarmaceutaTableModel model, List<Farmaceuta> datosIniciales) {

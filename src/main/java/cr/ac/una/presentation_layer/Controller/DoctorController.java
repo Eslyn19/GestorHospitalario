@@ -16,14 +16,22 @@ public class DoctorController {
     public void agregar(int id, String nombre, String apellido, String especialidad){
         validarId(id);
         validarNombre(nombre, apellido);
-        Doctor newDoctor = new Doctor(id, nombre, apellido, "",especialidad);
+        Doctor newDoctor = new Doctor(id, nombre, apellido, String.valueOf(id), especialidad);
         doctorIService.agregar(newDoctor);
     }
 
     public void Actualizar(int id, String nombre, String apellido, String especialidad){
         validarId(id);
         validarNombre(nombre, apellido);
-        Doctor newDoctor = new Doctor(id, nombre, apellido, "", especialidad);
+        Doctor newDoctor = new Doctor(id, nombre, apellido, String.valueOf(id), especialidad);
+        doctorIService.actualizar(newDoctor);
+    }
+    
+    public void ActualizarConClave(int id, String nombre, String apellido, String clave, String especialidad){
+        validarId(id);
+        validarNombre(nombre, apellido);
+        validarClave(clave);
+        Doctor newDoctor = new Doctor(id, nombre, apellido, clave, especialidad);
         doctorIService.actualizar(newDoctor);
     }
 
@@ -49,5 +57,10 @@ public class DoctorController {
     private void validarNombre(String nombre, String apellido) {
         if (nombre == null || apellido == null || nombre.trim().isEmpty() || apellido.trim().isEmpty())
             throw new IllegalArgumentException("El nombre y apellido es obligatorio.");
+    }
+    
+    private void validarClave(String clave) {
+        if (clave == null || clave.trim().isEmpty())
+            throw new IllegalArgumentException("La clave es obligatoria.");
     }
 }

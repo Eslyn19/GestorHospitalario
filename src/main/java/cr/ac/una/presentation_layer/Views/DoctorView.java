@@ -34,7 +34,7 @@ public class DoctorView extends JFrame{
     private JScrollPane JSrollPane;
     private JTextField BuscarIDTF;
     private JButton BuscarBTN;
-    private JButton ReporteBTN;
+    private JButton CambiarClaveBTN;
     private JPanel BuscarMedicoPanel;
     private JPanel SpacePanel;
     private JLabel IDBuscarLabel;
@@ -92,7 +92,95 @@ public class DoctorView extends JFrame{
         ActualizarBTN.addActionListener(e -> onUpdate());
         EliminarBTN.addActionListener(e -> onDelete());
         LimpiarBTN.addActionListener(e -> onClear());
+        CambiarClaveBTN.addActionListener(e -> onCambiarClave());
+        BuscarBTN.addActionListener(e -> onBuscar());
         TablaMedicos.getSelectionModel().addListSelectionListener(this::onTableSelection);
+    }
+
+    private void onCambiarClave() {
+        // Verificar si hay un doctor seleccionado en la tabla
+        int selectedRow = TablaMedicos.getSelectedRow();
+
+        // Obtener el doctor seleccionado
+        Doctor selectedDoctor = doctorTableModel.getAt(selectedRow);
+        if (selectedDoctor != null) {
+            // Mostrar información del doctor cuya clave se va a cambiar
+            int confirm = JOptionPane.showConfirmDialog(this,
+                "¿Desea cambiar la clave del (ID: " + selectedDoctor.getID() + ")?",
+                "Confirmar Cambio de Clave",
+                JOptionPane.YES_NO_OPTION);
+                
+            if (confirm == JOptionPane.YES_OPTION) {
+                // Abrir ventana de cambiar clave pasando el doctor y el controlador
+                SwingUtilities.invokeLater(() -> {
+                    CambiarClave ventanaCambiarClave = new CambiarClave(selectedDoctor, doctorController);
+                });
+            }
+        }
+    }
+    
+    private void onBuscar() {
+        try {
+            String idTexto = BuscarIDTF.getText().trim();
+            
+            // Validar que se haya ingresado un ID
+            if (idTexto.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                    "Por favor ingrese un ID para buscar",
+                    "Campo vacío",
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            // Convertir a entero
+            int id;
+            try {
+                id = Integer.parseInt(idTexto);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this,
+                    "El ID debe ser un número válido",
+                    "ID inválido",
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            // Buscar el doctor por ID
+            Doctor doctor = doctorController.leerPorId(id);
+            
+            if (doctor != null) {
+                // Mostrar los datos del doctor en un JOptionPane
+                String mensaje = String.format(
+                    "Doctor encontrado:\n\n" +
+                    "ID: %d\n" +
+                    "Nombre: %s\n" +
+                    "Apellido: %s\n" +
+                    "Especialidad: %s\n" +
+                    "Clave: %s",
+                    doctor.getID(),
+                    doctor.getNombre(),
+                    doctor.getApellido(),
+                    doctor.getEspecialidad(),
+                    doctor.getClave()
+                );
+                
+                JOptionPane.showMessageDialog(this,
+                    mensaje,
+                    "Doctor ID: " + id,
+                    JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                // Doctor no existe
+                JOptionPane.showMessageDialog(this,
+                    "No se encontró ningún doctor con el ID: " + id,
+                    "Doctor no encontrado",
+                    JOptionPane.WARNING_MESSAGE);
+            }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Error al buscar el doctor: " + e.getMessage(),
+                "Error de búsqueda",
+                JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void bind(DoctorController controller, DoctorTableModel model, List<Doctor> datosIniciales) {

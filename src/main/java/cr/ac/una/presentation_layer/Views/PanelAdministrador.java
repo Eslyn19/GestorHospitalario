@@ -76,6 +76,7 @@ public class PanelAdministrador extends JFrame {
         ImageIcon farmaceutaIcon = new ImageIcon(getClass().getResource("/Farmaceutas.png"));
         ImageIcon pacienteIcon = new ImageIcon(getClass().getResource("/Paciente.png"));
         ImageIcon medicamentoIcon = new ImageIcon(getClass().getResource("/medicamentos.png"));
+        ImageIcon ClaveIcon = new ImageIcon(getClass().getResource("/CambiarClave.png"));
 
         // Redimensionar iconos para las pestañas
         ImageIcon doctorIconScaled = new ImageIcon(doctorIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
@@ -116,7 +117,7 @@ public class PanelAdministrador extends JFrame {
 
     private void initializePrincipalPanel() {
         // Configure main window
-        setTitle("Sistema de Gestión Hospitalaria");
+        setTitle("Sistema de Gestión Hospitalaria (ADMIN)");
         setSize(900, 700);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
