@@ -8,6 +8,8 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.List;
 
 public class FarmaceutaView extends JFrame{
@@ -33,7 +35,7 @@ public class FarmaceutaView extends JFrame{
     private JTable TablaMedicos;
     private JScrollPane JSrollPane;
     private JTextField BuscarIDTF;
-    private JButton BuscarBTN;
+    // private JButton BuscarBTN;  <-- eliminado
     private JButton CambiarClaveBTN;
     private JPanel BuscarMedicoPanel;
     private JPanel SpacePanel;
@@ -47,7 +49,7 @@ public class FarmaceutaView extends JFrame{
     public FarmaceutaView(FarmaceutaController farmaceutaController, FarmaceutaTableModel farmaceutaTableModel, List<Farmaceuta> datos) {
         this(farmaceutaController, farmaceutaTableModel, datos, true);
     }
-    
+
     public FarmaceutaView(FarmaceutaController farmaceutaController, FarmaceutaTableModel farmaceutaTableModel, List<Farmaceuta> datos, boolean showAsWindow) {
         this.farmaceutaController = farmaceutaController;
         this.farmaceutaTableModel = farmaceutaTableModel;
@@ -76,8 +78,8 @@ public class FarmaceutaView extends JFrame{
             setVisible(true);
         }
     }
-    
-    // Static method to create farmaceuta panel for embedding
+
+    //Método estático para crear un panel
     public static JPanel createFarmaceutaPanel(FarmaceutaController farmaceutaController, FarmaceutaTableModel tableModel, List<Farmaceuta> farmaceutas) {
         FarmaceutaView farmaceutaView = new FarmaceutaView(farmaceutaController, tableModel, farmaceutas, false);
         return farmaceutaView.getPanelBase();
@@ -91,104 +93,68 @@ public class FarmaceutaView extends JFrame{
         EliminarBTN.addActionListener(e -> onDelete());
         LimpiarBTN.addActionListener(e -> onClear());
         CambiarClaveBTN.addActionListener(e -> onCambiarClave());
-        BuscarBTN.addActionListener(e -> onBuscar());
+        // Búsqueda en tiempo real: filtra mientras se escribe
+        BuscarIDTF.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                onSearch();
+            }
+        });
+
         TablaMedicos.getSelectionModel().addListSelectionListener(this::onTableSelection);
     }
-    
-    /**
-     * Maneja el evento de cambiar clave
-     */
+
+    //Maneja el evento de cambiar clave
+
     private void onCambiarClave() {
-        // Verificar si hay un farmacéuta seleccionado en la tabla
         int selectedRow = TablaMedicos.getSelectedRow();
         if (selectedRow < 0) {
-            JOptionPane.showMessageDialog(this, 
-                "Por favor seleccione un farmacéuta de la tabla para cambiar su clave.", 
-                "Seleccionar Farmacéuta", 
-                JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "Por favor seleccione un farmacéuta de la tabla para cambiar su clave.",
+                    "Seleccionar Farmacéuta",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
-        
-        // Obtener el farmacéuta seleccionado
+
         Farmaceuta selectedFarmaceuta = farmaceutaTableModel.getAt(selectedRow);
         if (selectedFarmaceuta != null) {
-            // Mostrar información del farmacéuta cuya clave se va a cambiar
             int confirm = JOptionPane.showConfirmDialog(this,
-                "¿Desea cambiar la clave del farmacéuta " + selectedFarmaceuta.getNombre() + " " + selectedFarmaceuta.getApellido() + 
-                " (ID: " + selectedFarmaceuta.getID() + ")?",
-                "Confirmar Cambio de Clave",
-                JOptionPane.YES_NO_OPTION);
-                
+                    "¿Desea cambiar la clave del farmacéuta " + selectedFarmaceuta.getNombre() + " " + selectedFarmaceuta.getApellido() +
+                            " (ID: " + selectedFarmaceuta.getID() + ")?",
+                    "Confirmar Cambio de Clave",
+                    JOptionPane.YES_NO_OPTION);
+
             if (confirm == JOptionPane.YES_OPTION) {
-                // Abrir ventana de cambiar clave pasando el farmacéuta y el controlador
                 SwingUtilities.invokeLater(() -> {
-                    CambiarClave ventanaCambiarClave = new CambiarClave(selectedFarmaceuta, farmaceutaController);
+                    new CambiarClave(selectedFarmaceuta, farmaceutaController);
                 });
             }
         }
     }
-    
-    private void onBuscar() {
+
+    // Nueva búsqueda en tiempo real: filtra la tabla por ID, nombre o apellido
+    private void onSearch() {
         try {
-            String idTexto = BuscarIDTF.getText().trim();
-            
-            // Validar que se haya ingresado un ID
-            if (idTexto.isEmpty()) {
-                JOptionPane.showMessageDialog(this,
-                    "Por favor ingrese un ID para buscar",
-                    "Campo vacío",
-                    JOptionPane.WARNING_MESSAGE);
+            requireBound();
+            String texto = safe(BuscarIDTF.getText()).toLowerCase();
+            if (texto.isEmpty()) {
+                farmaceutaTableModel.setRows(farmaceutaController.leerTodos());
                 return;
             }
-            
-            // Convertir a entero
-            int id;
-            try {
-                id = Integer.parseInt(idTexto);
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this,
-                    "El ID debe ser un número válido",
-                    "ID inválido",
-                    JOptionPane.ERROR_MESSAGE);
-                return;
+            List<Farmaceuta> all = farmaceutaController.leerTodos();
+            java.util.List<Farmaceuta> filtered = new java.util.ArrayList<>();
+            for (Farmaceuta f : all) {
+                String idStr = String.valueOf(f.getID());
+                if ((idStr != null && idStr.toLowerCase().contains(texto))
+                        || (f.getNombre() != null && f.getNombre().toLowerCase().contains(texto))
+                        || (f.getApellido() != null && f.getApellido().toLowerCase().contains(texto))) {
+                    filtered.add(f);
+                }
             }
-            
-            // Buscar el farmacéuta por ID
-            Farmaceuta farmaceuta = farmaceutaController.leerPorId(id);
-            
-            if (farmaceuta != null) {
-                // Mostrar los datos del farmacéuta en un JOptionPane
-                String mensaje = String.format(
-                    "Farmacéuta encontrado:\n\n" +
-                    "ID: %d\n" +
-                    "Nombre: %s\n" +
-                    "Apellido: %s\n" +
-                    "Clave: %s",
-                    farmaceuta.getID(),
-                    farmaceuta.getNombre(),
-                    farmaceuta.getApellido(),
-                    farmaceuta.getClave()
-                );
-                
-                JOptionPane.showMessageDialog(this,
-                    mensaje,
-                    "Farmacéuta ID: " + id,
-                    JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                // Farmacéuta no existe
-                JOptionPane.showMessageDialog(this,
-                    "No se encontró ningún farmacéuta con el ID: " + id,
-                    "Farmacéuta no encontrado",
-                    JOptionPane.WARNING_MESSAGE);
-            }
-            
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this,
-                "Error al buscar el farmacéuta: " + e.getMessage(),
-                "Error de búsqueda",
-                JOptionPane.ERROR_MESSAGE);
+            farmaceutaTableModel.setRows(filtered);
+        } catch (Exception ex) {
+            showError("Error en búsqueda: " + ex.getMessage(), ex);
         }
-        BuscarIDTF.setText("");
     }
 
     public void bind(FarmaceutaController controller, FarmaceutaTableModel model, List<Farmaceuta> datosIniciales) {
@@ -258,6 +224,10 @@ public class FarmaceutaView extends JFrame{
         nombreTF.setText("");
         ApellidoTF.setText("");
         ID_textfield.requestFocus(); // *opc
+        // restaurar listado completo
+        try {
+            farmaceutaTableModel.setRows(farmaceutaController.leerTodos());
+        } catch (Exception ignored) {}
     }
 
     private void onTableSelection(ListSelectionEvent e) {
@@ -286,7 +256,7 @@ public class FarmaceutaView extends JFrame{
         if (d.ID <= 0) throw new IllegalArgumentException("El ID debe ser mayor que 0.");
         if (d.nombre.isEmpty()) throw new IllegalArgumentException("El nombre es obligatorio.");
         if (d.apellido.isEmpty()) throw new IllegalArgumentException("El apellido es obligatorio.");
-        
+
         return d;
     }
 
@@ -311,3 +281,4 @@ public class FarmaceutaView extends JFrame{
     }
 
 }
+
