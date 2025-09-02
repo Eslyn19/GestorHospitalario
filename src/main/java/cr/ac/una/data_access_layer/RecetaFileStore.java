@@ -10,6 +10,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.*;
 
+import cr.ac.una.domain_layer.Receta;
+import cr.ac.una.domain_layer.RecetaDetalle;
+
+//acceso a XML de recetas
+
 public class RecetaFileStore {
     private final File xmlFile;
     private final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -32,7 +37,7 @@ public class RecetaFileStore {
         } catch (Exception ignored) {}
     }
 
-    // Lee el XML y retorna una lista simple de nodos recetas (no mapea a objetos porque para el dashboard basta DOM)
+    // Lee el XML y retorna un Document
     private Document getDocument() throws Exception {
         if (xmlFile.length() == 0) {
             // archivo vacío: crear raíz
@@ -95,7 +100,7 @@ public class RecetaFileStore {
         return counts;
     }
 
-    // Cuenta recetas por estado (p.ej. confeccionada, pendiente, anulada)
+    // Cuenta recetas por estado (confeccionada, pendiente, anulada)
     public Map<String, Integer> getRecetasPorEstado() {
         Map<String, Integer> map = new TreeMap<>();
         try {
@@ -109,5 +114,66 @@ public class RecetaFileStore {
             }
         } catch (Exception ex) { ex.printStackTrace(); }
         return map;
+    }
+
+    //Lee todas las recetas
+    public List<Receta> leerTodos() {
+        List<Receta> lista = new ArrayList<>();
+        try {
+            Document doc = getDocument();
+            NodeList recetas = doc.getElementsByTagName("receta");
+            for (int i = 0; i < recetas.getLength(); i++) {
+                Node nodo = recetas.item(i);
+                if (nodo.getNodeType() != Node.ELEMENT_NODE) continue;
+                Element elem = (Element) nodo;
+
+                Receta r = new Receta();
+                // atributos del elemento <receta>
+                String id = elem.getAttribute("id");
+                if (id != null && !id.trim().isEmpty()) r.setId(id);
+
+                String fecha = elem.getAttribute("fecha");
+                if (fecha != null && !fecha.trim().isEmpty()) r.setFecha(fecha);
+
+                String estado = elem.getAttribute("estado");
+                if (estado != null && !estado.trim().isEmpty()) r.setEstado(estado);
+
+                // detalles: <detalle><medicamento codigo="" cantidad=""/></detalle>
+                NodeList meds = elem.getElementsByTagName("medicamento");
+                for (int j = 0; j < meds.getLength(); j++) {
+                    Node nm = meds.item(j);
+                    if (nm.getNodeType() != Node.ELEMENT_NODE) continue;
+                    Element em = (Element) nm;
+                    RecetaDetalle det = new RecetaDetalle();
+                    String codigo = em.getAttribute("codigo");
+                    if (codigo != null && !codigo.trim().isEmpty()) det.setCodigo(codigo);
+                    String cantS = em.getAttribute("cantidad");
+                    try {
+                        if (cantS != null && !cantS.trim().isEmpty()) det.setCantidad(Integer.parseInt(cantS));
+                    } catch (Exception ex) { det.setCantidad(0); }
+                    r.getDetalle().add(det);
+                }
+
+                lista.add(r);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return lista;
+    }
+
+    //Busca una receta por su id.
+
+    public Receta leerPorId(String idBuscado) {
+        if (idBuscado == null) return null;
+        try {
+            List<Receta> todas = leerTodos();
+            for (Receta r : todas) {
+                if (idBuscado.equals(r.getId())) return r;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 }
