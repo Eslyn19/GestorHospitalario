@@ -14,7 +14,6 @@ public class RecetaController {
         this.recetaFileStore = new RecetaFileStore(xmlFile);
     }
 
-    // constructor por defecto usa data/recetas.xml
     public RecetaController() {
         this(new File("data/recetas.xml"));
     }
