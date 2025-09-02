@@ -25,7 +25,6 @@ public class MedicamentoService implements IService<Medicamento> {
 
     @Override
     public void borrar(int id) {
-        // Para medicamentos usamos el código como identificador
         List<Medicamento> medicamentos = medicamentoFileStore.readAll();
         Medicamento removed = null;
         for (int i = 0; i < medicamentos.size(); i++) {

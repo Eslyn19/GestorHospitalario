@@ -3,7 +3,7 @@
   <grid id="27dc6" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="870" height="400"/>
+      <xy x="20" y="20" width="874" height="400"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -296,7 +296,7 @@
                   <title-color color="-2104859"/>
                 </border>
                 <children>
-                  <grid id="452f0" binding="BuscarMedicoPanel" layout-manager="GridLayoutManager" row-count="1" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                  <grid id="452f0" binding="BuscarMedicoPanel" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="0" left="0" bottom="0" right="0"/>
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -329,25 +329,9 @@
                           <text value=""/>
                         </properties>
                       </component>
-                      <component id="ecde3" class="javax.swing.JButton" binding="BuscarBTN">
-                        <constraints>
-                          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <background color="-1"/>
-                          <contentAreaFilled value="false"/>
-                          <focusPainted value="false"/>
-                          <font name="Bell MT" size="16" style="0"/>
-                          <foreground color="-16776930"/>
-                          <icon value="Buscar.png"/>
-                          <margin top="0" left="10" bottom="0" right="10"/>
-                          <opaque value="true"/>
-                          <text value="Buscar"/>
-                        </properties>
-                      </component>
                       <hspacer id="e601f">
                         <constraints>
-                          <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                         </constraints>
                       </hspacer>
                       <hspacer id="83b8b">
@@ -355,23 +339,6 @@
                           <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                         </constraints>
                       </hspacer>
-                      <component id="d9625" class="javax.swing.JButton" binding="ReporteBTN">
-                        <constraints>
-                          <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <autoscrolls value="false"/>
-                          <background color="-1"/>
-                          <contentAreaFilled value="false"/>
-                          <focusPainted value="false"/>
-                          <font name="Bell MT" size="16" style="0"/>
-                          <foreground color="-16776930"/>
-                          <icon value="PDF.png"/>
-                          <margin top="0" left="10" bottom="0" right="10"/>
-                          <opaque value="true"/>
-                          <text value="Reporte"/>
-                        </properties>
-                      </component>
                     </children>
                   </grid>
                   <grid id="309de" binding="SpacePanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">

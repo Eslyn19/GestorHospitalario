@@ -9,6 +9,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
 import java.util.List;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class MedicamentoView extends JFrame{
     private JPanel PanelBase;
@@ -33,8 +35,7 @@ public class MedicamentoView extends JFrame{
     private JTable TablaMedicos;
     private JScrollPane JSrollPane;
     private JTextField BuscarIDTF;
-    private JButton BuscarBTN;
-    private JButton ReporteBTN;
+    // private JButton BuscarBTN;  <-- eliminado
     private JPanel BuscarMedicoPanel;
     private JPanel SpacePanel;
     private JLabel IDBuscarLabel;
@@ -46,7 +47,7 @@ public class MedicamentoView extends JFrame{
     public MedicamentoView(MedicamentoController medicamentoController, MedicamentoTableModel medicamentoTableModel, List<Medicamento> datos) {
         this(medicamentoController, medicamentoTableModel, datos, true);
     }
-    
+
     public MedicamentoView(MedicamentoController medicamentoController, MedicamentoTableModel medicamentoTableModel, List<Medicamento> datos, boolean showAsWindow) {
         this.medicamentoController = medicamentoController;
         this.medicamentoTableModel = medicamentoTableModel;
@@ -75,8 +76,8 @@ public class MedicamentoView extends JFrame{
             setVisible(true);
         }
     }
-    
-    // Static method to create medicamento panel for embedding
+
+    //Método estático para crear un panel
     public static JPanel createMedicamentoPanel(MedicamentoController medicamentoController, MedicamentoTableModel tableModel, List<Medicamento> medicamentos) {
         MedicamentoView medicamentoView = new MedicamentoView(medicamentoController, tableModel, medicamentos, false);
         return medicamentoView.getPanelBase();
@@ -90,6 +91,14 @@ public class MedicamentoView extends JFrame{
         EliminarBTN.addActionListener(e -> onDelete());
         LimpiarBTN.addActionListener(e -> onClear());
         TablaMedicos.getSelectionModel().addListSelectionListener(this::onTableSelection);
+
+        // Búsqueda en tiempo real: filtra mientras se escribe
+        BuscarIDTF.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                onSearch();
+            }
+        });
     }
 
     public void bind(MedicamentoController controller, MedicamentoTableModel model, List<Medicamento> datosIniciales) {
@@ -159,6 +168,12 @@ public class MedicamentoView extends JFrame{
         nombreTF.setText("");
         PresentacionTF.setText("");
         codigoTF.requestFocus();
+        // también restaurar listado completo
+        try {
+            medicamentoTableModel.setRows(medicamentoController.leerTodos());
+        } catch (Exception ex) {
+            // ignorar
+        }
     }
 
     private void onTableSelection(ListSelectionEvent e) {
@@ -174,6 +189,30 @@ public class MedicamentoView extends JFrame{
         PresentacionTF.setText(medicamento.getPresentacion());
     }
 
+    // Buscar (filtrado por código o por nombre/parcial) - ahora en tiempo real
+    private void onSearch() {
+        try {
+            requireBound();
+            String texto = safe(BuscarIDTF.getText()).toLowerCase();
+            if (texto.isEmpty()) {
+                // restaurar todos
+                medicamentoTableModel.setRows(medicamentoController.leerTodos());
+                return;
+            }
+            List<Medicamento> all = medicamentoController.leerTodos();
+            java.util.List<Medicamento> filtered = new java.util.ArrayList<>();
+            for (Medicamento m : all) {
+                if ((m.getCodigo() != null && m.getCodigo().toLowerCase().contains(texto))
+                        || (m.getNombreMedic() != null && m.getNombreMedic().toLowerCase().contains(texto))) {
+                    filtered.add(m);
+                }
+            }
+            medicamentoTableModel.setRows(filtered);
+        } catch (Exception ex) {
+            showError("Error en búsqueda: " + ex.getMessage(), ex);
+        }
+    }
+
     private static class DatosForm {
         String codigo; String nombreMedic; String presentacion;
     }
@@ -187,7 +226,7 @@ public class MedicamentoView extends JFrame{
         if (d.codigo.isEmpty()) throw new IllegalArgumentException("El código es obligatorio.");
         if (d.nombreMedic.isEmpty()) throw new IllegalArgumentException("El nombre del medicamento es obligatorio.");
         if (d.presentacion.isEmpty()) throw new IllegalArgumentException("La presentación es obligatoria.");
-        
+
         return d;
     }
 

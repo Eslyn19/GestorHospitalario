@@ -9,6 +9,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
 import java.util.List;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class PacienteView extends JFrame{
     private JPanel PanelBase;
@@ -33,8 +35,7 @@ public class PacienteView extends JFrame{
     private JTable TablaMedicos;
     private JScrollPane JSrollPane;
     private JTextField BuscarIDTF;
-    private JButton BuscarBTN;
-    private JButton ReporteBTN;
+    // private JButton BuscarBTN;  <-- eliminado
     private JPanel BuscarMedicoPanel;
     private JPanel SpacePanel;
     private JLabel IDBuscarLabel;
@@ -51,7 +52,7 @@ public class PacienteView extends JFrame{
     public PacienteView(PacienteController pacienteController, PacienteTableModel pacienteTableModel, List<Paciente> datos) {
         this(pacienteController, pacienteTableModel, datos, true);
     }
-    
+
     public PacienteView(PacienteController pacienteController, PacienteTableModel pacienteTableModel, List<Paciente> datos, boolean showAsWindow) {
         this.pacienteController = pacienteController;
         this.pacienteTableModel = pacienteTableModel;
@@ -81,8 +82,8 @@ public class PacienteView extends JFrame{
             setVisible(true);
         }
     }
-    
-    // Static method to create paciente panel for embedding
+
+    //Método estático para crear un panel
     public static JPanel createPacientePanel(PacienteController pacienteController, PacienteTableModel tableModel, List<Paciente> pacientes) {
         PacienteView pacienteView = new PacienteView(pacienteController, tableModel, pacientes, false);
         return pacienteView.getPanelBase();
@@ -96,6 +97,14 @@ public class PacienteView extends JFrame{
         EliminarBTN.addActionListener(e -> onDelete());
         LimpiarBTN.addActionListener(e -> onClear());
         TablaMedicos.getSelectionModel().addListSelectionListener(this::onTableSelection);
+
+        // Búsqueda en tiempo real: filtra mientras se escribe
+        BuscarIDTF.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                onSearch();
+            }
+        });
     }
 
     public void bind(PacienteController controller, PacienteTableModel model, List<Paciente> datosIniciales) {
@@ -167,6 +176,12 @@ public class PacienteView extends JFrame{
         FechaTF.setText("");
         TelefonoTF.setText("");
         ID_textfield.requestFocus();
+        // restaurar listado completo
+        try {
+            pacienteTableModel.setRows(pacienteController.leerTodos());
+        } catch (Exception ex) {
+            // ignorar
+        }
     }
 
     private void onTableSelection(ListSelectionEvent e) {
@@ -182,6 +197,31 @@ public class PacienteView extends JFrame{
         ApellidoTF.setText(paciente.getApellido());
         FechaTF.setText(paciente.getFechaNacimiento());
         TelefonoTF.setText(paciente.getTelefono());
+    }
+
+    // Buscar (filtrado por ID, nombre o apellido) - ahora en tiempo real
+    private void onSearch() {
+        try {
+            requireBound();
+            String texto = safe(BuscarIDTF.getText()).toLowerCase();
+            if (texto.isEmpty()) {
+                pacienteTableModel.setRows(pacienteController.leerTodos());
+                return;
+            }
+            List<Paciente> all = pacienteController.leerTodos();
+            java.util.List<Paciente> filtered = new java.util.ArrayList<>();
+            for (Paciente p : all) {
+                String idStr = String.valueOf(p.getID());
+                if ((idStr != null && idStr.toLowerCase().contains(texto))
+                        || (p.getNombre() != null && p.getNombre().toLowerCase().contains(texto))
+                        || (p.getApellido() != null && p.getApellido().toLowerCase().contains(texto))) {
+                    filtered.add(p);
+                }
+            }
+            pacienteTableModel.setRows(filtered);
+        } catch (Exception ex) {
+            showError("Error en búsqueda: " + ex.getMessage(), ex);
+        }
     }
 
     private static class DatosForm {
@@ -201,7 +241,7 @@ public class PacienteView extends JFrame{
         if (d.apellido.isEmpty()) throw new IllegalArgumentException("El apellido es obligatorio.");
         if (d.fechaNacimiento.isEmpty()) throw new IllegalArgumentException("La fecha de nacimiento es obligatoria.");
         if (d.telefono.isEmpty()) throw new IllegalArgumentException("El teléfono es obligatorio.");
-        
+
         return d;
     }
 
