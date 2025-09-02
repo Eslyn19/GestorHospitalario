@@ -21,12 +21,19 @@ import cr.ac.una.utilities.FileManagement;
 import cr.ac.una.presentation_layer.Views.DashboardView.DashboardView;
 import cr.ac.una.presentation_layer.Controller.DashboardController;
 import cr.ac.una.data_access_layer.RecetaFileStore;
+import cr.ac.una.presentation_layer.Views.HistorialRecetas.HistorialRecetasView;
+import cr.ac.una.presentation_layer.Model.RecetaTableModel;
+import cr.ac.una.presentation_layer.Controller.RecetaController;
+import cr.ac.una.domain_layer.Receta;
+import cr.ac.una.presentation_layer.Views.HistorialRecetas.RecetaDetalleDialog;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
 import java.util.Dictionary;
 import java.util.Hashtable;
-import java.io.File;
+import java.util.List;
 
 public class PanelAdministrador extends JFrame {
     private JPanel PanelBase;
@@ -91,9 +98,8 @@ public class PanelAdministrador extends JFrame {
         PanelTabs.addTab("Pacientes", pacienteIconScaled, pacienteview.getPanelBase(), "Pacientes");
         PanelTabs.addTab("Medicamentos", medicamentoIconScaled, medicamentoview.getPanelBase(), "Medicamentos");
 
-        // --- NUEVA PESTAÑA: DASHBOARD ---
         try {
-            // Crear dashboard (usa data/recetas.xml — ajusta la ruta si la tienes en otra carpeta)
+            // Crear dashboard (usa data/recetas.xml)
             DashboardView dashboardView = new DashboardView();
             RecetaFileStore recetaStore = new RecetaFileStore(new File("data/recetas.xml"));
             DashboardController dashboardController = new DashboardController(recetaStore, dashboardView);
@@ -101,6 +107,72 @@ public class PanelAdministrador extends JFrame {
             ImageIcon dashIcon = new ImageIcon(getClass().getResource("/Dashboard.png"));
             ImageIcon dashIconScaled = new ImageIcon(dashIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
             PanelTabs.addTab("Dashboard", dashIconScaled, dashboardView.getPanelBase(), "Dashboard");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        // -----------------------------------
+
+        //NUEVA PESTAÑA: HISTORIAL DE RECETAS
+        try {
+            // Crea la vista
+            HistorialRecetasView histView = new HistorialRecetasView();
+
+            // crea controller y model
+            RecetaController recetaController = new RecetaController(new File("data/recetas.xml"));
+            RecetaTableModel recetaModel = new RecetaTableModel();
+            // carga datos iniciales
+            List<Receta> all = recetaController.leerTodos();
+            recetaModel.setRows(all);
+
+            // conecta modelo a la vista
+            histView.setTableModel(recetaModel);
+
+            // listeners mínimos: refrescar y ver detalle
+            histView.btnRefrescar.addActionListener(e -> {
+                List<Receta> nuevas = recetaController.leerTodos();
+                recetaModel.setRows(nuevas);
+            });
+
+            histView.btnVerDetalle.addActionListener(e -> {
+                int row = histView.tableRecetas.getSelectedRow();
+                if (row < 0) { JOptionPane.showMessageDialog(this, "Seleccione una receta.", "Info", JOptionPane.INFORMATION_MESSAGE); return; }
+                Receta r = recetaModel.getAt(row);
+                Frame owner = (Frame) SwingUtilities.getWindowAncestor(this);
+                RecetaDetalleDialog dlg = new RecetaDetalleDialog(owner, r);
+                dlg.setVisible(true);
+            });
+
+            // busqueda rápida por texto (local, en memoria)
+            histView.txtBuscar.addKeyListener(new KeyAdapter() {
+                @Override public void keyReleased(KeyEvent e) {
+                    String t = histView.txtBuscar.getText().trim().toLowerCase();
+                    if (t.isEmpty()) {
+                        recetaModel.setRows(recetaController.leerTodos());
+                        return;
+                    }
+                    List<Receta> filtered = new java.util.ArrayList<>();
+                    for (Receta r : recetaController.leerTodos()) {
+                        if ((r.getId() != null && r.getId().toLowerCase().contains(t))
+                                || (r.getFecha() != null && r.getFecha().toLowerCase().contains(t))
+                                || (r.getEstado() != null && r.getEstado().toLowerCase().contains(t))) {
+                            filtered.add(r);
+                        }
+                    }
+                    recetaModel.setRows(filtered);
+                }
+            });
+
+            // icono opcional
+            ImageIcon recetasIcon = null;
+            try { recetasIcon = new ImageIcon(getClass().getResource("/Recetas.png")); } catch (Exception ignore) { recetasIcon = null; }
+            ImageIcon recetasIconScaled = null;
+            if (recetasIcon != null && recetasIcon.getImage() != null) {
+                recetasIconScaled = new ImageIcon(recetasIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
+            } else {
+                recetasIconScaled = medicamentoIconScaled;
+            }
+
+            PanelTabs.addTab("Historial Recetas", recetasIconScaled, histView.getPanelBase(), "Histórico de recetas");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
