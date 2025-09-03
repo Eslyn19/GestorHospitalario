@@ -26,6 +26,7 @@ import cr.ac.una.presentation_layer.Model.RecetaTableModel;
 import cr.ac.una.presentation_layer.Controller.RecetaController;
 import cr.ac.una.domain_layer.Receta;
 import cr.ac.una.presentation_layer.Views.HistorialRecetas.RecetaDetalleDialog;
+import cr.ac.una.presentation_layer.Views.AcercaDe.AcercaDeView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,50 +70,51 @@ public class PanelAdministrador extends JFrame {
         MedicamentoView medicamentoview = new MedicamentoView(medicamentocontroller, medicamentomodel, medicamentocontroller.leerTodos(), false);
         medicamentoservice.addObserver(medicamentomodel);
 
-        // Crear tabs
-        Dictionary<String, JPanel> tabs = new Hashtable<>();
-        tabs.put("Doctores", doctorview.getPanelBase());
-        tabs.put("Farmacéuticos", farmaceutaview.getPanelBase());
-        tabs.put("Pacientes", pacienteview.getPanelBase());
-        tabs.put("Medicamentos", medicamentoview.getPanelBase());
-
         // Configurar el TabbedPane con iconos
         PanelTabs = new JTabbedPane();
 
-        // Cargar iconos
-        ImageIcon doctorIcon = new ImageIcon(getClass().getResource("/Doctores.png"));
-        ImageIcon farmaceutaIcon = new ImageIcon(getClass().getResource("/Farmaceutas.png"));
-        ImageIcon pacienteIcon = new ImageIcon(getClass().getResource("/Paciente.png"));
-        ImageIcon medicamentoIcon = new ImageIcon(getClass().getResource("/medicamentos.png"));
-        ImageIcon ClaveIcon = new ImageIcon(getClass().getResource("/CambiarClave.png"));
+        // Cargar iconos (con fallback silencioso)
+        ImageIcon doctorIcon = null, farmaceutaIcon = null, pacienteIcon = null, medicamentoIcon = null, ClaveIcon = null;
+        try { doctorIcon = new ImageIcon(getClass().getResource("/Doctores.png")); } catch (Exception ignore) {}
+        try { farmaceutaIcon = new ImageIcon(getClass().getResource("/Farmaceutas.png")); } catch (Exception ignore) {}
+        try { pacienteIcon = new ImageIcon(getClass().getResource("/Paciente.png")); } catch (Exception ignore) {}
+        try { medicamentoIcon = new ImageIcon(getClass().getResource("/medicamentos.png")); } catch (Exception ignore) {}
+        try { ClaveIcon = new ImageIcon(getClass().getResource("/CambiarClave.png")); } catch (Exception ignore) {}
 
-        // Redimensionar iconos para las pestañas
-        ImageIcon doctorIconScaled = new ImageIcon(doctorIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
-        ImageIcon farmaceutaIconScaled = new ImageIcon(farmaceutaIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
-        ImageIcon pacienteIconScaled = new ImageIcon(pacienteIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
-        ImageIcon medicamentoIconScaled = new ImageIcon(medicamentoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
+        ImageIcon doctorIconScaled = (doctorIcon != null && doctorIcon.getImage() != null)
+                ? new ImageIcon(doctorIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
+                : null;
+        ImageIcon farmaceutaIconScaled = (farmaceutaIcon != null && farmaceutaIcon.getImage() != null)
+                ? new ImageIcon(farmaceutaIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
+                : null;
+        ImageIcon pacienteIconScaled = (pacienteIcon != null && pacienteIcon.getImage() != null)
+                ? new ImageIcon(pacienteIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
+                : null;
+        ImageIcon medicamentoIconScaled = (medicamentoIcon != null && medicamentoIcon.getImage() != null)
+                ? new ImageIcon(medicamentoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
+                : null;
 
-        // Agregar pestañas con iconos
+        // Agregar pestañas con iconos (si hay icono, si no, pasa null)
         PanelTabs.addTab("Doctores", doctorIconScaled, doctorview.getPanelBase(), "Doctores");
         PanelTabs.addTab("Farmacéuticos", farmaceutaIconScaled, farmaceutaview.getPanelBase(), "Farmacéuticos");
         PanelTabs.addTab("Pacientes", pacienteIconScaled, pacienteview.getPanelBase(), "Pacientes");
         PanelTabs.addTab("Medicamentos", medicamentoIconScaled, medicamentoview.getPanelBase(), "Medicamentos");
 
         try {
-            // Crear dashboard (usa data/recetas.xml)
             DashboardView dashboardView = new DashboardView();
             RecetaFileStore recetaStore = new RecetaFileStore(new File("data/recetas.xml"));
             DashboardController dashboardController = new DashboardController(recetaStore, dashboardView);
 
-            ImageIcon dashIcon = new ImageIcon(getClass().getResource("/Dashboard.png"));
-            ImageIcon dashIconScaled = new ImageIcon(dashIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
+            ImageIcon dashIcon = null;
+            try { dashIcon = new ImageIcon(getClass().getResource("/Dashboard.png")); } catch (Exception ignore) {}
+            ImageIcon dashIconScaled = (dashIcon != null && dashIcon.getImage() != null)
+                    ? new ImageIcon(dashIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
+                    : null;
             PanelTabs.addTab("Dashboard", dashIconScaled, dashboardView.getPanelBase(), "Dashboard");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        // -----------------------------------
 
-        //NUEVA PESTAÑA: HISTORIAL DE RECETAS
         try {
             // Crea la vista
             HistorialRecetasView histView = new HistorialRecetasView();
@@ -127,7 +129,7 @@ public class PanelAdministrador extends JFrame {
             // conecta modelo a la vista
             histView.setTableModel(recetaModel);
 
-            // listeners mínimos: refrescar y ver detalle
+            // refrescar y ver detalle
             histView.btnRefrescar.addActionListener(e -> {
                 List<Receta> nuevas = recetaController.leerTodos();
                 recetaModel.setRows(nuevas);
@@ -142,7 +144,7 @@ public class PanelAdministrador extends JFrame {
                 dlg.setVisible(true);
             });
 
-            // busqueda rápida por texto (local, en memoria)
+            // busqueda rápida por ID
             histView.txtBuscar.addKeyListener(new KeyAdapter() {
                 @Override public void keyReleased(KeyEvent e) {
                     String t = histView.txtBuscar.getText().trim().toLowerCase();
@@ -152,9 +154,7 @@ public class PanelAdministrador extends JFrame {
                     }
                     List<Receta> filtered = new java.util.ArrayList<>();
                     for (Receta r : recetaController.leerTodos()) {
-                        if ((r.getId() != null && r.getId().toLowerCase().contains(t))
-                                || (r.getFecha() != null && r.getFecha().toLowerCase().contains(t))
-                                || (r.getEstado() != null && r.getEstado().toLowerCase().contains(t))) {
+                        if (r.getId() != null && r.getId().toLowerCase().contains(t)) {
                             filtered.add(r);
                         }
                     }
@@ -162,21 +162,30 @@ public class PanelAdministrador extends JFrame {
                 }
             });
 
-            // icono opcional
+            // icono opcional para la pestaña de recetas
             ImageIcon recetasIcon = null;
             try { recetasIcon = new ImageIcon(getClass().getResource("/Recetas.png")); } catch (Exception ignore) { recetasIcon = null; }
-            ImageIcon recetasIconScaled = null;
-            if (recetasIcon != null && recetasIcon.getImage() != null) {
-                recetasIconScaled = new ImageIcon(recetasIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
-            } else {
-                recetasIconScaled = medicamentoIconScaled;
-            }
+            ImageIcon recetasIconScaled = (recetasIcon != null && recetasIcon.getImage() != null)
+                    ? new ImageIcon(recetasIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
+                    : medicamentoIconScaled;
 
             PanelTabs.addTab("Historial Recetas", recetasIconScaled, histView.getPanelBase(), "Histórico de recetas");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        // -----------------------------------
+
+        // ACERCA DE (nueva pestaña integrada)
+        try {
+            AcercaDeView acerca = new AcercaDeView();
+            ImageIcon aboutIcon = null;
+            try { aboutIcon = new ImageIcon(getClass().getResource("/AcercaDe.png")); } catch (Exception ignore) { aboutIcon = null; }
+            ImageIcon aboutIconScaled = (aboutIcon != null && aboutIcon.getImage() != null)
+                    ? new ImageIcon(aboutIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
+                    : null;
+            PanelTabs.addTab("Acerca de", aboutIconScaled, acerca.getPanelBase(), "Acerca de");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
         // Configurar el panel base
         PanelBase = new JPanel();
