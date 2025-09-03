@@ -35,7 +35,7 @@ public class MedicamentoView extends JFrame{
     private JTable TablaMedicos;
     private JScrollPane JSrollPane;
     private JTextField BuscarIDTF;
-    // private JButton BuscarBTN;  <-- eliminado
+    // BuscarBTN eliminado
     private JPanel BuscarMedicoPanel;
     private JPanel SpacePanel;
     private JLabel IDBuscarLabel;
@@ -77,7 +77,7 @@ public class MedicamentoView extends JFrame{
         }
     }
 
-    //Método estático para crear un panel
+    // Metodo estatico para generar un panel
     public static JPanel createMedicamentoPanel(MedicamentoController medicamentoController, MedicamentoTableModel tableModel, List<Medicamento> medicamentos) {
         MedicamentoView medicamentoView = new MedicamentoView(medicamentoController, tableModel, medicamentos, false);
         return medicamentoView.getPanelBase();
@@ -92,7 +92,7 @@ public class MedicamentoView extends JFrame{
         LimpiarBTN.addActionListener(e -> onClear());
         TablaMedicos.getSelectionModel().addListSelectionListener(this::onTableSelection);
 
-        // Búsqueda en tiempo real: filtra mientras se escribe
+        // Búsqueda en tiempo real: filtra mientras se escribe por código
         BuscarIDTF.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
@@ -168,12 +168,9 @@ public class MedicamentoView extends JFrame{
         nombreTF.setText("");
         PresentacionTF.setText("");
         codigoTF.requestFocus();
-        // también restaurar listado completo
         try {
             medicamentoTableModel.setRows(medicamentoController.leerTodos());
-        } catch (Exception ex) {
-            // ignorar
-        }
+        } catch (Exception ignored) {}
     }
 
     private void onTableSelection(ListSelectionEvent e) {
@@ -189,21 +186,19 @@ public class MedicamentoView extends JFrame{
         PresentacionTF.setText(medicamento.getPresentacion());
     }
 
-    // Buscar (filtrado por código o por nombre/parcial) - ahora en tiempo real
+    // Búsqueda en tiempo real solo por código
     private void onSearch() {
         try {
             requireBound();
             String texto = safe(BuscarIDTF.getText()).toLowerCase();
             if (texto.isEmpty()) {
-                // restaurar todos
                 medicamentoTableModel.setRows(medicamentoController.leerTodos());
                 return;
             }
             List<Medicamento> all = medicamentoController.leerTodos();
             java.util.List<Medicamento> filtered = new java.util.ArrayList<>();
             for (Medicamento m : all) {
-                if ((m.getCodigo() != null && m.getCodigo().toLowerCase().contains(texto))
-                        || (m.getNombreMedic() != null && m.getNombreMedic().toLowerCase().contains(texto))) {
+                if (m.getCodigo() != null && m.getCodigo().toLowerCase().contains(texto)) {
                     filtered.add(m);
                 }
             }
