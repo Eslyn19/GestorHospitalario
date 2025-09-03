@@ -35,7 +35,7 @@ public class DoctorView extends JFrame{
     private JTable TablaMedicos;
     private JScrollPane JSrollPane;
     private JTextField BuscarIDTF;
-    // private JButton BuscarBTN;  <-- eliminado intencionalmente
+    // BuscarBTN eliminado
     private JButton CambiarClaveBTN;
     private JPanel BuscarMedicoPanel;
     private JPanel SpacePanel;
@@ -81,7 +81,7 @@ public class DoctorView extends JFrame{
         }
     }
 
-    //Método estático para crear un panel
+    // Metodo estatico para generar un panel
     public static JPanel createDoctorPanel(DoctorController doctorController, DoctorTableModel tableModel, List<Doctor> doctors) {
         DoctorView doctorView = new DoctorView(doctorController, tableModel, doctors, false);
         return doctorView.getPanelBase();
@@ -96,7 +96,7 @@ public class DoctorView extends JFrame{
         LimpiarBTN.addActionListener(e -> onClear());
         CambiarClaveBTN.addActionListener(e -> onCambiarClave());
 
-        // Búsqueda en tiempo real: filtra mientras se escribe
+        // Búsqueda en tiempo real: filtra mientras se escribe por ID
         BuscarIDTF.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
@@ -132,7 +132,7 @@ public class DoctorView extends JFrame{
         }
     }
 
-    // Nueva búsqueda en tiempo real: filtra la tabla por ID, nombre, apellido o especialidad
+    // Búsqueda en tiempo real solo por ID
     private void onSearch() {
         try {
             requireBound();
@@ -145,12 +145,7 @@ public class DoctorView extends JFrame{
             java.util.List<Doctor> filtered = new java.util.ArrayList<>();
             for (Doctor d : all) {
                 String idStr = String.valueOf(d.getID());
-                if ((idStr != null && idStr.toLowerCase().contains(texto))
-                        || (d.getNombre() != null && d.getNombre().toLowerCase().contains(texto))
-                        || (d.getApellido() != null && d.getApellido().toLowerCase().contains(texto))
-                        || (d.getEspecialidad() != null && d.getEspecialidad().toLowerCase().contains(texto))) {
-                    filtered.add(d);
-                }
+                if (idStr.toLowerCase().contains(texto)) filtered.add(d);
             }
             doctorTableModel.setRows(filtered);
         } catch (Exception ex) {
@@ -219,14 +214,13 @@ public class DoctorView extends JFrame{
         }
     }
 
-    // Limpiar campos de palabras
+    // Limpiar campos
     private void onClear(){
         ID_textfield.setText("");
         EspecialidadTF.setText("");
         nombreTF.setText("");
         ApellidoTF.setText("");
-        ID_textfield.requestFocus(); // *opc
-        // restaurar listado completo
+        ID_textfield.requestFocus();
         try {
             doctorTableModel.setRows(doctorController.leerTodos());
         } catch (Exception ignored) {}

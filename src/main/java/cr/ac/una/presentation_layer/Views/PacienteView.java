@@ -35,7 +35,7 @@ public class PacienteView extends JFrame{
     private JTable TablaMedicos;
     private JScrollPane JSrollPane;
     private JTextField BuscarIDTF;
-    // private JButton BuscarBTN;  <-- eliminado
+    // BuscarBTN eliminado
     private JPanel BuscarMedicoPanel;
     private JPanel SpacePanel;
     private JLabel IDBuscarLabel;
@@ -83,7 +83,7 @@ public class PacienteView extends JFrame{
         }
     }
 
-    //Método estático para crear un panel
+    // Metodo estatico para generar un panel
     public static JPanel createPacientePanel(PacienteController pacienteController, PacienteTableModel tableModel, List<Paciente> pacientes) {
         PacienteView pacienteView = new PacienteView(pacienteController, tableModel, pacientes, false);
         return pacienteView.getPanelBase();
@@ -98,7 +98,7 @@ public class PacienteView extends JFrame{
         LimpiarBTN.addActionListener(e -> onClear());
         TablaMedicos.getSelectionModel().addListSelectionListener(this::onTableSelection);
 
-        // Búsqueda en tiempo real: filtra mientras se escribe
+        // Búsqueda en tiempo real: filtra mientras se escribe por ID
         BuscarIDTF.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
@@ -176,7 +176,6 @@ public class PacienteView extends JFrame{
         FechaTF.setText("");
         TelefonoTF.setText("");
         ID_textfield.requestFocus();
-        // restaurar listado completo
         try {
             pacienteTableModel.setRows(pacienteController.leerTodos());
         } catch (Exception ex) {
@@ -199,7 +198,7 @@ public class PacienteView extends JFrame{
         TelefonoTF.setText(paciente.getTelefono());
     }
 
-    // Buscar (filtrado por ID, nombre o apellido) - ahora en tiempo real
+    // Búsqueda en tiempo real solo por ID
     private void onSearch() {
         try {
             requireBound();
@@ -212,11 +211,7 @@ public class PacienteView extends JFrame{
             java.util.List<Paciente> filtered = new java.util.ArrayList<>();
             for (Paciente p : all) {
                 String idStr = String.valueOf(p.getID());
-                if ((idStr != null && idStr.toLowerCase().contains(texto))
-                        || (p.getNombre() != null && p.getNombre().toLowerCase().contains(texto))
-                        || (p.getApellido() != null && p.getApellido().toLowerCase().contains(texto))) {
-                    filtered.add(p);
-                }
+                if (idStr.toLowerCase().contains(texto)) filtered.add(p);
             }
             pacienteTableModel.setRows(filtered);
         } catch (Exception ex) {

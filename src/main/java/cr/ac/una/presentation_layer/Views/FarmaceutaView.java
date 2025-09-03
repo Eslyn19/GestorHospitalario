@@ -35,7 +35,7 @@ public class FarmaceutaView extends JFrame{
     private JTable TablaMedicos;
     private JScrollPane JSrollPane;
     private JTextField BuscarIDTF;
-    // private JButton BuscarBTN;  <-- eliminado
+    // BuscarBTN eliminado
     private JButton CambiarClaveBTN;
     private JPanel BuscarMedicoPanel;
     private JPanel SpacePanel;
@@ -79,7 +79,7 @@ public class FarmaceutaView extends JFrame{
         }
     }
 
-    //Método estático para crear un panel
+    // Metodo estatico para generar un panel
     public static JPanel createFarmaceutaPanel(FarmaceutaController farmaceutaController, FarmaceutaTableModel tableModel, List<Farmaceuta> farmaceutas) {
         FarmaceutaView farmaceutaView = new FarmaceutaView(farmaceutaController, tableModel, farmaceutas, false);
         return farmaceutaView.getPanelBase();
@@ -93,7 +93,8 @@ public class FarmaceutaView extends JFrame{
         EliminarBTN.addActionListener(e -> onDelete());
         LimpiarBTN.addActionListener(e -> onClear());
         CambiarClaveBTN.addActionListener(e -> onCambiarClave());
-        // Búsqueda en tiempo real: filtra mientras se escribe
+
+        // Búsqueda en tiempo real: filtra mientras se escribe por ID (solo ID)
         BuscarIDTF.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
@@ -104,8 +105,7 @@ public class FarmaceutaView extends JFrame{
         TablaMedicos.getSelectionModel().addListSelectionListener(this::onTableSelection);
     }
 
-    //Maneja el evento de cambiar clave
-
+    //maneja cambio de clave
     private void onCambiarClave() {
         int selectedRow = TablaMedicos.getSelectedRow();
         if (selectedRow < 0) {
@@ -132,7 +132,7 @@ public class FarmaceutaView extends JFrame{
         }
     }
 
-    // Nueva búsqueda en tiempo real: filtra la tabla por ID, nombre o apellido
+    // Búsqueda en tiempo real solo por ID
     private void onSearch() {
         try {
             requireBound();
@@ -145,11 +145,7 @@ public class FarmaceutaView extends JFrame{
             java.util.List<Farmaceuta> filtered = new java.util.ArrayList<>();
             for (Farmaceuta f : all) {
                 String idStr = String.valueOf(f.getID());
-                if ((idStr != null && idStr.toLowerCase().contains(texto))
-                        || (f.getNombre() != null && f.getNombre().toLowerCase().contains(texto))
-                        || (f.getApellido() != null && f.getApellido().toLowerCase().contains(texto))) {
-                    filtered.add(f);
-                }
+                if (idStr.toLowerCase().contains(texto)) filtered.add(f);
             }
             farmaceutaTableModel.setRows(filtered);
         } catch (Exception ex) {
@@ -223,8 +219,7 @@ public class FarmaceutaView extends JFrame{
         ID_textfield.setText("");
         nombreTF.setText("");
         ApellidoTF.setText("");
-        ID_textfield.requestFocus(); // *opc
-        // restaurar listado completo
+        ID_textfield.requestFocus();
         try {
             farmaceutaTableModel.setRows(farmaceutaController.leerTodos());
         } catch (Exception ignored) {}
@@ -281,4 +276,3 @@ public class FarmaceutaView extends JFrame{
     }
 
 }
-
