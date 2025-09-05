@@ -49,6 +49,30 @@ public class DoctorController {
         return doctorIService.leerPorId(id);
     }
 
+    public boolean autenticar(int id, String password) {
+        try {
+            Doctor doctor = leerPorId(id);
+            if (doctor != null) {
+                return doctor.getClave().equals(password);
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public String obtenerNombreDoctor(int id) {
+        try {
+            Doctor doctor = leerPorId(id);
+            if (doctor != null) {
+                return doctor.getNombre() + " " + doctor.getApellido();
+            }
+            return "Doctor";
+        } catch (Exception e) {
+            return "Doctor";
+        }
+    }
+
     // --- Validaciones mínimas ---
     private void validarId(int id) {
         if (id <= 0) throw new IllegalArgumentException("El ID debe ser mayor que 0.");

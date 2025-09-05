@@ -1,6 +1,6 @@
 package cr.ac.una.presentation_layer.Model;
 
-import cr.ac.una.domain_layer.Receta;
+import cr.ac.una.domain_layer.PrescripcionMedicamento;
 import cr.ac.una.service_layer.IServiceObserver;
 import cr.ac.una.utilities.ChangeType;
 
@@ -8,18 +8,18 @@ import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecetaTableModel extends AbstractTableModel implements IServiceObserver<Receta> {
-    private final String[] cols = {"ID", "Paciente", "Médico", "Fecha Confección", "Fecha Retiro", "Estado", "Prescripciones"};
-    private final Class<?>[] types = { String.class, String.class, String.class, String.class, String.class, String.class, Integer.class};
-    private final List<Receta> rows = new ArrayList<>();
+public class PrescripcionTableModel extends AbstractTableModel implements IServiceObserver<PrescripcionMedicamento> {
+    private final String[] cols = {"Medicamento", "Cantidad", "Indicaciones", "Duración"};
+    private final Class<?>[] types = { String.class, Integer.class, String.class, String.class};
+    private final List<PrescripcionMedicamento> rows = new ArrayList<>();
 
-    public void setRows(List<Receta> data) {
+    public void setRows(List<PrescripcionMedicamento> data) {
         rows.clear();
         if (data != null) rows.addAll(data);
         fireTableDataChanged();
     }
 
-    public Receta getAt(int row) { 
+    public PrescripcionMedicamento getAt(int row) { 
         return (row >= 0 && row < rows.size()) ? rows.get(row) : null; 
     }
 
@@ -31,41 +31,38 @@ public class RecetaTableModel extends AbstractTableModel implements IServiceObse
     @Override public boolean isCellEditable(int rowIndex, int columnIndex) { return false; }
 
     @Override public Object getValueAt(int rowIndex, int columnIndex) {
-        Receta receta = rows.get(rowIndex);
+        PrescripcionMedicamento prescripcion = rows.get(rowIndex);
         switch (columnIndex) {
-            case 0: return receta.getId();
-            case 1: return receta.getPaciente();
-            case 2: return receta.getMedico();
-            case 3: return receta.getFechaConfeccion() != null ? receta.getFechaConfeccion().toString() : "";
-            case 4: return receta.getFechaRetiro() != null ? receta.getFechaRetiro().toString() : "";
-            case 5: return receta.getEstado();
-            case 6: return receta.getPrescripciones().size();
+            case 0: return prescripcion.getMedicamento();
+            case 1: return prescripcion.getCantidad();
+            case 2: return prescripcion.getIndicaciones();
+            case 3: return prescripcion.getDuracion();
             default: return null;
         }
     }
 
     // Observer
     @Override
-    public void onDataChanged(ChangeType type, Receta receta) {
+    public void onDataChanged(ChangeType type, PrescripcionMedicamento prescripcion) {
         switch (type) {
             case CREATED: {
-                rows.add(receta);
+                rows.add(prescripcion);
                 int i = rows.size() - 1;
                 fireTableRowsInserted(i, i);
                 break;
             }
 
             case UPDATED: {
-                int i = indexOf(receta.getId());
+                int i = indexOf(prescripcion.getMedicamento());
                 if (i >= 0) {
-                    rows.set(i, receta);
+                    rows.set(i, prescripcion);
                     fireTableRowsUpdated(i, i);
                 }
                 break;
             }
             
             case DELETED: {
-                int i = indexOf(receta.getId());
+                int i = indexOf(prescripcion.getMedicamento());
                 if (i >= 0) {
                     rows.remove(i);
                     fireTableRowsDeleted(i, i);
@@ -75,9 +72,9 @@ public class RecetaTableModel extends AbstractTableModel implements IServiceObse
         }
     }
 
-    private int indexOf(String id) {
+    private int indexOf(String medicamento) {
         for (int i = 0; i < rows.size(); i++) {
-            if (rows.get(i).getId().equals(id)) return i;
+            if (rows.get(i).getMedicamento().equals(medicamento)) return i;
         }
         return -1;
     }

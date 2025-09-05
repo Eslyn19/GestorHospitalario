@@ -1,6 +1,6 @@
 package cr.ac.una.data_access_layer;
 
-import cr.ac.una.domain_layer.Receta;
+import cr.ac.una.domain_layer.PrescripcionMedicamento;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
@@ -17,18 +17,18 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecetaFileStore implements IFileStore<Receta> {
+public class PrescripcionFileStore implements IFileStore<PrescripcionMedicamento> {
 
     private final File xmlFile;
 
-    public RecetaFileStore(File xmlFile) {
+    public PrescripcionFileStore(File xmlFile) {
         this.xmlFile = xmlFile;
         ensureFile();
     }
 
     @Override
-    public List<Receta> readAll() {
-        List<Receta> out = new ArrayList<>();
+    public List<PrescripcionMedicamento> readAll() {
+        List<PrescripcionMedicamento> out = new ArrayList<>();
         if (xmlFile.length() == 0) return out;
 
         try {
@@ -36,15 +36,15 @@ public class RecetaFileStore implements IFileStore<Receta> {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(xmlFile);
 
-            JAXBContext ctx = JAXBContext.newInstance(Receta.class);
+            JAXBContext ctx = JAXBContext.newInstance(PrescripcionMedicamento.class);
             Unmarshaller u = ctx.createUnmarshaller();
-            NodeList recetaNodos = doc.getElementsByTagName("receta");
+            NodeList prescripcionNodos = doc.getElementsByTagName("prescripcion");
 
-            for (int i = 0; i < recetaNodos.getLength(); i++) {
-                Node recetaNodo = recetaNodos.item(i);
-                if (recetaNodo.getNodeType() == Node.ELEMENT_NODE) {
-                    Receta r = (Receta) u.unmarshal(recetaNodo);
-                    out.add(r);
+            for (int i = 0; i < prescripcionNodos.getLength(); i++) {
+                Node prescripcionNodo = prescripcionNodos.item(i);
+                if (prescripcionNodo.getNodeType() == Node.ELEMENT_NODE) {
+                    PrescripcionMedicamento p = (PrescripcionMedicamento) u.unmarshal(prescripcionNodo);
+                    out.add(p);
                 }
             }
         } catch (Exception ex) {
@@ -54,9 +54,9 @@ public class RecetaFileStore implements IFileStore<Receta> {
     }
 
     @Override
-    public void writeAll(List<Receta> data) {
+    public void writeAll(List<PrescripcionMedicamento> data) {
         try (FileOutputStream out = new FileOutputStream(xmlFile)) {
-            JAXBContext ctx = JAXBContext.newInstance(Receta.class);
+            JAXBContext ctx = JAXBContext.newInstance(PrescripcionMedicamento.class);
             Marshaller m = ctx.createMarshaller();
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             m.setProperty(Marshaller.JAXB_FRAGMENT, true);
@@ -65,11 +65,11 @@ public class RecetaFileStore implements IFileStore<Receta> {
             XMLStreamWriter xw = xof.createXMLStreamWriter(out, "UTF-8");
 
             xw.writeStartDocument("UTF-8", "1.0");
-            xw.writeStartElement("recetas");
+            xw.writeStartElement("prescripciones");
 
             if (data != null) {
-                for (Receta receta : data) {
-                    m.marshal(receta, xw);
+                for (PrescripcionMedicamento prescripcion : data) {
+                    m.marshal(prescripcion, xw);
                 }
             }
 
@@ -79,13 +79,6 @@ public class RecetaFileStore implements IFileStore<Receta> {
             xw.close();
         } catch (Exception ex) {
             ex.printStackTrace();
-            // Si hay error, crear un archivo limpio
-            try {
-                xmlFile.delete();
-                ensureFile();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 

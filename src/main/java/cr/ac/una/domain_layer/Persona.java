@@ -1,9 +1,9 @@
 package cr.ac.una.domain_layer;
 
 import jakarta.xml.bind.annotation.*;
-// duda aqui de que porque estos
+
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({Doctor.class})
+@XmlSeeAlso({Doctor.class, Farmaceuta.class, Paciente.class})
 public abstract class Persona {
 
     @XmlAttribute(name = "ID")

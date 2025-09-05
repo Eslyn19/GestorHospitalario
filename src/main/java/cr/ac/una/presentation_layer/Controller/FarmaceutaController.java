@@ -49,6 +49,30 @@ public class FarmaceutaController {
         return farmaceutaIService.leerPorId(id);
     }
 
+    public boolean autenticar(int id, String password) {
+        try {
+            Farmaceuta farmaceuta = leerPorId(id);
+            if (farmaceuta != null) {
+                return farmaceuta.getClave().equals(password);
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public String obtenerNombreFarmaceuta(int id) {
+        try {
+            Farmaceuta farmaceuta = leerPorId(id);
+            if (farmaceuta != null) {
+                return farmaceuta.getNombre() + " " + farmaceuta.getApellido();
+            }
+            return "Farmacéutico";
+        } catch (Exception e) {
+            return "Farmacéutico";
+        }
+    }
+
     // --- Validaciones mínimas ---
     private void validarId(int id) {
         if (id <= 0) throw new IllegalArgumentException("El ID debe ser mayor que 0.");

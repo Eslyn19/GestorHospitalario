@@ -1,1 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><farmaceutas><farmaceuta ID="1" nombre="Z" apellido="Z" clave="1"></farmaceuta><farmaceuta ID="2" nombre="Z" apellido="Z" clave="2"></farmaceuta><farmaceuta ID="22" nombre="Z" apellido="Z" clave="22"></farmaceuta></farmaceutas>
+<?xml version="1.0" encoding="UTF-8"?>
+<farmaceutas>
+    <farmaceutas ID="123456789" nombre="María" apellido="González" clave="farma123"/>
+</farmaceutas>

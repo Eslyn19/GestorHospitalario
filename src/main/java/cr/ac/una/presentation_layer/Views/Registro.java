@@ -1,6 +1,12 @@
 package cr.ac.una.presentation_layer.Views;
 
 import cr.ac.una.presentation_layer.Controller.AdminController;
+import cr.ac.una.presentation_layer.Controller.DoctorController;
+import cr.ac.una.presentation_layer.Controller.FarmaceutaController;
+import cr.ac.una.service_layer.AdminService;
+import cr.ac.una.service_layer.DoctorService;
+import cr.ac.una.service_layer.FarmaceutaService;
+import cr.ac.una.utilities.FileManagement;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,6 +27,8 @@ public class Registro extends JFrame {
     private JComboBox<String> userTypeCombo;
 
     private AdminController adminController;
+    private DoctorController doctorController;
+    private FarmaceutaController farmaceutaController;
 
     // Constructor
     public Registro() {
@@ -30,10 +38,6 @@ public class Registro extends JFrame {
     }
     
     private void initializeComponents() {
-        // Inicializar el combo box solo con Administrador
-        userTypeCombo = new JComboBox<>();
-        userTypeCombo.addItem("Administrador");
-
         UserTF.setPreferredSize(new Dimension(200, 30));
         PasswordTF.setPreferredSize(new Dimension(200, 30));
         RegistrarseBTN.setPreferredSize(new Dimension(100, 30));
@@ -50,10 +54,7 @@ public class Registro extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
-        // Solo mostrar opción de Administrador
-        userTypeCombo.removeAllItems();
-        userTypeCombo.addItem("Administrador");
-        userTypeCombo.setSelectedIndex(0);
+        // El ComboBox ya está configurado en el .form
 
         setVisible(true);
     }
@@ -89,7 +90,13 @@ public class Registro extends JFrame {
     }
     
     private void authenticateUser(int id, String password, String userType) {
-        authenticateAdmin(id, password);
+        if ("Administrador".equals(userType)) {
+            authenticateAdmin(id, password);
+        } else if ("Doctor".equals(userType)) {
+            authenticateDoctor(id, password);
+        } else if ("Farmacéutico".equals(userType)) {
+            authenticateFarmaceuta(id, password);
+        }
     }
     
     private void authenticateAdmin(int id, String password) {
@@ -113,8 +120,64 @@ public class Registro extends JFrame {
         }
     }
     
+    private void authenticateDoctor(int id, String password) {
+        if (doctorController != null) {
+            boolean autenticado = doctorController.autenticar(id, password);
+            if (autenticado) {
+                // Obtener el nombre del doctor
+                String nombreDoctor = doctorController.obtenerNombreDoctor(id);
+                PanelDoctor panelDoctor = new PanelDoctor(nombreDoctor);
+                panelDoctor.setVisible(true);
+                this.dispose(); // Cerrar ventana de login
+            } else {
+                JOptionPane.showMessageDialog(this,
+                    "ID o contraseña incorrectos para Doctor",
+                    "Error de autenticación",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this,
+                "Error: Controlador de doctor no disponible",
+                "Error del sistema",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void authenticateFarmaceuta(int id, String password) {
+        if (farmaceutaController != null) {
+            boolean autenticado = farmaceutaController.autenticar(id, password);
+            if (autenticado) {
+                // Obtener el nombre del farmacéutico
+                String nombreFarmaceuta = farmaceutaController.obtenerNombreFarmaceuta(id);
+                // Por ahora, los farmacéuticos también van al PanelDoctor
+                // TODO: Crear PanelFarmaceutico específico si es necesario
+                PanelDoctor panelDoctor = new PanelDoctor(nombreFarmaceuta);
+                panelDoctor.setVisible(true);
+                this.dispose(); // Cerrar ventana de login
+            } else {
+                JOptionPane.showMessageDialog(this,
+                    "ID o contraseña incorrectos para Farmacéutico",
+                    "Error de autenticación",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this,
+                "Error: Controlador de farmacéutico no disponible",
+                "Error del sistema",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
     public void setAdminController(AdminController adminController) {
         this.adminController = adminController;
+    }
+    
+    public void setDoctorController(DoctorController doctorController) {
+        this.doctorController = doctorController;
+    }
+    
+    public void setFarmaceutaController(FarmaceutaController farmaceutaController) {
+        this.farmaceutaController = farmaceutaController;
     }
     
     public JPanel getMainPanel() { return MainPanel; }
