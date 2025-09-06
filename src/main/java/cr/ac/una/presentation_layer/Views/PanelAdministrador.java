@@ -19,14 +19,15 @@ import cr.ac.una.service_layer.IService;
 import cr.ac.una.utilities.FileManagement;
 
 import javax.swing.*;
+import java.util.Objects;
 
 public class PanelAdministrador extends JFrame {
     private JPanel PanelBase;
     private JTabbedPane PanelTabs;
 
+    // Constructor
     public PanelAdministrador() {
-        setResizable(false);
-
+        // Cargar datos de cada entidad
         IService<Doctor> doctorservice = new DoctorService(FileManagement.getDoctoresFileStore("doctores.xml"));
         DoctorController doctorcontroller = new DoctorController(doctorservice);
         DoctorTableModel doctormodel = new DoctorTableModel();
@@ -51,63 +52,47 @@ public class PanelAdministrador extends JFrame {
         MedicamentoView medicamentoview = new MedicamentoView(medicamentocontroller, medicamentomodel, medicamentocontroller.leerTodos(), false);
         medicamentoservice.addObserver(medicamentomodel);
 
-        // Crear la vista de Banner
         Banner bannerView = new Banner(this);
-        
-        // Crear la vista de Histórico de Recetas
         HistoricoRecetas historicoRecetasView = new HistoricoRecetas();
 
-        PanelTabs = new JTabbedPane();
-
-        ImageIcon doctorIcon = new ImageIcon(getClass().getResource("/Doctores.png"));
-        ImageIcon farmaceutaIcon = new ImageIcon(getClass().getResource("/Farmaceutas.png"));
-        ImageIcon pacienteIcon = new ImageIcon(getClass().getResource("/Paciente.png"));
-        ImageIcon medicamentoIcon = new ImageIcon(getClass().getResource("/medicamentos.png"));
-        ImageIcon ClaveIcon = new ImageIcon(getClass().getResource("/CambiarClave.png"));
+        // Cargar imagenes
+        ImageIcon doctorIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Doctores.png")));
+        ImageIcon farmaceutaIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Farmaceutas.png")));
+        ImageIcon pacienteIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Paciente.png")));
+        ImageIcon medicamentoIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/medicamentos.png")));
         ImageIcon bannerIcon = new ImageIcon(getClass().getResource("/Banner.png"));
         ImageIcon historicoIcon = new ImageIcon(getClass().getResource("/Historial.png"));
 
-        ImageIcon doctorIconScaled = (doctorIcon != null && doctorIcon.getImage() != null)
-                ? new ImageIcon(doctorIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
-                : null;
-        ImageIcon farmaceutaIconScaled = (farmaceutaIcon != null && farmaceutaIcon.getImage() != null)
-                ? new ImageIcon(farmaceutaIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
-                : null;
-        ImageIcon pacienteIconScaled = (pacienteIcon != null && pacienteIcon.getImage() != null)
-                ? new ImageIcon(pacienteIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
-                : null;
-        ImageIcon medicamentoIconScaled = (medicamentoIcon != null && medicamentoIcon.getImage() != null)
-                ? new ImageIcon(medicamentoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
-                : null;
-        ImageIcon bannerIconScaled = (bannerIcon != null && bannerIcon.getImage() != null)
-                ? new ImageIcon(bannerIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
-                : null;
-        ImageIcon historicoIconScaled = (historicoIcon != null && historicoIcon.getImage() != null)
-                ? new ImageIcon(historicoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
-                : null;
+        // Configurar imagenes con nuevo resize
+        ImageIcon doctorResize = new ImageIcon(doctorIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
+        ImageIcon farmaceutaResize = new ImageIcon(farmaceutaIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
+        ImageIcon pacienteResize = new ImageIcon(pacienteIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
+        ImageIcon medicamentoResize = new ImageIcon(medicamentoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
+        ImageIcon bannerResize = new ImageIcon(bannerIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
+        ImageIcon historicoResize = new ImageIcon(historicoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
 
-        PanelTabs.addTab("Inicio", bannerIconScaled, bannerView.getPanel(), "Página de inicio del sistema");
-        PanelTabs.addTab("Doctores", doctorIconScaled, doctorview.getPanelBase(), "Doctores");
-        PanelTabs.addTab("Farmacéuticos", farmaceutaIconScaled, farmaceutaview.getPanelBase(), "Farmacéuticos");
-        PanelTabs.addTab("Pacientes", pacienteIconScaled, pacienteview.getPanelBase(), "Pacientes");
-        PanelTabs.addTab("Medicamentos", medicamentoIconScaled, medicamentoview.getPanelBase(), "Medicamentos");
-        PanelTabs.addTab("Histórico Recetas", historicoIconScaled, historicoRecetasView.getMainPanel(), "Histórico de recetas médicas");
+        PanelTabs = new JTabbedPane();
+
+        // Agregar pestañas
+        PanelTabs.addTab("Inicio", bannerResize, bannerView.getPanel(), "Página de inicio del sistema");
+        PanelTabs.addTab("Doctores", doctorResize, doctorview.getPanelBase(), "Doctores");
+        PanelTabs.addTab("Farmacéuticos", farmaceutaResize, farmaceutaview.getPanelBase(), "Farmacéuticos");
+        PanelTabs.addTab("Pacientes", pacienteResize, pacienteview.getPanelBase(), "Pacientes");
+        PanelTabs.addTab("Medicamentos", medicamentoResize, medicamentoview.getPanelBase(), "Medicamentos");
+        PanelTabs.addTab("Histórico Recetas", historicoResize, historicoRecetasView.getMainPanel(), "Histórico de recetas médicas");
 
         PanelBase = new JPanel();
         PanelBase.setLayout(new java.awt.BorderLayout());
         PanelBase.add(PanelTabs, java.awt.BorderLayout.CENTER);
 
-        InitPrincipalPanel();
-    }
-
-    private void InitPrincipalPanel() {
-        // Configure main window
-        setTitle("Sistema de Gestión Hospitalaria (ADMIN)");
+        setTitle("Sistema de Gestión Hospitalaria (ADM)");
         setSize(900, 700);
+        ImageIcon icon = new ImageIcon(getClass().getResource("/Admin.png"));
+        setIconImage(icon.getImage());
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         setContentPane(PanelBase);
         setVisible(true);
+        setResizable(false);
     }
 }

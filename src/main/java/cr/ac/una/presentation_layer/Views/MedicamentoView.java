@@ -35,7 +35,6 @@ public class MedicamentoView extends JFrame{
     private JTable TablaMedicos;
     private JScrollPane JSrollPane;
     private JTextField BuscarIDTF;
-    // BuscarBTN eliminado
     private JPanel BuscarMedicoPanel;
     private JPanel SpacePanel;
     private JLabel IDBuscarLabel;
@@ -64,20 +63,21 @@ public class MedicamentoView extends JFrame{
         PresentacionTF.setPreferredSize(new Dimension(20, 25));
         BuscarIDTF.setPreferredSize(new Dimension(20, 25));
 
+        setContentPane(PanelBase);
+        ImageIcon icon = new ImageIcon(getClass().getResource("/medicamentos.png"));
+        setIconImage(icon.getImage());
+        setLocationRelativeTo(null);
+        setTitle("Medicamentos");
+        setSize(850, 600);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        // Solo mostrar como ventana si showAsWindow es true
         if (showAsWindow) {
-            setContentPane(PanelBase);
-            ImageIcon icon = new ImageIcon(getClass().getResource("/medicamentos.png"));
-            setIconImage(icon.getImage());
-            setLocationRelativeTo(null);
-            setTitle("Medicamentos");
-            setSize(850, 600);
-            setLocationRelativeTo(null);
-            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setVisible(true);
         }
     }
 
-    // Metodo estatico para generar un panel
     public static JPanel createMedicamentoPanel(MedicamentoController medicamentoController, MedicamentoTableModel tableModel, List<Medicamento> medicamentos) {
         MedicamentoView medicamentoView = new MedicamentoView(medicamentoController, tableModel, medicamentos, false);
         return medicamentoView.getPanelBase();
@@ -91,8 +91,6 @@ public class MedicamentoView extends JFrame{
         EliminarBTN.addActionListener(e -> onDelete());
         LimpiarBTN.addActionListener(e -> onClear());
         TablaMedicos.getSelectionModel().addListSelectionListener(this::onTableSelection);
-
-        // Búsqueda en tiempo real: filtra mientras se escribe por código
         BuscarIDTF.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
@@ -186,7 +184,7 @@ public class MedicamentoView extends JFrame{
         PresentacionTF.setText(medicamento.getPresentacion());
     }
 
-    // Búsqueda en tiempo real solo por código
+    // Búsqueda en tiempo real de la tabla
     private void onSearch() {
         try {
             requireBound();

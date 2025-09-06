@@ -12,6 +12,10 @@ import cr.ac.una.presentation_layer.Model.RecetaTableModel;
 import cr.ac.una.presentation_layer.Model.MedicamentoTableModel;
 import cr.ac.una.service_layer.MedicamentoService;
 import cr.ac.una.data_access_layer.MedicamentoFileStore;
+import cr.ac.una.utilities.PrescripcionDialog;
+import cr.ac.una.utilities.BuscarPacienteDialog;
+import cr.ac.una.utilities.EditarPrescripcionDialog;
+import cr.ac.una.utilities.AgregarMedicamentoDialog;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -133,7 +137,7 @@ public class Prescripcion extends JFrame {
     private void buscarPaciente() {
         try {
             // Crear un JDialog modal para seleccionar paciente
-            BuscarPacienteDialog dialog = new BuscarPacienteDialog(this);
+            cr.ac.una.utilities.BuscarPacienteDialog dialog = new cr.ac.una.utilities.BuscarPacienteDialog(this);
             dialog.setVisible(true);
             
             // Obtener el paciente seleccionado directamente
@@ -157,11 +161,11 @@ public class Prescripcion extends JFrame {
     }
 
     private void abrirDialogoPrescripcion() {
-        PrescripcionDialog dialog = new PrescripcionDialog(this);
+        cr.ac.una.utilities.AgregarMedicamentoDialog dialog = new cr.ac.una.utilities.AgregarMedicamentoDialog(this);
         dialog.setVisible(true);
         
-        if (dialog.isPrescripcionAgregada()) {
-            PrescripcionMedicamento prescripcion = dialog.getPrescripcion();
+        if (dialog.isMedicamentoAgregado()) {
+            PrescripcionMedicamento prescripcion = dialog.getPrescripcionMedicamento();
             prescripcionesTemporales.add(prescripcion);
             actualizarTablaPrescripciones();
         }
@@ -173,7 +177,7 @@ public class Prescripcion extends JFrame {
             PrescripcionMedicamento prescripcionSeleccionada = prescripcionesTemporales.get(filaSeleccionada);
             
             // Abrir diálogo de edición
-            EditarPrescripcionDialog dialog = new EditarPrescripcionDialog(this, prescripcionSeleccionada);
+            cr.ac.una.utilities.EditarPrescripcionDialog dialog = new cr.ac.una.utilities.EditarPrescripcionDialog(this, prescripcionSeleccionada);
             dialog.setVisible(true);
             
             if (dialog.isPrescripcionEditada()) {
@@ -294,7 +298,6 @@ public class Prescripcion extends JFrame {
     }
 
     private void actualizarTablaPrescripciones() {
-        // Crear un modelo de tabla temporal para mostrar las prescripciones
         String[] columnas = {"Medicamento", "Cantidad", "Indicaciones", "Duración"};
         Object[][] datos = new Object[prescripcionesTemporales.size()][4];
         
@@ -312,382 +315,5 @@ public class Prescripcion extends JFrame {
                 return false;
             }
         });
-    }
-
-    // Clase interna para el diálogo de prescripción
-    private class PrescripcionDialog extends JDialog {
-        private JTable medicamentosTable;
-        private JSpinner cantidadSpinner;
-        private JTextArea indicacionesTA;
-        private JTextField duracionTF;
-        private JButton agregarBTN;
-        private JButton cancelarBTN;
-        private PrescripcionMedicamento prescripcion;
-        private boolean prescripcionAgregada = false;
-        private MedicamentoTableModel medicamentoTableModel;
-        private MedicamentoService medicamentoService;
-
-        public PrescripcionDialog(JFrame parent) {
-            super(parent, "Seleccionar Medicamento", true);
-            initializeDialog();
-        }
-
-        private void initializeDialog() {
-            setSize(600, 500);
-            setLocationRelativeTo(getParent());
-            setLayout(new BorderLayout());
-
-            // Inicializar servicio de medicamentos
-            try {
-                medicamentoService = new MedicamentoService(new MedicamentoFileStore(new File("medicamentos.xml")));
-                medicamentoTableModel = new MedicamentoTableModel();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Error al cargar medicamentos: " + e.getMessage());
-                dispose();
-                return;
-            }
-
-            // Panel superior: Tabla de medicamentos
-            JPanel tablaPanel = new JPanel(new BorderLayout());
-            tablaPanel.setBorder(BorderFactory.createTitledBorder("Seleccionar Medicamento"));
-            
-            medicamentosTable = new JTable(medicamentoTableModel);
-            medicamentosTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            JScrollPane scrollPane = new JScrollPane(medicamentosTable);
-            tablaPanel.add(scrollPane, BorderLayout.CENTER);
-            add(tablaPanel, BorderLayout.CENTER);
-
-            // Panel inferior: Campos de prescripción
-            JPanel camposPanel = new JPanel(new GridBagLayout());
-            camposPanel.setBorder(BorderFactory.createTitledBorder("Detalles de la Prescripción"));
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.insets = new Insets(5, 5, 5, 5);
-
-            // Cantidad
-            gbc.gridx = 0; gbc.gridy = 0; gbc.anchor = GridBagConstraints.WEST;
-            camposPanel.add(new JLabel("Cantidad:"), gbc);
-            gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-            cantidadSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 999, 1));
-            camposPanel.add(cantidadSpinner, gbc);
-
-            // Indicaciones
-            gbc.gridx = 0; gbc.gridy = 1; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
-            camposPanel.add(new JLabel("Indicaciones:"), gbc);
-            gbc.gridx = 1; gbc.fill = GridBagConstraints.BOTH; gbc.weightx = 1.0; gbc.weighty = 1.0;
-            indicacionesTA = new JTextArea(3, 20);
-            indicacionesTA.setLineWrap(true);
-            indicacionesTA.setWrapStyleWord(true);
-            camposPanel.add(new JScrollPane(indicacionesTA), gbc);
-
-            // Duración
-            gbc.gridx = 0; gbc.gridy = 2; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0; gbc.weighty = 0;
-            camposPanel.add(new JLabel("Duración (días):"), gbc);
-            gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-            duracionTF = new JTextField(20);
-            camposPanel.add(duracionTF, gbc);
-
-            // Panel de botones
-            JPanel botonesPanel = new JPanel(new FlowLayout());
-            agregarBTN = new JButton("Agregar");
-            cancelarBTN = new JButton("Cancelar");
-            botonesPanel.add(agregarBTN);
-            botonesPanel.add(cancelarBTN);
-
-            // Panel contenedor para campos y botones
-            JPanel inferiorPanel = new JPanel(new BorderLayout());
-            inferiorPanel.add(camposPanel, BorderLayout.CENTER);
-            inferiorPanel.add(botonesPanel, BorderLayout.SOUTH);
-            add(inferiorPanel, BorderLayout.SOUTH);
-
-            // Event listeners
-            agregarBTN.addActionListener(e -> agregarPrescripcion());
-            cancelarBTN.addActionListener(e -> dispose());
-
-            // Doble clic en la tabla para seleccionar
-            medicamentosTable.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseClicked(java.awt.event.MouseEvent evt) {
-                    if (evt.getClickCount() == 2) {
-                        agregarPrescripcion();
-                    }
-                }
-            });
-
-            // Cargar medicamentos
-            cargarMedicamentos();
-        }
-
-        private void cargarMedicamentos() {
-            try {
-                List<Medicamento> medicamentos = medicamentoService.leerTodos();
-                medicamentoTableModel.setRows(medicamentos);
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Error al cargar medicamentos: " + e.getMessage());
-            }
-        }
-
-        private void agregarPrescripcion() {
-            int filaSeleccionada = medicamentosTable.getSelectedRow();
-            if (filaSeleccionada < 0) {
-                JOptionPane.showMessageDialog(this, 
-                    "Por favor seleccione un medicamento de la tabla", 
-                    "Selección requerida", 
-                    JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            Medicamento medicamentoSeleccionado = medicamentoTableModel.getAt(filaSeleccionada);
-            if (medicamentoSeleccionado == null) {
-                JOptionPane.showMessageDialog(this, 
-                    "Error al obtener el medicamento seleccionado", 
-                    "Error", 
-                    JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            int cantidad = (Integer) cantidadSpinner.getValue();
-            String indicaciones = indicacionesTA.getText().trim();
-            String duracion = duracionTF.getText().trim();
-
-            if (indicaciones.isEmpty() || duracion.isEmpty()) {
-                JOptionPane.showMessageDialog(this, 
-                    "Por favor complete las indicaciones y duración", 
-                    "Campos incompletos", 
-                    JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            // Crear prescripción con el medicamento seleccionado
-            String nombreMedicamento = medicamentoSeleccionado.getNombreMedic() + " (" + medicamentoSeleccionado.getCodigo() + ")";
-            prescripcion = new PrescripcionMedicamento(nombreMedicamento, cantidad, indicaciones, duracion);
-            prescripcionAgregada = true;
-            dispose();
-        }
-
-        public PrescripcionMedicamento getPrescripcion() {
-            return prescripcion;
-        }
-
-        public boolean isPrescripcionAgregada() {
-            return prescripcionAgregada;
-        }
-    }
-
-    // Clase interna para el diálogo de búsqueda de pacientes
-    private class BuscarPacienteDialog extends JDialog {
-        private JTable resultsTable;
-        private JButton seleccionarBTN;
-        private JButton cancelarBTN;
-        
-        private PacienteController pacienteController;
-        private PacienteTableModel pacienteTableModel;
-        private Paciente pacienteSeleccionado;
-
-        public BuscarPacienteDialog(JFrame parent) {
-            super(parent, "Seleccionar Paciente", true);
-            setupUI();
-            setupEventListeners();
-            cargarPacientes();
-        }
-
-        private void setupUI() {
-            setSize(600, 400);
-            setLocationRelativeTo(getParent());
-            setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-            setResizable(false);
-            
-            // Color de fondo principal
-            Color backgroundColor = new Color(0x6ADAAE);
-            setBackground(backgroundColor);
-            
-            setLayout(new BorderLayout());
-            
-            // Tabla de resultados
-            resultsTable = new JTable();
-            resultsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            JScrollPane scrollPane = new JScrollPane(resultsTable);
-            scrollPane.setBackground(backgroundColor);
-            add(scrollPane, BorderLayout.CENTER);
-            
-            // Panel de botones
-            JPanel buttonPanel = new JPanel(new FlowLayout());
-            buttonPanel.setBackground(backgroundColor);
-            seleccionarBTN = new JButton("Ok");
-            cancelarBTN = new JButton("Cancelar");
-            
-            // Estilo de los botones: fondo blanco, letra negra
-            seleccionarBTN.setBackground(Color.WHITE);
-            seleccionarBTN.setForeground(Color.BLACK);
-            cancelarBTN.setBackground(Color.WHITE);
-            cancelarBTN.setForeground(Color.BLACK);
-            
-            buttonPanel.add(seleccionarBTN);
-            buttonPanel.add(cancelarBTN);
-            add(buttonPanel, BorderLayout.SOUTH);
-            
-            // Inicializar controlador
-            try {
-                pacienteController = new PacienteController(
-                    new cr.ac.una.service_layer.PacienteService(
-                        new cr.ac.una.data_access_layer.PacienteFileStore(new File("pacientes.xml"))
-                    )
-                );
-                pacienteTableModel = new PacienteTableModel();
-                resultsTable.setModel(pacienteTableModel);
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-            }
-        }
-
-        private void setupEventListeners() {
-            // Botón Seleccionar
-            seleccionarBTN.addActionListener(e -> seleccionarPaciente());
-            
-            // Botón Cancelar
-            cancelarBTN.addActionListener(e -> dispose());
-            
-            // Doble clic para seleccionar
-            resultsTable.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseClicked(java.awt.event.MouseEvent evt) {
-                    if (evt.getClickCount() == 2) {
-                        seleccionarPaciente();
-                    }
-                }
-            });
-        }
-        
-        private void cargarPacientes() {
-            List<Paciente> pacientes = pacienteController.leerTodos();
-            pacienteTableModel.setRows(pacientes);
-        }
-        
-        private void seleccionarPaciente() {
-            int fila = resultsTable.getSelectedRow();
-            
-            if (fila >= 0) {
-                pacienteSeleccionado = pacienteTableModel.getAt(fila);
-                if (pacienteSeleccionado != null) {
-                    dispose();
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, 
-                    "Por favor seleccione un paciente", 
-                    "Selección requerida", 
-                    JOptionPane.WARNING_MESSAGE);
-            }
-        }
-
-        public Paciente getPacienteSeleccionado() {
-            return pacienteSeleccionado;
-        }
-    }
-
-    // Clase interna para el diálogo de edición de prescripción
-    private class EditarPrescripcionDialog extends JDialog {
-        private JSpinner cantidadSpinner;
-        private JTextArea indicacionesTA;
-        private JTextField duracionTF;
-        private JButton guardarBTN;
-        private JButton cancelarBTN;
-        private PrescripcionMedicamento prescripcionEditada;
-        private boolean prescripcionEditadaFlag = false;
-        private PrescripcionMedicamento prescripcionOriginal;
-
-        public EditarPrescripcionDialog(JFrame parent, PrescripcionMedicamento prescripcion) {
-            super(parent, "Editar Prescripción", true);
-            this.prescripcionOriginal = prescripcion;
-            initializeDialog();
-        }
-
-        private void initializeDialog() {
-            setSize(400, 300);
-            setLocationRelativeTo(getParent());
-            setLayout(new BorderLayout());
-
-            // Panel de campos
-            JPanel camposPanel = new JPanel(new GridBagLayout());
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.insets = new Insets(5, 5, 5, 5);
-
-            // Medicamento (solo lectura)
-            gbc.gridx = 0; gbc.gridy = 0; gbc.anchor = GridBagConstraints.WEST;
-            camposPanel.add(new JLabel("Medicamento:"), gbc);
-            gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-            JTextField medicamentoTF = new JTextField(prescripcionOriginal.getMedicamento());
-            medicamentoTF.setEditable(false);
-            medicamentoTF.setBackground(getBackground());
-            camposPanel.add(medicamentoTF, gbc);
-
-            // Cantidad
-            gbc.gridx = 0; gbc.gridy = 1; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
-            camposPanel.add(new JLabel("Cantidad:"), gbc);
-            gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-            cantidadSpinner = new JSpinner(new SpinnerNumberModel(prescripcionOriginal.getCantidad(), 1, 999, 1));
-            camposPanel.add(cantidadSpinner, gbc);
-
-            // Indicaciones
-            gbc.gridx = 0; gbc.gridy = 2; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
-            camposPanel.add(new JLabel("Indicaciones:"), gbc);
-            gbc.gridx = 1; gbc.fill = GridBagConstraints.BOTH; gbc.weightx = 1.0; gbc.weighty = 1.0;
-            indicacionesTA = new JTextArea(3, 20);
-            indicacionesTA.setText(prescripcionOriginal.getIndicaciones());
-            indicacionesTA.setLineWrap(true);
-            indicacionesTA.setWrapStyleWord(true);
-            camposPanel.add(new JScrollPane(indicacionesTA), gbc);
-
-            // Duración
-            gbc.gridx = 0; gbc.gridy = 3; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0; gbc.weighty = 0;
-            camposPanel.add(new JLabel("Duración (días):"), gbc);
-            gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-            duracionTF = new JTextField(prescripcionOriginal.getDuracion());
-            camposPanel.add(duracionTF, gbc);
-
-            add(camposPanel, BorderLayout.CENTER);
-
-            // Panel de botones
-            JPanel botonesPanel = new JPanel(new FlowLayout());
-            guardarBTN = new JButton("Guardar");
-            cancelarBTN = new JButton("Cancelar");
-            botonesPanel.add(guardarBTN);
-            botonesPanel.add(cancelarBTN);
-            add(botonesPanel, BorderLayout.SOUTH);
-
-            // Event listeners
-            guardarBTN.addActionListener(e -> guardarEdicion());
-            cancelarBTN.addActionListener(e -> dispose());
-        }
-
-        private void guardarEdicion() {
-            int cantidad = (Integer) cantidadSpinner.getValue();
-            String indicaciones = indicacionesTA.getText().trim();
-            String duracion = duracionTF.getText().trim();
-
-            if (indicaciones.isEmpty() || duracion.isEmpty()) {
-                JOptionPane.showMessageDialog(this, 
-                    "Por favor complete las indicaciones y duración", 
-                    "Campos incompletos", 
-                    JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            // Crear prescripción editada manteniendo el medicamento original
-            prescripcionEditada = new PrescripcionMedicamento(
-                prescripcionOriginal.getMedicamento(), 
-                cantidad, 
-                indicaciones, 
-                duracion
-            );
-            prescripcionEditadaFlag = true;
-            dispose();
-        }
-
-        public PrescripcionMedicamento getPrescripcionEditada() {
-            return prescripcionEditada;
-        }
-
-        public boolean isPrescripcionEditada() {
-            return prescripcionEditadaFlag;
-        }
     }
 }

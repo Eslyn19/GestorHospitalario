@@ -35,7 +35,6 @@ public class FarmaceutaView extends JFrame{
     private JTable TablaMedicos;
     private JScrollPane JSrollPane;
     private JTextField BuscarIDTF;
-    // BuscarBTN eliminado
     private JButton CambiarClaveBTN;
     private JPanel BuscarMedicoPanel;
     private JPanel SpacePanel;
@@ -66,20 +65,21 @@ public class FarmaceutaView extends JFrame{
         ApellidoTF.setPreferredSize(new Dimension(20, 25));
         BuscarIDTF.setPreferredSize(new Dimension(20, 25));
 
+        setContentPane(PanelBase);
+        ImageIcon icon = new ImageIcon(getClass().getResource("/Farmaceutas.png"));
+        setIconImage(icon.getImage());
+        setLocationRelativeTo(null);
+        setTitle("Farmaceutas");
+        setSize(850, 600);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        // Solo mostrar como ventana si showAsWindow es true
         if (showAsWindow) {
-            setContentPane(PanelBase);
-            ImageIcon icon = new ImageIcon(getClass().getResource("/Farmaceutas.png"));
-            setIconImage(icon.getImage());
-            setLocationRelativeTo(null);
-            setTitle("Farmaceutas");
-            setSize(850, 600);
-            setLocationRelativeTo(null);
-            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setVisible(true);
         }
     }
 
-    // Metodo estatico para generar un panel
     public static JPanel createFarmaceutaPanel(FarmaceutaController farmaceutaController, FarmaceutaTableModel tableModel, List<Farmaceuta> farmaceutas) {
         FarmaceutaView farmaceutaView = new FarmaceutaView(farmaceutaController, tableModel, farmaceutas, false);
         return farmaceutaView.getPanelBase();
@@ -93,25 +93,22 @@ public class FarmaceutaView extends JFrame{
         EliminarBTN.addActionListener(e -> onDelete());
         LimpiarBTN.addActionListener(e -> onClear());
         CambiarClaveBTN.addActionListener(e -> onCambiarClave());
-
-        // Búsqueda en tiempo real: filtra mientras se escribe por ID (solo ID)
+        // Búsqueda de tiempo real en tablas
         BuscarIDTF.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 onSearch();
             }
         });
-
         TablaMedicos.getSelectionModel().addListSelectionListener(this::onTableSelection);
     }
 
-    //maneja cambio de clave
     private void onCambiarClave() {
         int selectedRow = TablaMedicos.getSelectedRow();
         if (selectedRow < 0) {
             JOptionPane.showMessageDialog(this,
-                    "Por favor seleccione un farmacéuta de la tabla para cambiar su clave.",
-                    "Seleccionar Farmacéuta",
+                    "Seleccione un farmaceuta de la tabla",
+                    "Seleccionar Farmaceuta",
                     JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -119,7 +116,7 @@ public class FarmaceutaView extends JFrame{
         Farmaceuta selectedFarmaceuta = farmaceutaTableModel.getAt(selectedRow);
         if (selectedFarmaceuta != null) {
             int confirm = JOptionPane.showConfirmDialog(this,
-                    "¿Desea cambiar la clave del farmacéuta " + selectedFarmaceuta.getNombre() + " " + selectedFarmaceuta.getApellido() +
+                    "¿Desea cambiar la clave del farmaceuta " + selectedFarmaceuta.getNombre() + " " + selectedFarmaceuta.getApellido() +
                             " (ID: " + selectedFarmaceuta.getID() + ")?",
                     "Confirmar Cambio de Clave",
                     JOptionPane.YES_NO_OPTION);

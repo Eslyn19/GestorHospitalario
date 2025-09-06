@@ -17,25 +17,19 @@ public class Banner extends JPanel{
 
     public Banner(){
         LogOutBTN.setPreferredSize(new Dimension(30, 30));
-        setupLogoutButton();
+        Salir();
     }
 
     public Banner(JFrame parentWindow){
         this.parentWindow = parentWindow;
-        LogOutBTN.setPreferredSize(new Dimension(30, 30));
-        setupLogoutButton();
+        Salir();
     }
 
-    private void setupLogoutButton() {
-        LogOutBTN.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                logout();
-            }
-        });
+    private void Salir() {
+        LogOutBTN.addActionListener(e -> CerrarSeccion());
     }
 
-    private void logout() {
+    private void CerrarSeccion() {
         int confirm = JOptionPane.showConfirmDialog(this,
             "¿Está seguro que desea cerrar sesión?",
             "Cerrar Sesión",
@@ -43,20 +37,12 @@ public class Banner extends JPanel{
             JOptionPane.QUESTION_MESSAGE);
         
         if (confirm == JOptionPane.YES_OPTION) {
-            // Cerrar la ventana actual
-            if (parentWindow != null) {
-                parentWindow.dispose();
-            }
-            
-            // Abrir nueva ventana de registro con controladores configurados
+            parentWindow.dispose();
+
             SwingUtilities.invokeLater(() -> {
                 try {
-                    // Crear nueva instancia de Registro
                     Registro registro = new Registro();
-                    
-                    // Configurar controladores
-                    setupControllers(registro);
-                    
+                    ControladoresConfig(registro);
                     registro.setVisible(true);
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null,
@@ -68,7 +54,7 @@ public class Banner extends JPanel{
         }
     }
     
-    private void setupControllers(Registro registro) {
+    private void ControladoresConfig(Registro registro) {
         try {
             // Configurar AdminController
             cr.ac.una.data_access_layer.AdminFileStore adminFileStore = cr.ac.una.utilities.FileManagement.getAdminFileStore("admins.xml");
@@ -87,10 +73,7 @@ public class Banner extends JPanel{
             registro.setFarmaceutaController(farmaceutaController);
             
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,
-                "Error al configurar controladores: " + e.getMessage(),
-                "Error de configuración",
-                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
     }
 

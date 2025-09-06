@@ -7,6 +7,7 @@ import cr.ac.una.presentation_layer.Controller.DoctorController;
 import cr.ac.una.presentation_layer.Controller.FarmaceutaController;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class CambiarClave extends JFrame {
     private JPanel MainPanel;
@@ -38,7 +39,7 @@ public class CambiarClave extends JFrame {
         this(doctor, doctorController, null);
     }
     
-    // Constructor para farmacéutas
+    // Constructor para farmaceutas
     public CambiarClave(Farmaceuta farmaceuta, FarmaceutaController farmaceutaController) {
         this(farmaceuta, null, farmaceutaController);
     }
@@ -49,7 +50,7 @@ public class CambiarClave extends JFrame {
         this.doctorController = doctorController;
         this.farmaceutaController = farmaceutaController;
         
-        setTitle("Cambiar Clave" + (persona != null ? " - " + persona.getNombre() + " " + persona.getApellido() : ""));
+        setTitle("Cambiar Clave");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setContentPane(MainPanel);
@@ -59,7 +60,10 @@ public class CambiarClave extends JFrame {
         setSize(350, 250);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+
+        ContActualPF.setPreferredSize(new Dimension(20, 25));
+        ContNuevaPF.setPreferredSize(new Dimension(20, 25));
+
         addListeners();
         setVisible(true);
     }
@@ -110,7 +114,7 @@ public class CambiarClave extends JFrame {
             }
             
             JOptionPane.showMessageDialog(this,
-                "¡Contraseña cambiada exitosamente!\nLa información se ha actualizado en el sistema.", 
+                "¡Contraseña cambiada exitosamente!",
                 "Éxito", 
                 JOptionPane.INFORMATION_MESSAGE);
             
@@ -126,7 +130,6 @@ public class CambiarClave extends JFrame {
 
     private void actualizarClaveDoctor(Doctor doctor, String nuevaClave) {
         if (doctorController != null) {
-            // Actualizar usando el nuevo metodo que incluye la clave
             doctorController.ActualizarConClave(
                 doctor.getID(),
                 doctor.getNombre(),
@@ -159,5 +162,4 @@ public class CambiarClave extends JFrame {
     }
 
     public JPanel getContentPane() { return MainPanel; }
-
 }

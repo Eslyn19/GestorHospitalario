@@ -19,11 +19,11 @@ public class HistoricoRecetas {
     private RecetaTableModel recetaTableModel;
 
     public HistoricoRecetas() {
-        initializeComponents();
-        loadData();
+        Inicializar();
+        CargarDatos();
     }
 
-    private void initializeComponents() {
+    private void Inicializar() {
         try {
             // Inicializar controlador y modelo
             recetaController = new RecetaController(
@@ -32,23 +32,20 @@ public class HistoricoRecetas {
                 )
             );
             recetaTableModel = new RecetaTableModel();
-            
             // Configurar tabla
             TablaHistorico.setModel(recetaTableModel);
             TablaHistorico.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            
-            // Configurar scroll pane
             MainScroller.setViewportView(TablaHistorico);
             
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, 
-                "Error al inicializar el histórico de recetas: " + e.getMessage(), 
+                "Error " + e.getMessage(),
                 "Error", 
                 JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void loadData() {
+    private void CargarDatos() {
         try {
             if (recetaController != null) {
                 List<Receta> recetas = recetaController.leerTodos();
@@ -62,12 +59,6 @@ public class HistoricoRecetas {
         }
     }
 
-    public JPanel getMainPanel() { 
-        return MainPanel; 
-    }
-    
-    // Método para refrescar los datos
-    public void refreshData() {
-        loadData();
-    }
+    public JPanel getMainPanel() { return MainPanel; }
+
 }

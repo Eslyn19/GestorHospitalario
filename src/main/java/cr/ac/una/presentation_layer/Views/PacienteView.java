@@ -10,7 +10,6 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -38,7 +37,6 @@ public class PacienteView extends JFrame{
     private JTable TablaMedicos;
     private JScrollPane JSrollPane;
     private JTextField BuscarIDTF;
-    // BuscarBTN eliminado
     private JPanel BuscarMedicoPanel;
     private JPanel SpacePanel;
     private JLabel IDBuscarLabel;
@@ -72,15 +70,17 @@ public class PacienteView extends JFrame{
         TelefonoTF.setPreferredSize(new Dimension(20, 25));
         BuscarIDTF.setPreferredSize(new Dimension(20, 25));
 
+        setContentPane(PanelBase);
+        ImageIcon icon = new ImageIcon(getClass().getResource("/Paciente.png"));
+        setIconImage(icon.getImage());
+        setLocationRelativeTo(null);
+        setTitle("Pacientes");
+        setSize(850, 600);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        // Solo mostrar como ventana si showAsWindow es true
         if (showAsWindow) {
-            setContentPane(PanelBase);
-            ImageIcon icon = new ImageIcon(getClass().getResource("/Paciente.png"));
-            setIconImage(icon.getImage());
-            setLocationRelativeTo(null);
-            setTitle("Pacientes");
-            setSize(850, 600);
-            setLocationRelativeTo(null);
-            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setVisible(true);
         }
     }
@@ -99,8 +99,6 @@ public class PacienteView extends JFrame{
         EliminarBTN.addActionListener(e -> onDelete());
         LimpiarBTN.addActionListener(e -> onClear());
         TablaMedicos.getSelectionModel().addListSelectionListener(this::onTableSelection);
-
-        // Búsqueda en tiempo real: filtra mientras se escribe por ID
         BuscarIDTF.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
@@ -170,7 +168,6 @@ public class PacienteView extends JFrame{
         }
     }
 
-    // Limpiar campos
     private void onClear(){
         ID_textfield.setText("");
         nombreTF.setText("");
@@ -181,7 +178,7 @@ public class PacienteView extends JFrame{
         try {
             pacienteTableModel.setRows(pacienteController.leerTodos());
         } catch (Exception ex) {
-            // ignorar
+            ex.printStackTrace();
         }
     }
 
@@ -229,7 +226,7 @@ public class PacienteView extends JFrame{
             }
             pacienteTableModel.setRows(filtered);
         } catch (Exception ex) {
-            showError("Error en búsqueda: " + ex.getMessage(), ex);
+            ex.printStackTrace();
         }
     }
 

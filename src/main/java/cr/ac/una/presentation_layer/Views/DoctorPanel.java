@@ -21,72 +21,51 @@ public class DoctorPanel extends JFrame {
 
     public DoctorPanel(String nombreDoctor) {
         this.nombreDoctor = nombreDoctor;
-        setResizable(false);
-        initializeComponents();
-        setupUI();
-    }
 
-    private void initializeComponents() {
-        // Iniciar la clase de recetas para confección
         RecetaService recetaService = new RecetaService(FileManagement.getRecetaFileStore("recetas.xml"));
         RecetaController recetaController = new RecetaController(recetaService);
         RecetaTableModel recetaModel = new RecetaTableModel();
         recetaService.addObserver(recetaModel);
 
-        // Iniciar la clase de prescripciones individuales
         PrescripcionService prescripcionService = new PrescripcionService(FileManagement.getPrescripcionFileStore("prescripciones.xml"));
         PrescripcionController prescripcionController = new PrescripcionController(prescripcionService);
         PrescripcionTableModel prescripcionModel = new PrescripcionTableModel();
         prescripcionService.addObserver(prescripcionModel);
 
-        // Crear la vista de prescripciones (confección de recetas)
         Prescripcion confeccionRecetasView = new Prescripcion(recetaController, recetaModel, nombreDoctor);
-
-        // Crear la vista de Banner
         Banner bannerView = new Banner(this);
-        
-        // Crear la vista de Histórico de Recetas
         HistoricoRecetas historicoRecetasView = new HistoricoRecetas();
 
-        // Configurar el TabbedPane con iconos
         PanelTabs = new JTabbedPane();
 
         // Cargar iconos
-        ImageIcon prescripcionIcon = null, bannerIcon = null, historicoIcon = null;
-        try { prescripcionIcon = new ImageIcon(getClass().getResource("/Prescripcion.png")); } catch (Exception ignore) {}
-        try { bannerIcon = new ImageIcon(getClass().getResource("/Banner.png")); } catch (Exception ignore) {}
-        try { historicoIcon = new ImageIcon(getClass().getResource("/Historial.png")); } catch (Exception ignore) {}
+        ImageIcon prescripcionIcon = new ImageIcon(getClass().getResource("/Prescripcion.png"));
+        ImageIcon bannerIcon = new ImageIcon(getClass().getResource("/Banner.png"));
+        ImageIcon historicoIcon = new ImageIcon(getClass().getResource("/Historial.png"));
 
-        ImageIcon prescripcionIconScaled = (prescripcionIcon != null && prescripcionIcon.getImage() != null)
-                ? new ImageIcon(prescripcionIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
-                : null;
-        ImageIcon bannerIconScaled = (bannerIcon != null && bannerIcon.getImage() != null)
-                ? new ImageIcon(bannerIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
-                : null;
-        ImageIcon historicoIconScaled = (historicoIcon != null && historicoIcon.getImage() != null)
-                ? new ImageIcon(historicoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
-                : null;
+        ImageIcon prescripcionResize = new ImageIcon(prescripcionIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
+        ImageIcon bannerResize = new ImageIcon(bannerIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
+        ImageIcon historicoResize = new ImageIcon(historicoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
 
         // Agregar pestañas
-        PanelTabs.addTab("Inicio", bannerIconScaled, bannerView.getPanel(), "Página de inicio del sistema");
-        PanelTabs.addTab("Prescripciones", prescripcionIconScaled, confeccionRecetasView.getMainPanel(), "Confección de recetas médicas");
-        PanelTabs.addTab("Histórico Recetas", historicoIconScaled, historicoRecetasView.getMainPanel(), "Histórico de recetas médicas");
+        PanelTabs.addTab("Inicio", bannerResize, bannerView.getPanel(), "Página de inicio del sistema");
+        PanelTabs.addTab("Prescripciones", prescripcionResize, confeccionRecetasView.getMainPanel(), "Confección de recetas médicas");
+        PanelTabs.addTab("Histórico Recetas", historicoResize, historicoRecetasView.getMainPanel(), "Histórico de recetas médicas");
 
         // Configurar el panel base
         PanelBase = new JPanel();
         PanelBase.setLayout(new BorderLayout());
         PanelBase.add(PanelTabs, BorderLayout.CENTER);
-    }
 
-    private void setupUI() {
-        // Configure main window
-        setTitle("Sistema de Gestión Hospitalaria - Doctor: " + nombreDoctor);
+        setTitle("Sistema de Gestión Hospitalaria - " + nombreDoctor + " - (MED)");
         setSize(1000, 700);
         setLocationRelativeTo(null);
+        ImageIcon icon = new ImageIcon(getClass().getResource("/Doctor.png"));
+        setIconImage(icon.getImage());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         setContentPane(PanelBase);
         setVisible(true);
+        setResizable(false);
     }
 
     public JPanel getPanelBase() {
