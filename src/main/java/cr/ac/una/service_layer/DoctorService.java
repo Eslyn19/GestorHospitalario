@@ -17,9 +17,15 @@ public class DoctorService implements IService<Doctor>{
 
     @Override
     public void agregar(Doctor entity) {
-        List<Doctor> clientes = fileStore.readAll();
-        clientes.add(entity);
-        fileStore.writeAll(clientes);
+        List<Doctor> doctores = fileStore.readAll();
+        
+        boolean existeId = doctores.stream().anyMatch(d -> d.getID() == entity.getID());
+        if (existeId) {
+            throw new IllegalArgumentException("Ya existe un doctor con el ID: " + entity.getID());
+        }
+        
+        doctores.add(entity);
+        fileStore.writeAll(doctores);
         notifyObservers(ChangeType.CREATED, entity);
     }
 
@@ -37,6 +43,12 @@ public class DoctorService implements IService<Doctor>{
     @Override
     public void actualizar(Doctor entity) {
         List<Doctor> doctores = fileStore.readAll();
+        
+        boolean doctorExiste = doctores.stream().anyMatch(d -> d.getID() == entity.getID());
+        if (!doctorExiste) {
+            throw new IllegalArgumentException("No existe un doctor con el ID: " + entity.getID());
+        }
+        
         for (int i = 0; i < doctores.size(); i++) {
             if (doctores.get(i).getID() == entity.getID()) {
                 doctores.set(i, entity);

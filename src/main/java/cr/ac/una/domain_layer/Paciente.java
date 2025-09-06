@@ -24,12 +24,12 @@ public class Paciente {
     // Constructores
     public Paciente() {}
     
-    public Paciente(int ID, String nombre, String apellido, String fechaNacimiento, String telefono) {
-        this.ID = ID;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.fechaNacimiento = fechaNacimiento;
-        this.telefono = telefono;
+    public Paciente(int _id, String _nombre, String _apellido, String _FN, String _telefono) {
+        this.ID = _id;
+        this.nombre = _nombre;
+        this.apellido = _apellido;
+        this.fechaNacimiento = _FN;
+        this.telefono = _telefono;
     }
 
     // Getters y Setters

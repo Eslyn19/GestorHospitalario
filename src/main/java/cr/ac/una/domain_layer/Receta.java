@@ -11,7 +11,6 @@ import cr.ac.una.utilities.LocalDateAdapter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @XmlRootElement(name = "receta")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -19,11 +18,14 @@ public class Receta {
     private String id;
     private String paciente;
     private String medico;
+
     @XmlElementWrapper(name = "prescripciones")
     @XmlElement(name = "prescripcion")
     private List<PrescripcionMedicamento> prescripciones;
+
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
     private LocalDate fechaConfeccion;
+
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
     private LocalDate fechaRetiro;
     private String estado;
@@ -46,7 +48,6 @@ public class Receta {
     public String getId() {
         return id;
     }
-
     public void setId(String id) {
         this.id = id;
     }
@@ -54,7 +55,6 @@ public class Receta {
     public String getPaciente() {
         return paciente;
     }
-
     public void setPaciente(String paciente) {
         this.paciente = paciente;
     }
@@ -62,7 +62,6 @@ public class Receta {
     public String getMedico() {
         return medico;
     }
-
     public void setMedico(String medico) {
         this.medico = medico;
     }
@@ -70,7 +69,6 @@ public class Receta {
     public List<PrescripcionMedicamento> getPrescripciones() {
         return prescripciones;
     }
-
     public void setPrescripciones(List<PrescripcionMedicamento> prescripciones) {
         this.prescripciones = prescripciones != null ? prescripciones : new ArrayList<>();
     }
@@ -78,7 +76,6 @@ public class Receta {
     public LocalDate getFechaConfeccion() {
         return fechaConfeccion;
     }
-
     public void setFechaConfeccion(LocalDate fechaConfeccion) {
         this.fechaConfeccion = fechaConfeccion;
     }
@@ -86,18 +83,12 @@ public class Receta {
     public LocalDate getFechaRetiro() {
         return fechaRetiro;
     }
-
     public void setFechaRetiro(LocalDate fechaRetiro) {
         this.fechaRetiro = fechaRetiro;
     }
 
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
 
     public void agregarPrescripcion(PrescripcionMedicamento prescripcion) {
         if (prescripcion != null) {

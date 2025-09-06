@@ -18,6 +18,12 @@ public class MedicamentoService implements IService<Medicamento> {
     @Override
     public void agregar(Medicamento entity) {
         List<Medicamento> medicamentos = medicamentoFileStore.readAll();
+        
+        boolean existeCodigo = medicamentos.stream().anyMatch(m -> m.getCodigo().equals(entity.getCodigo()));
+        if (existeCodigo) {
+            throw new IllegalArgumentException("Ya existe un medicamento con el código: " + entity.getCodigo());
+        }
+        
         medicamentos.add(entity);
         medicamentoFileStore.writeAll(medicamentos);
         notifyObservers(ChangeType.CREATED, entity);
@@ -53,6 +59,12 @@ public class MedicamentoService implements IService<Medicamento> {
     @Override
     public void actualizar(Medicamento entity) {
         List<Medicamento> medicamentos = medicamentoFileStore.readAll();
+        
+        boolean medicamentoExiste = medicamentos.stream().anyMatch(m -> m.getCodigo().equals(entity.getCodigo()));
+        if (!medicamentoExiste) {
+            throw new IllegalArgumentException("No existe un medicamento con el código: " + entity.getCodigo());
+        }
+        
         for (int i = 0; i < medicamentos.size(); i++) {
             if (medicamentos.get(i).getCodigo().equals(entity.getCodigo())) {
                 medicamentos.set(i, entity);

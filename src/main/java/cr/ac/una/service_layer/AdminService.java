@@ -2,7 +2,6 @@ package cr.ac.una.service_layer;
 
 import cr.ac.una.data_access_layer.AdminFileStore;
 import cr.ac.una.domain_layer.Admin;
-import cr.ac.una.domain_layer.Doctor;
 import cr.ac.una.utilities.ChangeType;
 
 import java.util.ArrayList;

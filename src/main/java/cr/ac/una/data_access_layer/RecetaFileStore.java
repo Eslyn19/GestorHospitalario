@@ -79,7 +79,6 @@ public class RecetaFileStore implements IFileStore<Receta> {
             xw.close();
         } catch (Exception ex) {
             ex.printStackTrace();
-            // Si hay error, crear un archivo limpio
             try {
                 xmlFile.delete();
                 ensureFile();

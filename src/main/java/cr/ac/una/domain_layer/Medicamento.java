@@ -21,35 +21,21 @@ public class Medicamento {
         presentacion = "";
     }
 
-    public Medicamento(String codigo, String nombreMedic, String presentacion) {
-        this.codigo = codigo;
-        this.nombreMedic = nombreMedic;
-        this.presentacion = presentacion;
+    public Medicamento(String _codigo, String _nombreMedic, String _presentacion) {
+        this.codigo = _codigo;
+        this.nombreMedic = _nombreMedic;
+        this.presentacion = _presentacion;
     }
 
-    public String getCodigo() {
-        return codigo;
-    }
+    // Setters & getters
+    public String getCodigo() { return codigo; }
+    public void setCodigo(String codigo) { this.codigo = codigo; }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
+    public String getNombreMedic() { return nombreMedic; }
+    public void setNombreMedic(String nombreMedic) { this.nombreMedic = nombreMedic; }
 
-    public String getNombreMedic() {
-        return nombreMedic;
-    }
-
-    public void setNombreMedic(String nombreMedic) {
-        this.nombreMedic = nombreMedic;
-    }
-
-    public String getPresentacion() {
-        return presentacion;
-    }
-
-    public void setPresentacion(String presentacion) {
-        this.presentacion = presentacion;
-    }
+    public String getPresentacion() { return presentacion; }
+    public void setPresentacion(String presentacion) { this.presentacion = presentacion; }
 
     @Override
     public boolean equals(Object o) {

@@ -18,6 +18,17 @@ public class PacienteService implements IService<Paciente> {
     @Override
     public void agregar(Paciente entity) {
         List<Paciente> pacientes = pacienteFileStore.readAll();
+        
+        boolean existeId = pacientes.stream().anyMatch(p -> p.getID() == entity.getID());
+        if (existeId) {
+            throw new IllegalArgumentException("Ya existe un paciente con el ID: " + entity.getID());
+        }
+        
+        boolean existeTelefono = pacientes.stream().anyMatch(p -> p.getTelefono().equals(entity.getTelefono()));
+        if (existeTelefono) {
+            throw new IllegalArgumentException("Ya existe un paciente con el teléfono: " + entity.getTelefono());
+        }
+        
         pacientes.add(entity);
         pacienteFileStore.writeAll(pacientes);
         notifyObservers(ChangeType.CREATED, entity);
@@ -37,6 +48,18 @@ public class PacienteService implements IService<Paciente> {
     @Override
     public void actualizar(Paciente entity) {
         List<Paciente> pacientes = pacienteFileStore.readAll();
+        
+        boolean pacienteExiste = pacientes.stream().anyMatch(p -> p.getID() == entity.getID());
+        if (!pacienteExiste) {
+            throw new IllegalArgumentException("No existe un paciente con el ID: " + entity.getID());
+        }
+        
+        boolean existeTelefonoEnOtro = pacientes.stream()
+            .anyMatch(p -> p.getID() != entity.getID() && p.getTelefono().equals(entity.getTelefono()));
+        if (existeTelefonoEnOtro) {
+            throw new IllegalArgumentException("Ya existe otro paciente con el teléfono: " + entity.getTelefono());
+        }
+        
         for (int i = 0; i < pacientes.size(); i++) {
             if (pacientes.get(i).getID() == entity.getID()) {
                 pacientes.set(i, entity);

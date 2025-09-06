@@ -13,19 +13,23 @@ public class PrescripcionMedicamento {
     private String duracion;
 
     public PrescripcionMedicamento() {
+        medicamento = "";
+        cantidad = 0;
+        indicaciones = "";
+        duracion = "";
     }
 
-    public PrescripcionMedicamento(String medicamento, int cantidad, String indicaciones, String duracion) {
-        this.medicamento = medicamento;
-        this.cantidad = cantidad;
-        this.indicaciones = indicaciones;
-        this.duracion = duracion;
+    public PrescripcionMedicamento(String _medicamento, int _cantidad, String _indicaciones, String _duracion) {
+        this.medicamento = _medicamento;
+        this.cantidad = _cantidad;
+        this.indicaciones = _indicaciones;
+        this.duracion = _duracion;
     }
 
+    // Setters & getters
     public String getMedicamento() {
         return medicamento;
     }
-
     public void setMedicamento(String medicamento) {
         this.medicamento = medicamento;
     }
@@ -33,7 +37,6 @@ public class PrescripcionMedicamento {
     public int getCantidad() {
         return cantidad;
     }
-
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
@@ -41,7 +44,6 @@ public class PrescripcionMedicamento {
     public String getIndicaciones() {
         return indicaciones;
     }
-
     public void setIndicaciones(String indicaciones) {
         this.indicaciones = indicaciones;
     }
@@ -49,7 +51,6 @@ public class PrescripcionMedicamento {
     public String getDuracion() {
         return duracion;
     }
-
     public void setDuracion(String duracion) {
         this.duracion = duracion;
     }

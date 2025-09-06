@@ -19,6 +19,12 @@ public class FarmaceutaService implements IService<Farmaceuta>{
     @Override
     public void agregar(Farmaceuta entity) {
         List<Farmaceuta> farmaceutas = farmaceutafileStore.readAll();
+        
+        boolean existeId = farmaceutas.stream().anyMatch(f -> f.getID() == entity.getID());
+        if (existeId) {
+            throw new IllegalArgumentException("Ya existe un farmaceuta con el ID: " + entity.getID());
+        }
+        
         farmaceutas.add(entity);
         farmaceutafileStore.writeAll(farmaceutas);
         notifyObservers(ChangeType.CREATED, entity);
@@ -38,6 +44,12 @@ public class FarmaceutaService implements IService<Farmaceuta>{
     @Override
     public void actualizar(Farmaceuta entity) {
         List<Farmaceuta> farmaceutas = farmaceutafileStore.readAll();
+        
+        boolean farmaceutaExiste = farmaceutas.stream().anyMatch(f -> f.getID() == entity.getID());
+        if (!farmaceutaExiste) {
+            throw new IllegalArgumentException("No existe un farmaceuta con el ID: " + entity.getID());
+        }
+        
         for (int i = 0; i < farmaceutas.size(); i++) {
             if (farmaceutas.get(i).getID() == entity.getID()) {
                 farmaceutas.set(i, entity);
