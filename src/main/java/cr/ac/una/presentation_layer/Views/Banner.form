@@ -39,7 +39,7 @@
             <properties>
               <background color="-1"/>
               <focusable value="false"/>
-              <foreground color="-8057344"/>
+              <foreground color="-13947600"/>
               <icon value="logOut.png"/>
               <text value="Cerrar Seccion"/>
             </properties>
@@ -52,7 +52,7 @@
         </constraints>
         <properties>
           <font name="Kristen ITC" size="28" style="2"/>
-          <foreground color="-16775535"/>
+          <foreground color="-13947600"/>
           <text value=" Sistema Hospitalario "/>
         </properties>
       </component>

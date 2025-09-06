@@ -143,10 +143,9 @@ public class Registro extends JFrame {
             if (autenticado) {
                 // Obtener el nombre del farmacéutico
                 String nombreFarmaceuta = farmaceutaController.obtenerNombreFarmaceuta(id);
-                // Por ahora, los farmacéuticos también van al PanelDoctor
-                // TODO: Crear PanelFarmaceutico específico si es necesario
-                DoctorPanel panelDoctor = new DoctorPanel(nombreFarmaceuta);
-                panelDoctor.setVisible(true);
+                // Abrir el panel específico para farmacéuticos
+                FarmaceutasPanel panelFarmaceutas = new FarmaceutasPanel(nombreFarmaceuta);
+                panelFarmaceutas.setVisible(true);
                 this.dispose(); // Cerrar ventana de login
             } else {
                 JOptionPane.showMessageDialog(this,
