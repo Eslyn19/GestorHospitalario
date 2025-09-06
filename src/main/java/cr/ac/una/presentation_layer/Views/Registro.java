@@ -3,15 +3,9 @@ package cr.ac.una.presentation_layer.Views;
 import cr.ac.una.presentation_layer.Controller.AdminController;
 import cr.ac.una.presentation_layer.Controller.DoctorController;
 import cr.ac.una.presentation_layer.Controller.FarmaceutaController;
-import cr.ac.una.service_layer.AdminService;
-import cr.ac.una.service_layer.DoctorService;
-import cr.ac.una.service_layer.FarmaceutaService;
-import cr.ac.una.utilities.FileManagement;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class Registro extends JFrame {
     private JPanel MainPanel;
@@ -126,7 +120,7 @@ public class Registro extends JFrame {
             if (autenticado) {
                 // Obtener el nombre del doctor
                 String nombreDoctor = doctorController.obtenerNombreDoctor(id);
-                PanelDoctor panelDoctor = new PanelDoctor(nombreDoctor);
+                DoctorPanel panelDoctor = new DoctorPanel(nombreDoctor);
                 panelDoctor.setVisible(true);
                 this.dispose(); // Cerrar ventana de login
             } else {
@@ -151,7 +145,7 @@ public class Registro extends JFrame {
                 String nombreFarmaceuta = farmaceutaController.obtenerNombreFarmaceuta(id);
                 // Por ahora, los farmacéuticos también van al PanelDoctor
                 // TODO: Crear PanelFarmaceutico específico si es necesario
-                PanelDoctor panelDoctor = new PanelDoctor(nombreFarmaceuta);
+                DoctorPanel panelDoctor = new DoctorPanel(nombreFarmaceuta);
                 panelDoctor.setVisible(true);
                 this.dispose(); // Cerrar ventana de login
             } else {
