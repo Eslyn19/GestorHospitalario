@@ -46,14 +46,18 @@ public class PanelDoctor extends JFrame {
 
         // Crear la vista de Banner
         Banner bannerView = new Banner(this);
+        
+        // Crear la vista de Histórico de Recetas
+        HistoricoRecetas historicoRecetasView = new HistoricoRecetas();
 
         // Configurar el TabbedPane con iconos
         PanelTabs = new JTabbedPane();
 
         // Cargar iconos
-        ImageIcon doctorIcon = null, prescripcionIcon = null, confeccionIcon = null, bannerIcon = null;
+        ImageIcon doctorIcon = null, prescripcionIcon = null, confeccionIcon = null, bannerIcon = null, historicoIcon = null;
         try { prescripcionIcon = new ImageIcon(getClass().getResource("/Prescripcion.png")); } catch (Exception ignore) {}
         try { bannerIcon = new ImageIcon(getClass().getResource("/Banner.png")); } catch (Exception ignore) {}
+        try { historicoIcon = new ImageIcon(getClass().getResource("/Historial.png")); } catch (Exception ignore) {}
 
         ImageIcon prescripcionIconScaled = (prescripcionIcon != null && prescripcionIcon.getImage() != null)
                 ? new ImageIcon(prescripcionIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
@@ -61,10 +65,14 @@ public class PanelDoctor extends JFrame {
         ImageIcon bannerIconScaled = (bannerIcon != null && bannerIcon.getImage() != null)
                 ? new ImageIcon(bannerIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
                 : null;
+        ImageIcon historicoIconScaled = (historicoIcon != null && historicoIcon.getImage() != null)
+                ? new ImageIcon(historicoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
+                : null;
 
         // Agregar pestañas
         PanelTabs.addTab("Inicio", bannerIconScaled, bannerView.getPanel(), "Página de inicio del sistema");
         PanelTabs.addTab("Prescripciones", prescripcionIconScaled, confeccionRecetasView.getMainPanel(), "Confección de recetas médicas");
+        PanelTabs.addTab("Histórico Recetas", historicoIconScaled, historicoRecetasView.getMainPanel(), "Histórico de recetas médicas");
 
         // Configurar el panel base
         PanelBase = new JPanel();
