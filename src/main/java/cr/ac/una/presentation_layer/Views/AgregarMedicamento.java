@@ -9,6 +9,8 @@ import cr.ac.una.data_access_layer.MedicamentoFileStore;
 import cr.ac.una.utilities.AgregarMedicamentoDialog;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
 import java.io.File;
 import java.util.List;
 
@@ -26,6 +28,8 @@ public class AgregarMedicamento extends JFrame {
     private JPanel IndicacionesPanel;
     private JLabel IndicacionesLabel;
     private JButton AceptarBTN;
+    private JPanel PanelTabla;
+    private JButton VolverBTN;
     private JScrollPane Scroller;
     
     private MedicamentoController medicamentoController;
@@ -38,6 +42,7 @@ public class AgregarMedicamento extends JFrame {
         setupUI();
         setupEventListeners();
         cargarMedicamentos();
+        configurarPaneles();
     }
     
     public AgregarMedicamento(JDialog parentDialog) {
@@ -45,6 +50,7 @@ public class AgregarMedicamento extends JFrame {
         setupUI();
         setupEventListeners();
         cargarMedicamentos();
+        configurarPaneles();
     }
     
     public void setParentDialog(JDialog parentDialog) {
@@ -64,8 +70,8 @@ public class AgregarMedicamento extends JFrame {
         setContentPane(MainPanel);
         
         TablaMedicamentos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        CantidadSpinner.setModel(new SpinnerNumberModel(1, 1, 999, 1));
-        DiasSpinner.setModel(new SpinnerNumberModel(1, 1, 365, 1));
+        CantidadSpinner.setModel(new SpinnerNumberModel(1, 1, 10, 1));
+        DiasSpinner.setModel(new SpinnerNumberModel(1, 1, 30, 1));
         IndicacionesTF.setColumns(20);
 
         try {
@@ -80,6 +86,15 @@ public class AgregarMedicamento extends JFrame {
     private void setupEventListeners() {
         // Botón Aceptar
         AceptarBTN.addActionListener(e -> agregarMedicamento());
+        
+        // Botón Volver
+        VolverBTN.addActionListener(e -> {
+            if (parentDialog != null) {
+                parentDialog.dispose();
+            } else {
+                dispose();
+            }
+        });
         
         // Doble clic en la tabla para agregar medicamento
         TablaMedicamentos.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -172,5 +187,29 @@ public class AgregarMedicamento extends JFrame {
 
     public PrescripcionMedicamento getPrescripcionMedicamento() {
         return prescripcionMedicamento;
+    }
+
+    private void configurarPaneles() {
+        Color colorBorde = new Color(255,255,255);
+        Color colorTitulo = new Color(255,255,255);   // Gris más oscuro para el título
+        configurarPanel(PanelInfo, "Información del Medicamento", colorBorde, 
+                       new Font("Arial", Font.BOLD, 14), colorTitulo);
+        
+        Color colorBorde2 = new Color(0,2,92);
+        configurarPanel(PanelTabla, "Tabla de Medicamentos", colorBorde2,
+                       new Font("Arial", Font.BOLD, 14), colorBorde2);
+    }
+    
+    private void configurarPanel(JPanel panel, String titulo, Color bordeColor, Font fuente, Color tituloColor) {
+        panel.setBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createLineBorder(bordeColor, 2),
+                        titulo,
+                        TitledBorder.LEFT,
+                        TitledBorder.TOP,
+                        fuente,
+                        tituloColor
+                )
+        );
     }
 }

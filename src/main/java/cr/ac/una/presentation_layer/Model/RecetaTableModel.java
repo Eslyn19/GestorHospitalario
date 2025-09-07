@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RecetaTableModel extends AbstractTableModel implements IServiceObserver<Receta> {
-    private final String[] cols = {"ID", "Paciente", "Médico", "Fecha Confección", "Fecha Retiro", "Estado", "Prescripciones"};
+    private final String[] cols = {"Receta ID", "Paciente", "Médico", "Fecha Confección", "Fecha Retiro", "Estado", "Prescripciones"};
     private final Class<?>[] types = { String.class, String.class, String.class, String.class, String.class, String.class, Integer.class};
     private final List<Receta> rows = new ArrayList<>();
 

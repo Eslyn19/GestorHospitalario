@@ -42,7 +42,7 @@
               <focusable value="true"/>
               <font name="Bell MT" size="16" style="0"/>
               <foreground color="-16777216"/>
-              <icon value="Reject.png"/>
+              <icon value="Volver.png"/>
               <requestFocusEnabled value="true"/>
               <text value="Regresar"/>
             </properties>

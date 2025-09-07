@@ -47,3 +47,4 @@ public class AgregarMedicamentoDialog extends JDialog {
         return medicamentoAgregado;
     }
 }
+

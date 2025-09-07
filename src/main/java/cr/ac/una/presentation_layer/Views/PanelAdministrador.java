@@ -86,7 +86,7 @@ public class PanelAdministrador extends JFrame {
         PanelBase.add(PanelTabs, java.awt.BorderLayout.CENTER);
 
         setTitle("Sistema de Gestión Hospitalaria (ADM)");
-        setSize(900, 700);
+        setSize(900, 710);
         ImageIcon icon = new ImageIcon(getClass().getResource("/Admin.png"));
         setIconImage(icon.getImage());
         setLocationRelativeTo(null);

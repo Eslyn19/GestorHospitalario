@@ -10,7 +10,6 @@ public class Banner extends JPanel{
     private JLabel FondoLabel;
     private JLabel TituloLabel;
     private JButton LogOutBTN;
-    private JPanel BotonPanel;
     private JFrame parentWindow;
 
     public JPanel getPanel() { return PanelBase; }

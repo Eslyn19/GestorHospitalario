@@ -58,7 +58,7 @@ public class DoctorPanel extends JFrame {
         PanelBase.add(PanelTabs, BorderLayout.CENTER);
 
         setTitle("Sistema de Gestión Hospitalaria - " + nombreDoctor + " - (MED)");
-        setSize(1000, 700);
+        setSize(1000, 710);
         setLocationRelativeTo(null);
         ImageIcon icon = new ImageIcon(getClass().getResource("/Doctor.png"));
         setIconImage(icon.getImage());
