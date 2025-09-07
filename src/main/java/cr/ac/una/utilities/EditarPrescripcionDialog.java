@@ -26,7 +26,6 @@ public class EditarPrescripcionDialog extends JDialog {
         setLocationRelativeTo(getParent());
         setLayout(new BorderLayout());
 
-        // Panel de campos
         JPanel camposPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -66,7 +65,6 @@ public class EditarPrescripcionDialog extends JDialog {
 
         add(camposPanel, BorderLayout.CENTER);
 
-        // Panel de botones
         JPanel botonesPanel = new JPanel(new FlowLayout());
         guardarBTN = new JButton("Guardar");
         cancelarBTN = new JButton("Cancelar");
@@ -74,7 +72,6 @@ public class EditarPrescripcionDialog extends JDialog {
         botonesPanel.add(cancelarBTN);
         add(botonesPanel, BorderLayout.SOUTH);
 
-        // Event listeners
         guardarBTN.addActionListener(e -> guardarEdicion());
         cancelarBTN.addActionListener(e -> dispose());
     }
@@ -92,7 +89,6 @@ public class EditarPrescripcionDialog extends JDialog {
             return;
         }
 
-        // Crear prescripción editada manteniendo el medicamento original
         prescripcionEditada = new PrescripcionMedicamento(
             prescripcionOriginal.getMedicamento(), 
             cantidad, 

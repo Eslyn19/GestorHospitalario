@@ -28,14 +28,6 @@ public class PrescripcionController {
         return prescripcionService.leerTodos();
     }
 
-    public PrescripcionMedicamento leerPorMedicamento(String medicamento) {
-        return prescripcionService.leerPorMedicamento(medicamento);
-    }
-
-    public List<PrescripcionMedicamento> buscarPorIndicaciones(String indicaciones) {
-        return prescripcionService.leerPorIndicaciones(indicaciones);
-    }
-
     public void addObserver(cr.ac.una.service_layer.IServiceObserver<PrescripcionMedicamento> observer) {
         prescripcionService.addObserver(observer);
     }

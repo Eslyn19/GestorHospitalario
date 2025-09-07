@@ -43,10 +43,6 @@ public class MedicamentoView extends JFrame{
     private MedicamentoController medicamentoController;
     private MedicamentoTableModel medicamentoTableModel;
 
-    public MedicamentoView(MedicamentoController medicamentoController, MedicamentoTableModel medicamentoTableModel, List<Medicamento> datos) {
-        this(medicamentoController, medicamentoTableModel, datos, true);
-    }
-
     public MedicamentoView(MedicamentoController medicamentoController, MedicamentoTableModel medicamentoTableModel, List<Medicamento> datos, boolean showAsWindow) {
         this.medicamentoController = medicamentoController;
         this.medicamentoTableModel = medicamentoTableModel;
@@ -72,15 +68,9 @@ public class MedicamentoView extends JFrame{
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        // Solo mostrar como ventana si showAsWindow es true
         if (showAsWindow) {
             setVisible(true);
         }
-    }
-
-    public static JPanel createMedicamentoPanel(MedicamentoController medicamentoController, MedicamentoTableModel tableModel, List<Medicamento> medicamentos) {
-        MedicamentoView medicamentoView = new MedicamentoView(medicamentoController, tableModel, medicamentos, false);
-        return medicamentoView.getPanelBase();
     }
 
     public JPanel getPanelBase() { return PanelBase; }
@@ -160,7 +150,6 @@ public class MedicamentoView extends JFrame{
         }
     }
 
-    // Limpiar campos
     private void onClear(){
         codigoTF.setText("");
         nombreTF.setText("");

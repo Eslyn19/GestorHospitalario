@@ -4,6 +4,7 @@ import cr.ac.una.domain_layer.PrescripcionMedicamento;
 import cr.ac.una.domain_layer.Receta;
 import cr.ac.una.presentation_layer.Controller.RecetaController;
 import cr.ac.una.presentation_layer.Model.RecetaTableModel;
+import cr.ac.una.utilities.PrescripcionDialog;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -62,9 +63,9 @@ public class RecetaView extends JFrame{
         this.prescripcionesTemporales = new ArrayList<>();
         
         initializeComponents();
-        setupUI();
+        ConfigurarComponentes();
         setupEventListeners();
-        loadData(datos);
+        CargarData(datos);
         
         if (isVisible) {
             setVisible(true);
@@ -72,29 +73,26 @@ public class RecetaView extends JFrame{
     }
 
     private void initializeComponents() {
-        // Configurar lista de prescripciones
         prescripcionesList = new JList<>();
         prescripcionesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         prescripcionesScrollPane = new JScrollPane(prescripcionesList);
         
-        // Configurar tabla
         TablaRecetas = new JTable(recetaTableModel);
         TablaRecetas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane = new JScrollPane(TablaRecetas);
         
-        // Configurar botones
         AgregarPrescripcionBTN.setPreferredSize(new Dimension(150, 30));
         EliminarPrescripcionBTN.setPreferredSize(new Dimension(150, 30));
         ConfeccionarRecetaBTN.setPreferredSize(new Dimension(150, 30));
         LimpiarBTN.setPreferredSize(new Dimension(100, 30));
         ActualizarBTN.setPreferredSize(new Dimension(100, 30));
         
-        // Configurar fecha de retiro (por defecto, 7 días después)
+        // Configurar fecha de retiro  dias despues
         LocalDate fechaRetiro = LocalDate.now().plusDays(7);
         fechaRetiroTF.setText(fechaRetiro.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
     }
 
-    private void setupUI() {
+    private void ConfigurarComponentes() {
         setContentPane(PanelBase);
         setTitle("Confección de Recetas Médicas");
         setSize(1200, 700);
@@ -119,29 +117,16 @@ public class RecetaView extends JFrame{
     }
 
     private void setupEventListeners() {
-        // Botón Agregar Prescripción
         AgregarPrescripcionBTN.addActionListener(e -> abrirDialogoPrescripcion());
-        
-        // Botón Eliminar Prescripción
         EliminarPrescripcionBTN.addActionListener(e -> eliminarPrescripcionSeleccionada());
-        
-        // Botón Confeccionar Receta
         ConfeccionarRecetaBTN.addActionListener(e -> confeccionarReceta());
-        
-        // Botón Limpiar
         LimpiarBTN.addActionListener(e -> limpiarCampos());
-        
-        // Botón Actualizar
         ActualizarBTN.addActionListener(e -> actualizarTabla());
-        
-        // Selección en tabla
         TablaRecetas.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 cargarRecetaSeleccionada();
             }
         });
-        
-        // Búsqueda en tiempo real
         BuscarTF.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
@@ -150,7 +135,7 @@ public class RecetaView extends JFrame{
         });
     }
 
-    private void loadData(List<Receta> datos) {
+    private void CargarData(List<Receta> datos) {
         recetaTableModel.setRows(datos);
     }
 
@@ -307,104 +292,5 @@ public class RecetaView extends JFrame{
 
     public JPanel getPanelBase() {
         return PanelBase;
-    }
-
-    // Clase interna para el diálogo de prescripción
-    private class PrescripcionDialog extends JDialog {
-        private JTextField medicamentoTF;
-        private JSpinner cantidadSpinner;
-        private JTextArea indicacionesTA;
-        private JTextField duracionTF;
-        private JButton agregarBTN;
-        private JButton cancelarBTN;
-        private PrescripcionMedicamento prescripcion;
-        private boolean prescripcionAgregada = false;
-
-        public PrescripcionDialog(JFrame parent) {
-            super(parent, "Agregar Prescripción", true);
-            initializeDialog();
-        }
-
-        private void initializeDialog() {
-            setSize(400, 300);
-            setLocationRelativeTo(getParent());
-            setLayout(new BorderLayout());
-
-            // Panel de campos
-            JPanel camposPanel = new JPanel(new GridBagLayout());
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.insets = new Insets(5, 5, 5, 5);
-
-            // Medicamento
-            gbc.gridx = 0; gbc.gridy = 0; gbc.anchor = GridBagConstraints.WEST;
-            camposPanel.add(new JLabel("Medicamento:"), gbc);
-            gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-            medicamentoTF = new JTextField(20);
-            camposPanel.add(medicamentoTF, gbc);
-
-            // Cantidad
-            gbc.gridx = 0; gbc.gridy = 1; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
-            camposPanel.add(new JLabel("Cantidad:"), gbc);
-            gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-            cantidadSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 999, 1));
-            camposPanel.add(cantidadSpinner, gbc);
-
-            // Indicaciones
-            gbc.gridx = 0; gbc.gridy = 2; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
-            camposPanel.add(new JLabel("Indicaciones:"), gbc);
-            gbc.gridx = 1; gbc.fill = GridBagConstraints.BOTH; gbc.weightx = 1.0; gbc.weighty = 1.0;
-            indicacionesTA = new JTextArea(3, 20);
-            indicacionesTA.setLineWrap(true);
-            indicacionesTA.setWrapStyleWord(true);
-            camposPanel.add(new JScrollPane(indicacionesTA), gbc);
-
-            // Duración
-            gbc.gridx = 0; gbc.gridy = 3; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0; gbc.weighty = 0;
-            camposPanel.add(new JLabel("Duración (días):"), gbc);
-            gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-            duracionTF = new JTextField(20);
-            camposPanel.add(duracionTF, gbc);
-
-            add(camposPanel, BorderLayout.CENTER);
-
-            // Panel de botones
-            JPanel botonesPanel = new JPanel(new FlowLayout());
-            agregarBTN = new JButton("Agregar");
-            cancelarBTN = new JButton("Cancelar");
-            botonesPanel.add(agregarBTN);
-            botonesPanel.add(cancelarBTN);
-            add(botonesPanel, BorderLayout.SOUTH);
-
-            // Event listeners
-            agregarBTN.addActionListener(e -> agregarPrescripcion());
-            cancelarBTN.addActionListener(e -> dispose());
-        }
-
-        private void agregarPrescripcion() {
-            String medicamento = medicamentoTF.getText().trim();
-            int cantidad = (Integer) cantidadSpinner.getValue();
-            String indicaciones = indicacionesTA.getText().trim();
-            String duracion = duracionTF.getText().trim();
-
-            if (medicamento.isEmpty() || indicaciones.isEmpty() || duracion.isEmpty()) {
-                JOptionPane.showMessageDialog(this, 
-                    "Por favor complete todos los campos", 
-                    "Campos incompletos", 
-                    JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            prescripcion = new PrescripcionMedicamento(medicamento, cantidad, indicaciones, duracion);
-            prescripcionAgregada = true;
-            dispose();
-        }
-
-        public PrescripcionMedicamento getPrescripcion() {
-            return prescripcion;
-        }
-
-        public boolean isPrescripcionAgregada() {
-            return prescripcionAgregada;
-        }
     }
 }

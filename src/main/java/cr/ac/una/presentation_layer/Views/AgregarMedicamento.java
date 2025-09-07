@@ -39,16 +39,16 @@ public class AgregarMedicamento extends JFrame {
     private JDialog parentDialog;
 
     public AgregarMedicamento() {
-        setupUI();
-        setupEventListeners();
+        ConfigurarVentana();
+        Listeners();
         cargarMedicamentos();
         configurarPaneles();
     }
     
     public AgregarMedicamento(JDialog parentDialog) {
         this.parentDialog = parentDialog;
-        setupUI();
-        setupEventListeners();
+        ConfigurarVentana();
+        Listeners();
         cargarMedicamentos();
         configurarPaneles();
     }
@@ -61,7 +61,7 @@ public class AgregarMedicamento extends JFrame {
         this.dialogCallback = dialogCallback;
     }
 
-    private void setupUI() {
+    private void ConfigurarVentana(){
         setTitle("Agregar Medicamento");
         setSize(800, 600);
         setLocationRelativeTo(null);
@@ -74,29 +74,16 @@ public class AgregarMedicamento extends JFrame {
         DiasSpinner.setModel(new SpinnerNumberModel(1, 1, 30, 1));
         IndicacionesTF.setColumns(20);
 
-        try {
-            medicamentoController = new MedicamentoController(new MedicamentoService(new MedicamentoFileStore(new File("medicamentos.xml"))));
-            medicamentoTableModel = new MedicamentoTableModel();
-            TablaMedicamentos.setModel(medicamentoTableModel);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-        }
+        medicamentoController = new MedicamentoController(new MedicamentoService(new MedicamentoFileStore(new File("medicamentos.xml"))));
+        medicamentoTableModel = new MedicamentoTableModel();
+        TablaMedicamentos.setModel(medicamentoTableModel);
+
     }
 
-    private void setupEventListeners() {
-        // Botón Aceptar
+    private void Listeners() {
         AceptarBTN.addActionListener(e -> agregarMedicamento());
+        VolverBTN.addActionListener(e -> dispose());
         
-        // Botón Volver
-        VolverBTN.addActionListener(e -> {
-            if (parentDialog != null) {
-                parentDialog.dispose();
-            } else {
-                dispose();
-            }
-        });
-        
-        // Doble clic en la tabla para agregar medicamento
         TablaMedicamentos.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -133,7 +120,6 @@ public class AgregarMedicamento extends JFrame {
             return;
         }
         
-        // Validar indicaciones
         String indicaciones = IndicacionesTF.getText().trim();
         if (indicaciones.isEmpty()) {
             JOptionPane.showMessageDialog(this,
@@ -144,7 +130,6 @@ public class AgregarMedicamento extends JFrame {
             return;
         }
         
-        // Validar cantidad
         int cantidad = (Integer) CantidadSpinner.getValue();
         if (cantidad <= 0) {
             JOptionPane.showMessageDialog(this,
@@ -155,7 +140,6 @@ public class AgregarMedicamento extends JFrame {
             return;
         }
         
-        // Validar días
         int dias = (Integer) DiasSpinner.getValue();
         if (dias <= 0) {
             JOptionPane.showMessageDialog(this,
@@ -166,13 +150,12 @@ public class AgregarMedicamento extends JFrame {
             return;
         }
         
-        // Crear prescripción
         String duracion = dias + " días";
         String nombreMedicamento = medicamentoSeleccionado.getNombreMedic() + " (" + medicamentoSeleccionado.getCodigo() + ")";
         
         prescripcionMedicamento = new PrescripcionMedicamento(nombreMedicamento, cantidad, indicaciones, duracion);
         
-        // Notificar al dialog callback
+        // Llamar a la clase dialogCallBack
         if (dialogCallback != null) {
             dialogCallback.setPrescripcionMedicamento(prescripcionMedicamento);
         }
@@ -191,8 +174,9 @@ public class AgregarMedicamento extends JFrame {
 
     private void configurarPaneles() {
         Color colorBorde = new Color(255,255,255);
-        Color colorTitulo = new Color(255,255,255);   // Gris más oscuro para el título
-        configurarPanel(PanelInfo, "Información del Medicamento", colorBorde, 
+        Color colorTitulo = new Color(255,255,255);
+
+        configurarPanel(PanelInfo, "Información del Medicamento", colorBorde,
                        new Font("Arial", Font.BOLD, 14), colorTitulo);
         
         Color colorBorde2 = new Color(0,2,92);

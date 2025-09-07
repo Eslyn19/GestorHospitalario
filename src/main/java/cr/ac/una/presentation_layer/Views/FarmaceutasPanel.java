@@ -30,24 +30,16 @@ public class FarmaceutasPanel extends JFrame {
     }
 
     private void initializeComponents() {
-        // Crear la vista de Banner
-        Banner bannerView = new Banner(this);
-        
-        // Crear la vista de Histórico de Recetas
+        BannerView bannerView = new BannerView(this);
         HistoricoRecetas historicoRecetasView = new HistoricoRecetas();
-        
-        // Configurar servicios para el controlador de Despacho
         PacienteService pacienteService = new PacienteService(FileManagement.getPacientesFileStore("pacientes.xml"));
         RecetaService recetaService = new RecetaService(FileManagement.getRecetaFileStore("recetas.xml"));
         
-        // Crear el modelo y controlador de Despacho
         DespachoTableModel despachoTableModel = new DespachoTableModel();
         recetaService.addObserver(despachoTableModel);
-        
         Despacho despachoView = new Despacho();
         DespachoController despachoController = new DespachoController(despachoView, pacienteService, recetaService, despachoTableModel);
 
-        // Configurar el TabbedPane con iconos
         PanelTabs = new JTabbedPane();
 
         // Cargar iconos

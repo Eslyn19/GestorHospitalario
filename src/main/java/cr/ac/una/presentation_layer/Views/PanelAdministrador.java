@@ -52,7 +52,7 @@ public class PanelAdministrador extends JFrame {
         MedicamentoView medicamentoview = new MedicamentoView(medicamentocontroller, medicamentomodel, medicamentocontroller.leerTodos(), false);
         medicamentoservice.addObserver(medicamentomodel);
 
-        Banner bannerView = new Banner(this);
+        BannerView bannerView = new BannerView(this);
         HistoricoRecetas historicoRecetasView = new HistoricoRecetas();
 
         // Cargar imagenes

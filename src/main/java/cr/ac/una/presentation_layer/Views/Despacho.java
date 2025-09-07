@@ -34,7 +34,6 @@ public class Despacho extends JPanel {
     private JPanel LimpiarPanel;
 
     public Despacho() {
-        // Configurar bordes de los paneles principales
         Color white = new Color(0, 0, 40);
         configurarPanel(PanelBotones, "Indicadores", white, new Font("Arial", Font.BOLD, 13), Color.BLACK);
         configurarPanel(PacienteMainPanel, "Buscar Paciente", white, new Font("Arial", Font.BOLD, 13), Color.BLACK);
@@ -58,7 +57,7 @@ public class Despacho extends JPanel {
 
     public JPanel getPanel() { return MainPanel; }
     
-    // Getters para el controlador
+    // Getters & setters
     public JTextField getBuscarPacienteTF() { return BuscarPacienteTF; }
     public JComboBox getRecetasCB() { return RecetasCB; }
     public JComboBox getEstadosCB() { return EstadosCB; }

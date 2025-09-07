@@ -4,23 +4,15 @@ import com.github.lgooddatepicker.components.DatePicker;
 import cr.ac.una.domain_layer.Paciente;
 import cr.ac.una.domain_layer.PrescripcionMedicamento;
 import cr.ac.una.domain_layer.Receta;
-import cr.ac.una.domain_layer.Medicamento;
-import cr.ac.una.presentation_layer.Controller.PacienteController;
 import cr.ac.una.presentation_layer.Controller.RecetaController;
-import cr.ac.una.presentation_layer.Model.PacienteTableModel;
 import cr.ac.una.presentation_layer.Model.RecetaTableModel;
-import cr.ac.una.presentation_layer.Model.MedicamentoTableModel;
-import cr.ac.una.service_layer.MedicamentoService;
-import cr.ac.una.data_access_layer.MedicamentoFileStore;
-import cr.ac.una.utilities.PrescripcionDialog;
+import cr.ac.una.utilities.AgregarMedicamentoDialog;
 import cr.ac.una.utilities.BuscarPacienteDialog;
 import cr.ac.una.utilities.EditarPrescripcionDialog;
-import cr.ac.una.utilities.AgregarMedicamentoDialog;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +39,6 @@ public class Prescripcion extends JFrame {
     private JLabel NombrePaciente;
     private JTextField MostrarPaciente;
 
-    // Campos adicionales para la funcionalidad
     private JTextField pacienteTF;
     private JTextField medicoTF;
     private List<PrescripcionMedicamento> prescripcionesTemporales;
@@ -59,9 +50,9 @@ public class Prescripcion extends JFrame {
 
     public Prescripcion() {
         this.prescripcionesTemporales = new ArrayList<>();
-        initializeComponents();
-        setupUI();
-        setupEventListeners();
+        Init();
+        CargarComponentes();
+        Listeners();
     }
 
     public Prescripcion(RecetaController recetaController, RecetaTableModel recetaTableModel, String nombreDoctor) {
@@ -73,19 +64,15 @@ public class Prescripcion extends JFrame {
         loadData();
     }
 
-    private void initializeComponents() {
+    private void Init() {
         pacienteTF = new JTextField(20);
         medicoTF = new JTextField(20);
-        
-        // Configurar tabla
         table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        
-        // Configurar fecha de retiro por defecto (7 días después)
         LocalDate fechaRetiro = LocalDate.now().plusDays(7);
         RetiroDPicker.setDate(fechaRetiro);
     }
 
-    private void setupUI() {
+    private void CargarComponentes() {
         setContentPane(MainPanel);
         setTitle("Confección de Recetas Médicas");
         setSize(1000, 700);
@@ -109,22 +96,12 @@ public class Prescripcion extends JFrame {
         ));
     }
 
-    private void setupEventListeners() {
-        // Botón Buscar Paciente
+    private void Listeners() {
         BuscarPacBTN.addActionListener(e -> buscarPaciente());
-
-        // Botón Agregar Medicamento
         AgregarMedBTN.addActionListener(e -> abrirDialogoPrescripcion());
-        
-        // Botón Guardar (Confeccionar Receta)
         GuardarBTN.addActionListener(e -> confeccionarReceta());
-        
-        // Botón Editar
         EditarBTN.addActionListener(e -> editarMedicamentoSeleccionado());
-        
-        // Botón Descartar Medicamento
         DescartarMedBTN.addActionListener(e -> eliminarPrescripcionSeleccionada());
-        
     }
 
     private void loadData() {
@@ -137,7 +114,7 @@ public class Prescripcion extends JFrame {
     private void buscarPaciente() {
         try {
             // Crear un JDialog modal para seleccionar paciente
-            cr.ac.una.utilities.BuscarPacienteDialog dialog = new cr.ac.una.utilities.BuscarPacienteDialog(this);
+            BuscarPacienteDialog dialog = new BuscarPacienteDialog(this);
             dialog.setVisible(true);
             
             // Obtener el paciente seleccionado directamente
@@ -161,7 +138,7 @@ public class Prescripcion extends JFrame {
     }
 
     private void abrirDialogoPrescripcion() {
-        cr.ac.una.utilities.AgregarMedicamentoDialog dialog = new cr.ac.una.utilities.AgregarMedicamentoDialog(this);
+        AgregarMedicamentoDialog dialog = new AgregarMedicamentoDialog(this);
         dialog.setVisible(true);
         
         if (dialog.isMedicamentoAgregado()) {
@@ -176,8 +153,7 @@ public class Prescripcion extends JFrame {
         if (filaSeleccionada >= 0 && filaSeleccionada < prescripcionesTemporales.size()) {
             PrescripcionMedicamento prescripcionSeleccionada = prescripcionesTemporales.get(filaSeleccionada);
             
-            // Abrir diálogo de edición
-            cr.ac.una.utilities.EditarPrescripcionDialog dialog = new cr.ac.una.utilities.EditarPrescripcionDialog(this, prescripcionSeleccionada);
+            EditarPrescripcionDialog dialog = new EditarPrescripcionDialog(this, prescripcionSeleccionada);
             dialog.setVisible(true);
             
             if (dialog.isPrescripcionEditada()) {
@@ -284,12 +260,10 @@ public class Prescripcion extends JFrame {
         pacienteTF.setText("");
         medicoTF.setText(nombreDoctor != null ? nombreDoctor : "");
         PacienteLabel.setText("Paciente");
-        if (MostrarPaciente != null) {
-            MostrarPaciente.setText("");
-        }
-        if (NombrePaciente != null) {
-            NombrePaciente.setText("PacienteNombre");
-        }
+
+        if (MostrarPaciente != null) { MostrarPaciente.setText(""); }
+        if (NombrePaciente != null) { NombrePaciente.setText("PacienteNombre"); }
+
         LocalDate fechaRetiro = LocalDate.now().plusDays(7);
         RetiroDPicker.setDate(fechaRetiro);
         prescripcionesTemporales.clear();

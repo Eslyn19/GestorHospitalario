@@ -45,10 +45,6 @@ public class FarmaceutaView extends JFrame{
     private FarmaceutaController farmaceutaController;
     private FarmaceutaTableModel farmaceutaTableModel;
 
-    public FarmaceutaView(FarmaceutaController farmaceutaController, FarmaceutaTableModel farmaceutaTableModel, List<Farmaceuta> datos) {
-        this(farmaceutaController, farmaceutaTableModel, datos, true);
-    }
-
     public FarmaceutaView(FarmaceutaController farmaceutaController, FarmaceutaTableModel farmaceutaTableModel, List<Farmaceuta> datos, boolean showAsWindow) {
         this.farmaceutaController = farmaceutaController;
         this.farmaceutaTableModel = farmaceutaTableModel;
@@ -74,15 +70,9 @@ public class FarmaceutaView extends JFrame{
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        // Solo mostrar como ventana si showAsWindow es true
         if (showAsWindow) {
             setVisible(true);
         }
-    }
-
-    public static JPanel createFarmaceutaPanel(FarmaceutaController farmaceutaController, FarmaceutaTableModel tableModel, List<Farmaceuta> farmaceutas) {
-        FarmaceutaView farmaceutaView = new FarmaceutaView(farmaceutaController, tableModel, farmaceutas, false);
-        return farmaceutaView.getPanelBase();
     }
 
     public JPanel getPanelBase() { return PanelBase; }
@@ -93,7 +83,7 @@ public class FarmaceutaView extends JFrame{
         EliminarBTN.addActionListener(e -> onDelete());
         LimpiarBTN.addActionListener(e -> onClear());
         CambiarClaveBTN.addActionListener(e -> onCambiarClave());
-        // Búsqueda de tiempo real en tablas
+        // Busqueda de tiempo real en tablas
         BuscarIDTF.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
@@ -211,7 +201,6 @@ public class FarmaceutaView extends JFrame{
         }
     }
 
-    // Limpiar campos de palabras
     private void onClear(){
         ID_textfield.setText("");
         nombreTF.setText("");

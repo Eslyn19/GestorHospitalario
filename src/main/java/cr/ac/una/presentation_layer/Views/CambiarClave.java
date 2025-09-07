@@ -30,10 +30,6 @@ public class CambiarClave extends JFrame {
     private DoctorController doctorController;
     private FarmaceutaController farmaceutaController;
 
-    public CambiarClave(){
-        this(null, null, null);
-    }
-
     // Constructor para doctores
     public CambiarClave(Doctor doctor, DoctorController doctorController) {
         this(doctor, doctorController, null);

@@ -75,7 +75,6 @@ public class DoctorView extends JFrame{
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        // Solo mostrar como ventana si showAsWindow es true
         if (showAsWindow) {
             setVisible(true);
         }

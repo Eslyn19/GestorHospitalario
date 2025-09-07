@@ -1,11 +1,18 @@
 package cr.ac.una.presentation_layer.Views;
 
+import cr.ac.una.data_access_layer.AdminFileStore;
+import cr.ac.una.presentation_layer.Controller.AdminController;
+import cr.ac.una.presentation_layer.Controller.DoctorController;
+import cr.ac.una.presentation_layer.Controller.FarmaceutaController;
+import cr.ac.una.service_layer.AdminService;
+import cr.ac.una.service_layer.DoctorService;
+import cr.ac.una.service_layer.FarmaceutaService;
+import cr.ac.una.utilities.FileManagement;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class Banner extends JPanel{
+public class BannerView extends JPanel{
     private JPanel PanelBase;
     private JLabel FondoLabel;
     private JLabel TituloLabel;
@@ -14,12 +21,12 @@ public class Banner extends JPanel{
 
     public JPanel getPanel() { return PanelBase; }
 
-    public Banner(){
+    public BannerView(){
         LogOutBTN.setPreferredSize(new Dimension(30, 30));
         Salir();
     }
 
-    public Banner(JFrame parentWindow){
+    public BannerView(JFrame parentWindow){
         this.parentWindow = parentWindow;
         Salir();
     }
@@ -55,20 +62,20 @@ public class Banner extends JPanel{
     
     private void ControladoresConfig(Registro registro) {
         try {
-            // Configurar AdminController
-            cr.ac.una.data_access_layer.AdminFileStore adminFileStore = cr.ac.una.utilities.FileManagement.getAdminFileStore("admins.xml");
-            cr.ac.una.service_layer.AdminService adminService = new cr.ac.una.service_layer.AdminService(adminFileStore);
-            cr.ac.una.presentation_layer.Controller.AdminController adminController = new cr.ac.una.presentation_layer.Controller.AdminController(adminService);
+            // Admin
+            AdminFileStore adminFileStore = FileManagement.getAdminFileStore("admins.xml");
+            AdminService adminService = new AdminService(adminFileStore);
+            AdminController adminController = new AdminController(adminService);
             registro.setAdminController(adminController);
 
-            // Configurar DoctorController
-            cr.ac.una.service_layer.DoctorService doctorService = new cr.ac.una.service_layer.DoctorService(cr.ac.una.utilities.FileManagement.getDoctoresFileStore("doctores.xml"));
-            cr.ac.una.presentation_layer.Controller.DoctorController doctorController = new cr.ac.una.presentation_layer.Controller.DoctorController(doctorService);
+            // Doctor
+            DoctorService doctorService = new DoctorService(FileManagement.getDoctoresFileStore("doctores.xml"));
+            DoctorController doctorController = new DoctorController(doctorService);
             registro.setDoctorController(doctorController);
 
-            // Configurar FarmaceutaController
-            cr.ac.una.service_layer.FarmaceutaService farmaceutaService = new cr.ac.una.service_layer.FarmaceutaService(cr.ac.una.utilities.FileManagement.getFarmaceutasFileStore("farmaceutas.xml"));
-            cr.ac.una.presentation_layer.Controller.FarmaceutaController farmaceutaController = new cr.ac.una.presentation_layer.Controller.FarmaceutaController(farmaceutaService);
+            // Farmaceuta
+            FarmaceutaService farmaceutaService = new FarmaceutaService(FileManagement.getFarmaceutasFileStore("farmaceutas.xml"));
+            FarmaceutaController farmaceutaController = new FarmaceutaController(farmaceutaService);
             registro.setFarmaceutaController(farmaceutaController);
             
         } catch (Exception e) {

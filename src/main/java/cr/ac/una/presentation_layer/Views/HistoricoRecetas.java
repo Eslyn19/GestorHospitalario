@@ -25,12 +25,7 @@ public class HistoricoRecetas {
 
     private void Inicializar() {
         try {
-            // Inicializar controlador y modelo
-            recetaController = new RecetaController(
-                new RecetaService(
-                    new RecetaFileStore(new File("recetas.xml"))
-                )
-            );
+            recetaController = new RecetaController(new RecetaService(new RecetaFileStore(new File("recetas.xml"))));
             recetaTableModel = new RecetaTableModel();
             // Configurar tabla
             TablaHistorico.setModel(recetaTableModel);

@@ -33,7 +33,7 @@ public class DoctorPanel extends JFrame {
         prescripcionService.addObserver(prescripcionModel);
 
         Prescripcion confeccionRecetasView = new Prescripcion(recetaController, recetaModel, nombreDoctor);
-        Banner bannerView = new Banner(this);
+        BannerView bannerView = new BannerView(this);
         HistoricoRecetas historicoRecetasView = new HistoricoRecetas();
 
         PanelTabs = new JTabbedPane();

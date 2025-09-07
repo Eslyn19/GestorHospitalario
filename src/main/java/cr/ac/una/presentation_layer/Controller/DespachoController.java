@@ -19,27 +19,19 @@ public class DespachoController {
     private Receta recetaActual;
 
     public DespachoController(Despacho vista, PacienteService pacienteService, RecetaService recetaService, DespachoTableModel despachoTableModel) {
+        String[] estados = {"Confeccionada", "En proceso", "Lista", "Entregada"};
+        DefaultComboBoxModel<String> modeloEstados = new DefaultComboBoxModel<>(estados);
+        vista.getEstadosCB().setModel(modeloEstados);
+
         this.vista = vista;
         this.pacienteService = pacienteService;
         this.recetaService = recetaService;
         this.despachoTableModel = despachoTableModel;
-        configurarEventos();
-        inicializarEstados();
 
-
-    }
-
-    private void configurarEventos() {
         vista.getBuscarPacienteBTN().addActionListener(e -> buscarPaciente());
         vista.getRecetasCB().addActionListener(e -> cargarEstadoReceta());
         vista.getActualizarRecetaBTN().addActionListener(e -> actualizarEstadoReceta());
         vista.getLimpiarBTN().addActionListener(e -> limpiarFormulario());
-    }
-
-    private void inicializarEstados() {
-        String[] estados = {"Confeccionada", "En proceso", "Lista", "Entregada"};
-        DefaultComboBoxModel<String> modeloEstados = new DefaultComboBoxModel<>(estados);
-        vista.getEstadosCB().setModel(modeloEstados);
     }
 
     private void cargarEstadosDisponibles(String estadoActual) {
@@ -47,37 +39,31 @@ public class DespachoController {
         
         switch (estadoActual) {
             case "Confeccionada":
-                // Desde "Confeccionada" solo puede ir a "En proceso" (farmacéutico inicia el proceso)
                 modeloEstados.addElement("Confeccionada");
                 modeloEstados.addElement("En proceso");
                 break;
                 
             case "En proceso":
-                // Desde "En proceso" puede ir a "Lista" (farmacéutico alista medicamentos)
                 modeloEstados.addElement("En proceso");
                 modeloEstados.addElement("Lista");
                 break;
                 
             case "Lista":
-                // Desde "Lista" puede ir a "Entregada" (farmacéutico entrega medicamentos)
                 modeloEstados.addElement("Lista");
                 modeloEstados.addElement("Entregada");
                 break;
                 
             case "Entregada":
-                // "Entregada" es el estado final, no puede cambiar
                 modeloEstados.addElement("Entregada");
                 break;
                 
             default:
-                // Para estados no reconocidos, permitir todos los estados
                 modeloEstados.addElement("Confeccionada");
                 modeloEstados.addElement("En proceso");
                 modeloEstados.addElement("Lista");
                 modeloEstados.addElement("Entregada");
                 break;
         }
-        
         vista.getEstadosCB().setModel(modeloEstados);
     }
 
@@ -88,23 +74,18 @@ public class DespachoController {
         
         switch (estadoActual) {
             case "Confeccionada":
-                // Desde "Confeccionada" solo puede ir a "En proceso"
                 return "En proceso".equals(nuevoEstado);
                 
             case "En proceso":
-                // Desde "En proceso" solo puede ir a "Lista"
                 return "Lista".equals(nuevoEstado);
                 
             case "Lista":
-                // Desde "Lista" solo puede ir a "Entregada"
                 return "Entregada".equals(nuevoEstado);
                 
             case "Entregada":
-                // "Entregada" es el estado final, no puede cambiar
                 return false;
                 
             default:
-                // Para estados no reconocidos, permitir cualquier cambio
                 return true;
         }
     }
@@ -139,36 +120,30 @@ public class DespachoController {
     private void cargarRecetasPaciente() {
         if (pacienteActual == null) return;
 
-        // Buscar recetas por paciente (usando el nombre del paciente)
+        // Buscar recetas por paciente
         String nombrePaciente = pacienteActual.getNombre() + " " + pacienteActual.getApellido();
         List<Receta> recetas = recetaService.leerPorPaciente(nombrePaciente);
 
-        // Limpiar combo box de recetas
         DefaultComboBoxModel<Receta> modeloRecetas = new DefaultComboBoxModel<>();
         
         if (recetas.isEmpty()) {
             JOptionPane.showMessageDialog(vista, "El paciente no tiene recetas registradas", "Sin recetas", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            // Filtrar solo recetas "Confeccionadas" que estén dentro del rango de fechas válido
             java.time.LocalDate hoy = java.time.LocalDate.now();
             java.time.LocalDate fechaLimiteInferior = hoy.minusDays(3);
             java.time.LocalDate fechaLimiteSuperior = hoy.plusDays(3);
             
             for (Receta receta : recetas) {
-                // Solo mostrar recetas confeccionadas
                 if ("Confeccionada".equals(receta.getEstado())) {
-                    // Verificar si la receta tiene fecha de retiro válida (hoy ± 3 días)
                     if (receta.getFechaRetiro() != null) {
                         if (receta.getFechaRetiro().isAfter(fechaLimiteInferior.minusDays(1)) && 
                             receta.getFechaRetiro().isBefore(fechaLimiteSuperior.plusDays(1))) {
                             modeloRecetas.addElement(receta);
                         }
                     } else {
-                        // Si no tiene fecha de retiro, permitir procesarla
                         modeloRecetas.addElement(receta);
                     }
                 } else if ("En proceso".equals(receta.getEstado()) || "Lista".equals(receta.getEstado())) {
-                    // También mostrar recetas en proceso o listas para continuar el flujo
                     modeloRecetas.addElement(receta);
                 }
             }
@@ -198,10 +173,8 @@ public class DespachoController {
         recetaActual = recetaSeleccionada;
         String estadoActual = recetaActual.getEstado();
         
-        // Cargar estados disponibles según el estado actual (lógica lineal)
         cargarEstadosDisponibles(estadoActual);
         
-        // Seleccionar el estado actual si está disponible
         DefaultComboBoxModel<String> modeloEstados = (DefaultComboBoxModel<String>) vista.getEstadosCB().getModel();
         for (int i = 0; i < modeloEstados.getSize(); i++) {
             if (modeloEstados.getElementAt(i).equals(estadoActual)) {
@@ -210,7 +183,6 @@ public class DespachoController {
             }
         }
         
-        // Si el estado actual no está disponible, seleccionar el primero disponible
         if (modeloEstados.getSize() > 0) {
             vista.getEstadosCB().setSelectedIndex(0);
         }
@@ -229,7 +201,6 @@ public class DespachoController {
             return;
         }
 
-        // Validar que el cambio de estado sea válido según la lógica lineal
         if (!esCambioEstadoValido(recetaActual.getEstado(), nuevoEstado)) {
             JOptionPane.showMessageDialog(vista, 
                 "No se puede cambiar de '" + recetaActual.getEstado() + "' a '" + nuevoEstado + "'.\n" +
@@ -240,13 +211,10 @@ public class DespachoController {
         }
 
         try {
-            // Actualizar el estado de la receta
             recetaService.cambiarEstado(recetaActual.getId(), nuevoEstado);
             
-            // Actualizar la receta actual
             recetaActual.setEstado(nuevoEstado);
             
-            // Recargar los estados disponibles para el nuevo estado
             cargarEstadosDisponibles(nuevoEstado);
             vista.getEstadosCB().setSelectedItem(nuevoEstado);
             

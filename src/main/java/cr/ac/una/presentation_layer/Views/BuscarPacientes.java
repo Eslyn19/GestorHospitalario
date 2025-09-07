@@ -23,31 +23,27 @@ public class BuscarPacientes extends JFrame {
     private PacienteTableModel pacienteTableModel;
     private Paciente pacienteSeleccionado;
     private boolean pacienteSeleccionadoFlag = false;
-    private JDialog parentDialog; // Para referenciar al dialog padre
-    private BuscarPacienteDialog dialogCallback; // Callback para notificar al dialog
+    private JDialog parentDialog;
+    private BuscarPacienteDialog dialogCallback;
 
     public BuscarPacientes() {
-        setupUI();
-        setupEventListeners();
+        CargarComponentes();
+        Listeners();
         cargarPacientes();
     }
     
     public BuscarPacientes(JDialog parentDialog) {
         this.parentDialog = parentDialog;
-        setupUI();
-        setupEventListeners();
+        CargarComponentes();
+        Listeners();
         cargarPacientes();
-    }
-    
-    public void setParentDialog(JDialog parentDialog) {
-        this.parentDialog = parentDialog;
     }
     
     public void setDialogCallback(BuscarPacienteDialog dialogCallback) {
         this.dialogCallback = dialogCallback;
     }
 
-    private void setupUI() {
+    private void CargarComponentes() {
         setTitle("Seleccionar Paciente");
         setSize(600, 400);
         setLocationRelativeTo(null);
@@ -55,36 +51,16 @@ public class BuscarPacientes extends JFrame {
         setResizable(false);
         setContentPane(MainPanel);
         TablaPacientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        
-        // Forzar que los botones sean focusables y clickeables
-        AceptarBTN.setFocusable(true);
-        AceptarBTN.setRequestFocusEnabled(true);
-        RegresarBTN.setFocusable(true);
-        RegresarBTN.setRequestFocusEnabled(true);
 
-        try {
-            pacienteController = new PacienteController(new PacienteService(new PacienteFileStore(new File("pacientes.xml"))));
-            pacienteTableModel = new PacienteTableModel();
-            TablaPacientes.setModel(pacienteTableModel);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-        }
+        pacienteController = new PacienteController(new PacienteService(new PacienteFileStore(new File("pacientes.xml"))));
+        pacienteTableModel = new PacienteTableModel();
+        TablaPacientes.setModel(pacienteTableModel);
     }
 
-    private void setupEventListeners() {
-        AceptarBTN.addActionListener(e -> { 
-            seleccionarPaciente(); 
-        });
-        
-        RegresarBTN.addActionListener(e -> { 
-            // Si hay un dialog padre, cerrarlo; si no, cerrar esta ventana
-            if (parentDialog != null) {
-                parentDialog.dispose();
-            } else {
-                dispose();
-            }
-        });
-        
+    private void Listeners() {
+        AceptarBTN.addActionListener(e -> { seleccionarPaciente(); });
+        RegresarBTN.addActionListener(e -> dispose());
+
         TablaPacientes.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -99,33 +75,34 @@ public class BuscarPacientes extends JFrame {
         List<Paciente> pacientes = pacienteController.leerTodos();
         pacienteTableModel.setRows(pacientes);
     }
-    
+
     private void seleccionarPaciente() {
         int fila = TablaPacientes.getSelectedRow();
-        
-        if (fila >= 0) {
-            pacienteSeleccionado = pacienteTableModel.getAt(fila);
-            if (pacienteSeleccionado != null) {
-                // Notificar al dialog callback antes de cerrar
-                if (dialogCallback != null) {
-                    dialogCallback.setPacienteSeleccionado(pacienteSeleccionado);
-                }
-                // Si hay un dialog padre, cerrarlo; si no, cerrar esta ventana
-                if (parentDialog != null) {
-                    parentDialog.dispose();
-                } else {
-                    dispose();
-                }
-            }
-        } else {
+
+        if (fila < 0) {
             JOptionPane.showMessageDialog(this,
-                "Por favor seleccione un paciente",
-                "Selección requerida",
-                JOptionPane.WARNING_MESSAGE);
+                    "Por favor seleccione un paciente",
+                    "Selección requerida",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        pacienteSeleccionado = pacienteTableModel.getAt(fila);
+        if (pacienteSeleccionado == null) {
+            return;
+        }
+
+        if (dialogCallback != null) {
+            dialogCallback.setPacienteSeleccionado(pacienteSeleccionado);
+        }
+
+        if (parentDialog != null) {
+            parentDialog.dispose();
+        } else {
+            dispose();
         }
     }
 
-    public Paciente getPacienteSeleccionado() {
-        return pacienteSeleccionado;
-    }
+
+    public Paciente getPacienteSeleccionado() { return pacienteSeleccionado; }
 }

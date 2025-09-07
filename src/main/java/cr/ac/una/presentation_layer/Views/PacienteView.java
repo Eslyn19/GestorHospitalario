@@ -50,10 +50,6 @@ public class PacienteView extends JFrame{
     private PacienteController pacienteController;
     private PacienteTableModel pacienteTableModel;
 
-    public PacienteView(PacienteController pacienteController, PacienteTableModel pacienteTableModel, List<Paciente> datos) {
-        this(pacienteController, pacienteTableModel, datos, true);
-    }
-
     public PacienteView(PacienteController pacienteController, PacienteTableModel pacienteTableModel, List<Paciente> datos, boolean showAsWindow) {
         this.pacienteController = pacienteController;
         this.pacienteTableModel = pacienteTableModel;
@@ -79,13 +75,11 @@ public class PacienteView extends JFrame{
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        // Solo mostrar como ventana si showAsWindow es true
         if (showAsWindow) {
             setVisible(true);
         }
     }
 
-    // Metodo estatico para generar un panel
     public static JPanel createPacientePanel(PacienteController pacienteController, PacienteTableModel tableModel, List<Paciente> pacientes) {
         PacienteView pacienteView = new PacienteView(pacienteController, tableModel, pacientes, false);
         return pacienteView.getPanelBase();
