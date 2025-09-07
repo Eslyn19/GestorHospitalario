@@ -102,14 +102,6 @@ public class Receta {
 
     @Override
     public String toString() {
-        return "Receta{" +
-                "id='" + id + '\'' +
-                ", paciente='" + paciente + '\'' +
-                ", medico='" + medico + '\'' +
-                ", prescripciones=" + prescripciones.size() + " items" +
-                ", fechaConfeccion=" + fechaConfeccion +
-                ", fechaRetiro=" + fechaRetiro +
-                ", estado='" + estado + '\'' +
-                '}';
+        return "Receta #" + id + " - " + paciente + " (" + estado + ")";
     }
 }
