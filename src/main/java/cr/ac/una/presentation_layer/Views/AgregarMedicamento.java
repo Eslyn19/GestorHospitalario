@@ -53,9 +53,9 @@ public class AgregarMedicamento extends JFrame {
         setupEventListeners();
         cargarMedicamentos();
 
-        CantidadSpinner.setSize(new Dimension(200, 30));
-        IndicacionesTF.setSize(new Dimension(400, 50));
-        DiasPanel.setPreferredSize(new Dimension(200, 30));
+        CantidadSpinner.setPreferredSize(new Dimension(10, 20));
+        IndicacionesTF.setPreferredSize(new Dimension(350, 35));
+        DiasSpinner.setPreferredSize(new Dimension(10, 20));
         Color color = new Color(255, 255, 255);
         configurarPanel(PanelInfo, "Descripcion medicamentos", color, new Font("Arial", Font.BOLD, 13), Color.WHITE);
     }
@@ -81,7 +81,13 @@ public class AgregarMedicamento extends JFrame {
 
     private void setupEventListeners() {
         AceptarBTN.addActionListener(e -> agregarMedicamento());
-        VolverBTN.addActionListener(e -> dispose());
+        VolverBTN.addActionListener(e -> {
+            if (parentDialog != null) {
+                parentDialog.dispose();
+            } else {
+                dispose();
+            }
+        });
 
         // Doble clic en la tabla para agregar medicamento
         TablaMedicamentos.addMouseListener(new java.awt.event.MouseAdapter() {

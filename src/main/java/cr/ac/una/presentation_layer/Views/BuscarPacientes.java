@@ -59,7 +59,13 @@ public class BuscarPacientes extends JFrame {
 
     private void Listeners() {
         AceptarBTN.addActionListener(e -> { seleccionarPaciente(); });
-        RegresarBTN.addActionListener(e -> dispose());
+        RegresarBTN.addActionListener(e -> {
+            if (parentDialog != null) {
+                parentDialog.dispose();
+            } else {
+                dispose();
+            }
+        });
 
         TablaPacientes.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
