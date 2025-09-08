@@ -2,8 +2,10 @@ package cr.ac.una.presentation_layer.Views;
 
 import javax.swing.*;
 
-public class DoctorPanel {
+public class GraficoPastel {
+    private JTable TablaEstado;
     private JPanel MainPanel;
-    private JTable TablaDoctorPanel;
+    private JPanel PanelMedicamentos;
     private JScrollPane Scroller;
+    private JPanel GraficoPastel;
 }
