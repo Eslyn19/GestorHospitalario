@@ -30,13 +30,13 @@ public class GraficoPastel {
     private ChartPanel chartPanel;
     
     public GraficoPastel() {
-        initializeServices();
-        setupTable();
-        setupChart();
-        loadData();
+        IniciarServicio();
+        ConfigTabla();
+        CrearGrafico();
+        CargarData();
     }
     
-    private void initializeServices() {
+    private void IniciarServicio() {
         try {
             recetaService = new RecetaService(FileManagement.getRecetaFileStore("recetas.xml"));
             recetaController = new RecetaController(recetaService);
@@ -46,7 +46,7 @@ public class GraficoPastel {
         }
     }
     
-    private void setupTable() {
+    private void ConfigTabla() {
         // Configurar el modelo de tabla
         String[] columnNames = {"Estado", "Cantidad", "Porcentaje"};
         tableModel = new DefaultTableModel(columnNames, 0) {
@@ -59,14 +59,14 @@ public class GraficoPastel {
         TablaEstado.setModel(tableModel);
         TablaEstado.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         TablaEstado.getTableHeader().setReorderingAllowed(false);
-        
-        // Configurar el ancho de las columnas
+
+        // Ancho de tablas
         TablaEstado.getColumnModel().getColumn(0).setPreferredWidth(150);
         TablaEstado.getColumnModel().getColumn(1).setPreferredWidth(80);
         TablaEstado.getColumnModel().getColumn(2).setPreferredWidth(80);
     }
     
-    private void setupChart() {
+    private void CrearGrafico() {
         // Crear el gráfico de pastel inicial
         DefaultPieDataset dataset = new DefaultPieDataset();
         dataset.setValue("Sin datos", 1);
@@ -82,13 +82,13 @@ public class GraficoPastel {
         // Personalizar el gráfico
         PiePlot plot = (PiePlot) chart.getPlot();
         plot.setSectionPaint((Comparable) "Sin datos", Color.LIGHT_GRAY);
-        plot.setLabelFont(new Font("Arial", Font.PLAIN, 10));
+        plot.setLabelFont(new Font("Bell MT", Font.PLAIN, 10));
         
         chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new Dimension(400, 300));
         chartPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
-        // Limpiar el panel y agregar el gráfico
+        // Limpiar el panel y agregar el grafico
         GraficoPastel.removeAll();
         GraficoPastel.setLayout(new BorderLayout());
         GraficoPastel.add(chartPanel, BorderLayout.CENTER);
@@ -96,7 +96,7 @@ public class GraficoPastel {
         GraficoPastel.repaint();
     }
     
-    private void loadData() {
+    private void CargarData() {
         try {
             List<Receta> recetas = recetaController.leerTodos();
             Map<String, Integer> estadoCount = new HashMap<>();
@@ -113,17 +113,16 @@ public class GraficoPastel {
             // Limpiar la tabla
             tableModel.setRowCount(0);
             
-            // Crear dataset para el gráfico
+            // Crear dataset para el grafico
             DefaultPieDataset dataset = new DefaultPieDataset();
             
             int totalRecetas = recetas.size();
             
             if (totalRecetas == 0) {
-                // Si no hay recetas, mostrar mensaje
                 tableModel.addRow(new Object[]{"Sin datos", 0, "0%"});
                 dataset.setValue("Sin datos", 1);
             } else {
-                // Agregar datos a la tabla y al gráfico
+                // Agregar datos
                 for (Map.Entry<String, Integer> entry : estadoCount.entrySet()) {
                     String estado = entry.getKey();
                     int cantidad = entry.getValue();
@@ -139,8 +138,7 @@ public class GraficoPastel {
                 }
             }
             
-            // Actualizar el gráfico
-            updateChart(dataset);
+            ActualizarGrafico(dataset);
             
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al cargar datos: " + e.getMessage(), 
@@ -148,18 +146,18 @@ public class GraficoPastel {
         }
     }
     
-    private void updateChart(DefaultPieDataset dataset) {
+    private void ActualizarGrafico(DefaultPieDataset dataset) {
         JFreeChart chart = ChartFactory.createPieChart(
             "Distribución de Recetas por Estado",
             dataset,
-            true, // legend
-            true, // tooltips
-            false // urls
+            true,
+            true,
+            false
         );
         
-        // Personalizar colores del gráfico
-        PiePlot plot = (PiePlot) chart.getPlot();
-        plot.setLabelFont(new Font("Arial", Font.PLAIN, 10));
+        // Estilo del grafico
+        PiePlot pie = (PiePlot) chart.getPlot();
+        pie.setLabelFont(new Font("Bell MT", Font.PLAIN, 10));
         
         // Asignar colores específicos para cada estado
         Color[] colors = {
@@ -167,28 +165,19 @@ public class GraficoPastel {
             new Color(192, 80, 77),    // Rojo para En proceso
             new Color(155, 187, 89),   // Verde para Lista
             new Color(128, 100, 162),  // Morado para Entregada
-            new Color(247, 150, 70),   // Naranja para Retirada
-            new Color(149, 179, 215),  // Azul claro para otros
-            new Color(211, 211, 211)   // Gris para Sin estado
         };
         
-        int colorIndex = 0;
+        int iColor = 0;
         for (Object key : dataset.getKeys()) {
-            if (colorIndex < colors.length) {
-                plot.setSectionPaint((Comparable) key, colors[colorIndex]);
-                colorIndex++;
+            if (iColor < colors.length) {
+                pie.setSectionPaint((Comparable) key, colors[iColor]);
+                iColor++;
             }
         }
         
-        // Actualizar el panel del gráfico
+        // Actualizar
         chartPanel.setChart(chart);
     }
     
-    public void refreshData() {
-        loadData();
-    }
-    
-    public JPanel getMainPanel() {
-        return MainPanel;
-    }
+    public JPanel getMainPanel() { return MainPanel; }
 }
