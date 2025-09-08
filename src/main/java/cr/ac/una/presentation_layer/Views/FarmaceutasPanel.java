@@ -32,6 +32,7 @@ public class FarmaceutasPanel extends JFrame {
     private void initializeComponents() {
         BannerView bannerView = new BannerView(this);
         HistoricoRecetas historicoRecetasView = new HistoricoRecetas();
+        GraficoPastel graficoPastelView = new GraficoPastel();
         PacienteService pacienteService = new PacienteService(FileManagement.getPacientesFileStore("pacientes.xml"));
         RecetaService recetaService = new RecetaService(FileManagement.getRecetaFileStore("recetas.xml"));
         
@@ -43,10 +44,11 @@ public class FarmaceutasPanel extends JFrame {
         PanelTabs = new JTabbedPane();
 
         // Cargar iconos
-        ImageIcon bannerIcon = null, historicoIcon = null, despachoIcon = null;
+        ImageIcon bannerIcon = null, historicoIcon = null, despachoIcon = null, graficoIcon = null;
         try { bannerIcon = new ImageIcon(getClass().getResource("/Banner.png")); } catch (Exception ignore) {}
         try { historicoIcon = new ImageIcon(getClass().getResource("/Historial.png")); } catch (Exception ignore) {}
         try { despachoIcon = new ImageIcon(getClass().getResource("/Despacho.png")); } catch (Exception ignore) {}
+        try { graficoIcon = new ImageIcon(getClass().getResource("/Dashboard.png")); } catch (Exception ignore) {}
 
         ImageIcon bannerIconScaled = (bannerIcon != null && bannerIcon.getImage() != null)
                 ? new ImageIcon(bannerIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
@@ -57,11 +59,15 @@ public class FarmaceutasPanel extends JFrame {
         ImageIcon despachoIconScaled = (despachoIcon != null && despachoIcon.getImage() != null)
                 ? new ImageIcon(despachoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
                 : null;
+        ImageIcon graficoIconScaled = (graficoIcon != null && graficoIcon.getImage() != null)
+                ? new ImageIcon(graficoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
+                : null;
 
         // Agregar pestañas
         PanelTabs.addTab("Inicio", bannerIconScaled, bannerView.getPanel(), "Página de inicio del sistema");
         PanelTabs.addTab("Despacho", despachoIconScaled, despachoView.getPanel(), "Despacho de recetas");
         PanelTabs.addTab("Histórico Recetas", historicoIconScaled, historicoRecetasView.getMainPanel(), "Histórico de recetas médicas");
+        PanelTabs.addTab("Gráficos", graficoIconScaled, graficoPastelView.getMainPanel(), "Gráficos de estadísticas de recetas");
 
         // Configurar el panel base
         PanelBase = new JPanel();

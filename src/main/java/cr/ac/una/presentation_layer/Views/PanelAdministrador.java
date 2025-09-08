@@ -54,6 +54,7 @@ public class PanelAdministrador extends JFrame {
 
         BannerView bannerView = new BannerView(this);
         HistoricoRecetas historicoRecetasView = new HistoricoRecetas();
+        GraficoPastel graficoPastelView = new GraficoPastel();
 
         // Cargar imagenes
         ImageIcon doctorIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Doctores.png")));
@@ -62,6 +63,7 @@ public class PanelAdministrador extends JFrame {
         ImageIcon medicamentoIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/medicamentos.png")));
         ImageIcon bannerIcon = new ImageIcon(getClass().getResource("/Banner.png"));
         ImageIcon historicoIcon = new ImageIcon(getClass().getResource("/Historial.png"));
+        ImageIcon graficoIcon = new ImageIcon(getClass().getResource("/Dashboard.png"));
 
         // Configurar imagenes con nuevo resize
         ImageIcon doctorResize = new ImageIcon(doctorIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
@@ -70,6 +72,7 @@ public class PanelAdministrador extends JFrame {
         ImageIcon medicamentoResize = new ImageIcon(medicamentoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
         ImageIcon bannerResize = new ImageIcon(bannerIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
         ImageIcon historicoResize = new ImageIcon(historicoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
+        ImageIcon graficoResize = new ImageIcon(graficoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
 
         PanelTabs = new JTabbedPane();
 
@@ -80,6 +83,7 @@ public class PanelAdministrador extends JFrame {
         PanelTabs.addTab("Pacientes", pacienteResize, pacienteview.getPanelBase(), "Pacientes");
         PanelTabs.addTab("Medicamentos", medicamentoResize, medicamentoview.getPanelBase(), "Medicamentos");
         PanelTabs.addTab("Histórico Recetas", historicoResize, historicoRecetasView.getMainPanel(), "Histórico de recetas médicas");
+        PanelTabs.addTab("Gráficos", graficoResize, graficoPastelView.getMainPanel(), "Gráficos de estadísticas de recetas");
 
         PanelBase = new JPanel();
         PanelBase.setLayout(new java.awt.BorderLayout());
