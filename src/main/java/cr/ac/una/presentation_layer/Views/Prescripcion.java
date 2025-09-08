@@ -8,7 +8,6 @@ import cr.ac.una.presentation_layer.Controller.RecetaController;
 import cr.ac.una.presentation_layer.Model.RecetaTableModel;
 import cr.ac.una.utilities.AgregarMedicamentoDialog;
 import cr.ac.una.utilities.BuscarPacienteDialog;
-import cr.ac.una.utilities.EditarPrescripcionDialog;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -80,7 +79,6 @@ public class Prescripcion extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
 
-        // Configurar bordes
         ControlPanel.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(Color.GRAY),
                 "Controles de Receta",
@@ -100,7 +98,6 @@ public class Prescripcion extends JFrame {
         BuscarPacBTN.addActionListener(e -> buscarPaciente());
         AgregarMedBTN.addActionListener(e -> abrirDialogoPrescripcion());
         GuardarBTN.addActionListener(e -> confeccionarReceta());
-        EditarBTN.addActionListener(e -> editarMedicamentoSeleccionado());
         DescartarMedBTN.addActionListener(e -> eliminarPrescripcionSeleccionada());
     }
 
@@ -145,27 +142,6 @@ public class Prescripcion extends JFrame {
             PrescripcionMedicamento prescripcion = dialog.getPrescripcionMedicamento();
             prescripcionesTemporales.add(prescripcion);
             actualizarTablaPrescripciones();
-        }
-    }
-
-    private void editarMedicamentoSeleccionado() {
-        int filaSeleccionada = table1.getSelectedRow();
-        if (filaSeleccionada >= 0 && filaSeleccionada < prescripcionesTemporales.size()) {
-            PrescripcionMedicamento prescripcionSeleccionada = prescripcionesTemporales.get(filaSeleccionada);
-
-            EditarPrescripcionDialog dialog = new EditarPrescripcionDialog(this, prescripcionSeleccionada);
-            dialog.setVisible(true);
-
-            if (dialog.isPrescripcionEditada()) {
-                PrescripcionMedicamento prescripcionEditada = dialog.getPrescripcionEditada();
-                prescripcionesTemporales.set(filaSeleccionada, prescripcionEditada);
-                actualizarTablaPrescripciones();
-            }
-        } else {
-            JOptionPane.showMessageDialog(this,
-                    "Por favor seleccione una prescripción para editar",
-                    "Selección requerida",
-                    JOptionPane.WARNING_MESSAGE);
         }
     }
 
