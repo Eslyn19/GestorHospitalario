@@ -69,13 +69,13 @@ public class BannerView extends JPanel{
             registro.setAdminController(adminController);
 
             // Doctor
-            DoctorService doctorService = new DoctorService(FileManagement.getDoctoresFileStore("doctores.xml"));
+            DoctorService doctorService = new cr.ac.una.service_layer.DoctorService(cr.ac.una.utilities.FileManagement.getDoctoresFileStore("doctores.xml"));
             DoctorController doctorController = new DoctorController(doctorService);
             registro.setDoctorController(doctorController);
 
             // Farmaceuta
-            FarmaceutaService farmaceutaService = new FarmaceutaService(FileManagement.getFarmaceutasFileStore("farmaceutas.xml"));
-            FarmaceutaController farmaceutaController = new FarmaceutaController(farmaceutaService);
+            FarmaceutaService farmaceutaService = new cr.ac.una.service_layer.FarmaceutaService(cr.ac.una.utilities.FileManagement.getFarmaceutasFileStore("farmaceutas.xml"));
+            FarmaceutaController farmaceutaController = new cr.ac.una.presentation_layer.Controller.FarmaceutaController(farmaceutaService);
             registro.setFarmaceutaController(farmaceutaController);
             
         } catch (Exception e) {

@@ -1,1 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?><medicamentos><medicamento codigo="A11" nombreMedic="paracetamol" presentacion="jengibre"></medicamento></medicamentos>
+<?xml version="1.0" encoding="UTF-8"?><medicamentos><medicamento codigo="PAR111" nombreMedic="Paracetamol" presentacion="Capsulas"></medicamento><medicamento codigo="ACET22" nombreMedic="Acetaminofen" presentacion="Pildoras"></medicamento><medicamento codigo="VAL202" nombreMedic="Clonazepam" presentacion="Jarabe"></medicamento></medicamentos>

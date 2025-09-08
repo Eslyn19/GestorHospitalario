@@ -28,40 +28,42 @@ public class AgregarMedicamento extends JFrame {
     private JPanel IndicacionesPanel;
     private JLabel IndicacionesLabel;
     private JButton AceptarBTN;
-    private JPanel PanelTabla;
-    private JButton VolverBTN;
     private JScrollPane Scroller;
-    
+    private JPanel PanelTablaMedicamentos;
+    private JButton VolverBTN;
+    private JPanel PanelBotones;
+
     private MedicamentoController medicamentoController;
     private MedicamentoTableModel medicamentoTableModel;
     private PrescripcionMedicamento prescripcionMedicamento;
     private AgregarMedicamentoDialog dialogCallback;
     private JDialog parentDialog;
 
-    public AgregarMedicamento() {
-        ConfigurarVentana();
-        Listeners();
-        cargarMedicamentos();
-        configurarPaneles();
-    }
-    
     public AgregarMedicamento(JDialog parentDialog) {
         this.parentDialog = parentDialog;
-        ConfigurarVentana();
-        Listeners();
+        setContentPane(MainPanel);  // ya está inicializado por $$$setupUI$$$
+        setTitle("Agregar Medicamento");
+        setSize(800, 600);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setResizable(false);
+
+        setupEventListeners();
         cargarMedicamentos();
-        configurarPaneles();
+
+        CantidadSpinner.setSize(new Dimension(200, 30));
+        IndicacionesTF.setSize(new Dimension(400, 50));
+        DiasPanel.setPreferredSize(new Dimension(200, 30));
+        Color color = new Color(255, 255, 255);
+        configurarPanel(IndicacionesPanel, "Descripcion medicamentos", color, new Font("Arial", Font.BOLD, 13), Color.WHITE);
     }
-    
-    public void setParentDialog(JDialog parentDialog) {
-        this.parentDialog = parentDialog;
-    }
-    
+
+
     public void setDialogCallback(AgregarMedicamentoDialog dialogCallback) {
         this.dialogCallback = dialogCallback;
     }
 
-    private void ConfigurarVentana(){
+    private void setupUI() {
         setTitle("Agregar Medicamento");
         setSize(800, 600);
         setLocationRelativeTo(null);
@@ -70,20 +72,24 @@ public class AgregarMedicamento extends JFrame {
         setContentPane(MainPanel);
         
         TablaMedicamentos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        CantidadSpinner.setModel(new SpinnerNumberModel(1, 1, 10, 1));
-        DiasSpinner.setModel(new SpinnerNumberModel(1, 1, 30, 1));
+        CantidadSpinner.setModel(new SpinnerNumberModel(1, 1, 999, 1));
+        DiasSpinner.setModel(new SpinnerNumberModel(1, 1, 365, 1));
         IndicacionesTF.setColumns(20);
 
-        medicamentoController = new MedicamentoController(new MedicamentoService(new MedicamentoFileStore(new File("medicamentos.xml"))));
-        medicamentoTableModel = new MedicamentoTableModel();
-        TablaMedicamentos.setModel(medicamentoTableModel);
-
+        try {
+            medicamentoController = new MedicamentoController(new MedicamentoService(new MedicamentoFileStore(new File("medicamentos.xml"))));
+            medicamentoTableModel = new MedicamentoTableModel();
+            TablaMedicamentos.setModel(medicamentoTableModel);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
     }
 
-    private void Listeners() {
+    private void setupEventListeners() {
         AceptarBTN.addActionListener(e -> agregarMedicamento());
         VolverBTN.addActionListener(e -> dispose());
-        
+
+        // Doble clic en la tabla para agregar medicamento
         TablaMedicamentos.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -120,6 +126,7 @@ public class AgregarMedicamento extends JFrame {
             return;
         }
         
+        // Validar indicaciones
         String indicaciones = IndicacionesTF.getText().trim();
         if (indicaciones.isEmpty()) {
             JOptionPane.showMessageDialog(this,
@@ -130,6 +137,7 @@ public class AgregarMedicamento extends JFrame {
             return;
         }
         
+        // Validar cantidad
         int cantidad = (Integer) CantidadSpinner.getValue();
         if (cantidad <= 0) {
             JOptionPane.showMessageDialog(this,
@@ -140,6 +148,7 @@ public class AgregarMedicamento extends JFrame {
             return;
         }
         
+        // Validar días
         int dias = (Integer) DiasSpinner.getValue();
         if (dias <= 0) {
             JOptionPane.showMessageDialog(this,
@@ -150,12 +159,13 @@ public class AgregarMedicamento extends JFrame {
             return;
         }
         
+        // Crear prescripción
         String duracion = dias + " días";
         String nombreMedicamento = medicamentoSeleccionado.getNombreMedic() + " (" + medicamentoSeleccionado.getCodigo() + ")";
         
         prescripcionMedicamento = new PrescripcionMedicamento(nombreMedicamento, cantidad, indicaciones, duracion);
         
-        // Llamar a la clase dialogCallBack
+        // Notificar al dialog callback
         if (dialogCallback != null) {
             dialogCallback.setPrescripcionMedicamento(prescripcionMedicamento);
         }
@@ -172,22 +182,10 @@ public class AgregarMedicamento extends JFrame {
         return prescripcionMedicamento;
     }
 
-    private void configurarPaneles() {
-        Color colorBorde = new Color(255,255,255);
-        Color colorTitulo = new Color(255,255,255);
-
-        configurarPanel(PanelInfo, "Información del Medicamento", colorBorde,
-                       new Font("Arial", Font.BOLD, 14), colorTitulo);
-        
-        Color colorBorde2 = new Color(0,2,92);
-        configurarPanel(PanelTabla, "Tabla de Medicamentos", colorBorde2,
-                       new Font("Arial", Font.BOLD, 14), colorBorde2);
-    }
-    
     private void configurarPanel(JPanel panel, String titulo, Color bordeColor, Font fuente, Color tituloColor) {
         panel.setBorder(
                 BorderFactory.createTitledBorder(
-                        BorderFactory.createLineBorder(bordeColor, 2),
+                        BorderFactory.createLineBorder(bordeColor, 1),
                         titulo,
                         TitledBorder.LEFT,
                         TitledBorder.TOP,
@@ -195,5 +193,9 @@ public class AgregarMedicamento extends JFrame {
                         tituloColor
                 )
         );
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
     }
 }

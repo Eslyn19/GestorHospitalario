@@ -1,7 +1,6 @@
 package cr.ac.una.presentation_layer.Controller;
 
 import cr.ac.una.domain_layer.Receta;
-import cr.ac.una.service_layer.IServiceObserver;
 import cr.ac.una.service_layer.RecetaService;
 
 import java.time.LocalDate;
@@ -40,7 +39,7 @@ public class RecetaController {
         recetaService.agregar(receta);
     }
 
-    public void addObserver(IServiceObserver<Receta> observer) {
+    public void addObserver(cr.ac.una.service_layer.IServiceObserver<Receta> observer) {
         recetaService.addObserver(observer);
     }
 }

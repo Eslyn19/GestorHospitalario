@@ -82,17 +82,17 @@ public class Prescripcion extends JFrame {
 
         // Configurar bordes
         ControlPanel.setBorder(BorderFactory.createTitledBorder(
-            BorderFactory.createLineBorder(Color.GRAY), 
-            "Controles de Receta", 
-            TitledBorder.LEFT, 
-            TitledBorder.TOP
+                BorderFactory.createLineBorder(Color.GRAY),
+                "Controles de Receta",
+                TitledBorder.LEFT,
+                TitledBorder.TOP
         ));
-        
+
         ContenedorPanel.setBorder(BorderFactory.createTitledBorder(
-            BorderFactory.createLineBorder(Color.GRAY), 
-            "Datos de la Receta", 
-            TitledBorder.LEFT, 
-            TitledBorder.TOP
+                BorderFactory.createLineBorder(Color.GRAY),
+                "Datos de la Receta",
+                TitledBorder.LEFT,
+                TitledBorder.TOP
         ));
     }
 
@@ -116,31 +116,31 @@ public class Prescripcion extends JFrame {
             // Crear un JDialog modal para seleccionar paciente
             BuscarPacienteDialog dialog = new BuscarPacienteDialog(this);
             dialog.setVisible(true);
-            
+
             // Obtener el paciente seleccionado directamente
             Paciente paciente = dialog.getPacienteSeleccionado();
             if (paciente != null) {
                 // Actualizar el campo de texto del paciente
                 String nombreCompleto = paciente.getNombre() + " " + paciente.getApellido();
                 pacienteTF.setText(nombreCompleto);
-                
+
                 // Actualizar el label NombrePaciente con el nombre del paciente
                 if (NombrePaciente != null) {
                     NombrePaciente.setText(nombreCompleto);
                 }
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, 
-                "Error al buscar paciente: " + ex.getMessage(), 
-                "Error", 
-                JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "Error al buscar paciente: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void abrirDialogoPrescripcion() {
         AgregarMedicamentoDialog dialog = new AgregarMedicamentoDialog(this);
         dialog.setVisible(true);
-        
+
         if (dialog.isMedicamentoAgregado()) {
             PrescripcionMedicamento prescripcion = dialog.getPrescripcionMedicamento();
             prescripcionesTemporales.add(prescripcion);
@@ -152,20 +152,20 @@ public class Prescripcion extends JFrame {
         int filaSeleccionada = table1.getSelectedRow();
         if (filaSeleccionada >= 0 && filaSeleccionada < prescripcionesTemporales.size()) {
             PrescripcionMedicamento prescripcionSeleccionada = prescripcionesTemporales.get(filaSeleccionada);
-            
+
             EditarPrescripcionDialog dialog = new EditarPrescripcionDialog(this, prescripcionSeleccionada);
             dialog.setVisible(true);
-            
+
             if (dialog.isPrescripcionEditada()) {
                 PrescripcionMedicamento prescripcionEditada = dialog.getPrescripcionEditada();
                 prescripcionesTemporales.set(filaSeleccionada, prescripcionEditada);
                 actualizarTablaPrescripciones();
             }
         } else {
-            JOptionPane.showMessageDialog(this, 
-                "Por favor seleccione una prescripción para editar", 
-                "Selección requerida", 
-                JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "Por favor seleccione una prescripción para editar",
+                    "Selección requerida",
+                    JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -175,10 +175,10 @@ public class Prescripcion extends JFrame {
             prescripcionesTemporales.remove(filaSeleccionada);
             actualizarTablaPrescripciones();
         } else {
-            JOptionPane.showMessageDialog(this, 
-                "Por favor seleccione una prescripción para eliminar", 
-                "Selección requerida", 
-                JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "Por favor seleccione una prescripción para eliminar",
+                    "Selección requerida",
+                    JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -194,65 +194,65 @@ public class Prescripcion extends JFrame {
                 if (paciente.isEmpty()) mensaje += "- Paciente (use 'Buscar Paciente')\n";
                 if (medico.isEmpty()) mensaje += "- Médico\n";
                 mensaje += "\nComplete estos campos antes de crear la receta.";
-                
-                JOptionPane.showMessageDialog(this, 
-                    mensaje, 
-                    "Campos incompletos", 
-                    JOptionPane.WARNING_MESSAGE);
+
+                JOptionPane.showMessageDialog(this,
+                        mensaje,
+                        "Campos incompletos",
+                        JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             if (fechaRetiro == null) {
-                JOptionPane.showMessageDialog(this, 
-                    "Por favor seleccione una fecha de retiro", 
-                    "Fecha requerida", 
-                    JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "Por favor seleccione una fecha de retiro",
+                        "Fecha requerida",
+                        JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             if (fechaRetiro.isBefore(LocalDate.now())) {
-                JOptionPane.showMessageDialog(this, 
-                    "La fecha de retiro no puede ser anterior a hoy", 
-                    "Fecha inválida", 
-                    JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "La fecha de retiro no puede ser anterior a hoy",
+                        "Fecha inválida",
+                        JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             if (prescripcionesTemporales.isEmpty()) {
-                JOptionPane.showMessageDialog(this, 
-                    "Debe agregar al menos un medicamento antes de crear la receta.\n" +
-                    "Use el botón 'Agregar Medicamento' para agregar medicamentos a la receta.", 
-                    "Medicamentos requeridos", 
-                    JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "Debe agregar al menos un medicamento antes de crear la receta.\n" +
+                                "Use el botón 'Agregar Medicamento' para agregar medicamentos a la receta.",
+                        "Medicamentos requeridos",
+                        JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             // Crear la receta
             String idReceta = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
             Receta receta = new Receta(
-                idReceta,
-                paciente,
-                medico,
-                new ArrayList<>(prescripcionesTemporales),
-                LocalDate.now(),
-                fechaRetiro,
-                "Confeccionada"
+                    idReceta,
+                    paciente,
+                    medico,
+                    new ArrayList<>(prescripcionesTemporales),
+                    LocalDate.now(),
+                    fechaRetiro,
+                    "Confeccionada"
             );
 
             recetaController.confeccionarReceta(receta);
-            JOptionPane.showMessageDialog(this, 
-                "Receta confeccionada exitosamente con ID: " + idReceta, 
-                "Receta creada", 
-                JOptionPane.INFORMATION_MESSAGE);
-            
+            JOptionPane.showMessageDialog(this,
+                    "Receta confeccionada exitosamente con ID: " + idReceta,
+                    "Receta creada",
+                    JOptionPane.INFORMATION_MESSAGE);
+
             limpiarCampos();
             loadData();
-            
+
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, 
-                "Error al confeccionar la receta: " + ex.getMessage(), 
-                "Error", 
-                JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "Error al confeccionar la receta: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -274,7 +274,7 @@ public class Prescripcion extends JFrame {
     private void actualizarTablaPrescripciones() {
         String[] columnas = {"Medicamento", "Cantidad", "Indicaciones", "Duración"};
         Object[][] datos = new Object[prescripcionesTemporales.size()][4];
-        
+
         for (int i = 0; i < prescripcionesTemporales.size(); i++) {
             PrescripcionMedicamento p = prescripcionesTemporales.get(i);
             datos[i][0] = p.getMedicamento();
@@ -282,7 +282,7 @@ public class Prescripcion extends JFrame {
             datos[i][2] = p.getIndicaciones();
             datos[i][3] = p.getDuracion();
         }
-        
+
         table1.setModel(new javax.swing.table.DefaultTableModel(datos, columnas) {
             @Override
             public boolean isCellEditable(int row, int column) {
