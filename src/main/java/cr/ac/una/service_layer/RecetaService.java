@@ -4,7 +4,6 @@ import cr.ac.una.data_access_layer.IFileStore;
 import cr.ac.una.domain_layer.Receta;
 import cr.ac.una.utilities.ChangeType;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -89,44 +88,10 @@ public class RecetaService implements IService<Receta> {
                 .collect(Collectors.toList());
     }
 
-    public List<Receta> leerPorMedico(String medico) {
-        return recetaFileStore.readAll().stream()
-                .filter(x -> x.getMedico().toLowerCase().contains(medico.toLowerCase()))
-                .collect(Collectors.toList());
-    }
-
-    public List<Receta> leerPorEstado(String estado) {
-        return recetaFileStore.readAll().stream()
-                .filter(x -> x.getEstado().toLowerCase().contains(estado.toLowerCase()))
-                .collect(Collectors.toList());
-    }
-
-    public List<Receta> leerPorFechaConfeccion(LocalDate fecha) {
-        return recetaFileStore.readAll().stream()
-                .filter(x -> x.getFechaConfeccion().equals(fecha))
-                .collect(Collectors.toList());
-    }
-
-    public List<Receta> leerPorRangoFechas(LocalDate fechaInicio, LocalDate fechaFin) {
-        return recetaFileStore.readAll().stream()
-                .filter(x -> x.getFechaConfeccion().isAfter(fechaInicio.minusDays(1)) && 
-                           x.getFechaConfeccion().isBefore(fechaFin.plusDays(1)))
-                .collect(Collectors.toList());
-    }
-
     public void cambiarEstado(String id, String nuevoEstado) {
         Receta receta = leerPorIdString(id);
         if (receta != null) {
             receta.setEstado(nuevoEstado);
-            actualizar(receta);
-        }
-    }
-
-    public void marcarComoRetirada(String id, LocalDate fechaRetiro) {
-        Receta receta = leerPorIdString(id);
-        if (receta != null) {
-            receta.setEstado("Retirada");
-            receta.setFechaRetiro(fechaRetiro);
             actualizar(receta);
         }
     }

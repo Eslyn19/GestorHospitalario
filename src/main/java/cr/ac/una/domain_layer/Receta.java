@@ -45,6 +45,7 @@ public class Receta {
         this.estado = estado;
     }
 
+    // setters y getters
     public String getId() {
         return id;
     }
