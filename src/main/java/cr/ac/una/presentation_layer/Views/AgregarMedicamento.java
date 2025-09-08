@@ -41,13 +41,15 @@ public class AgregarMedicamento extends JFrame {
 
     public AgregarMedicamento(JDialog parentDialog) {
         this.parentDialog = parentDialog;
-        setContentPane(MainPanel);  // ya está inicializado por $$$setupUI$$$
+        setContentPane(MainPanel);
         setTitle("Agregar Medicamento");
         setSize(800, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
 
+        // Inicializar el controlador y modelo antes de cargar medicamentos
+        initializeController();
         setupEventListeners();
         cargarMedicamentos();
 
@@ -55,22 +57,14 @@ public class AgregarMedicamento extends JFrame {
         IndicacionesTF.setSize(new Dimension(400, 50));
         DiasPanel.setPreferredSize(new Dimension(200, 30));
         Color color = new Color(255, 255, 255);
-        configurarPanel(IndicacionesPanel, "Descripcion medicamentos", color, new Font("Arial", Font.BOLD, 13), Color.WHITE);
+        configurarPanel(PanelInfo, "Descripcion medicamentos", color, new Font("Arial", Font.BOLD, 13), Color.WHITE);
     }
-
 
     public void setDialogCallback(AgregarMedicamentoDialog dialogCallback) {
         this.dialogCallback = dialogCallback;
     }
 
-    private void setupUI() {
-        setTitle("Agregar Medicamento");
-        setSize(800, 600);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setResizable(false);
-        setContentPane(MainPanel);
-        
+    private void initializeController() {
         TablaMedicamentos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         CantidadSpinner.setModel(new SpinnerNumberModel(1, 1, 999, 1));
         DiasSpinner.setModel(new SpinnerNumberModel(1, 1, 365, 1));
