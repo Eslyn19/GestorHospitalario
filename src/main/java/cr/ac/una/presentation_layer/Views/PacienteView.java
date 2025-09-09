@@ -4,10 +4,12 @@ import cr.ac.una.domain_layer.Paciente;
 import cr.ac.una.presentation_layer.Controller.PacienteController;
 import cr.ac.una.presentation_layer.Model.PacienteTableModel;
 
+import com.github.lgooddatepicker.components.DatePicker;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
+import java.time.LocalDate;
 import java.util.List;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -35,7 +37,6 @@ public class PacienteView extends JFrame{
     private JTable TablaMedicos;
     private JScrollPane JSrollPane;
     private JTextField BuscarIDTF;
-    // BuscarBTN eliminado
     private JPanel BuscarMedicoPanel;
     private JPanel SpacePanel;
     private JLabel IDBuscarLabel;
@@ -43,15 +44,11 @@ public class PacienteView extends JFrame{
     private JButton ActualizarBTN;
     private JTextField TelefonoTF;
     private JLabel labelTelefono;
-    private JTextField FechaTF;
+    private DatePicker FechaDPicker;
     private JLabel labelFecha;
 
     private PacienteController pacienteController;
     private PacienteTableModel pacienteTableModel;
-
-    public PacienteView(PacienteController pacienteController, PacienteTableModel pacienteTableModel, List<Paciente> datos) {
-        this(pacienteController, pacienteTableModel, datos, true);
-    }
 
     public PacienteView(PacienteController pacienteController, PacienteTableModel pacienteTableModel, List<Paciente> datos, boolean showAsWindow) {
         this.pacienteController = pacienteController;
@@ -66,24 +63,23 @@ public class PacienteView extends JFrame{
 
         ID_textfield.setPreferredSize(new Dimension(20, 25));
         nombreTF.setPreferredSize(new Dimension(20, 25));
-        FechaTF.setPreferredSize(new Dimension(20, 25));
         TelefonoTF.setPreferredSize(new Dimension(20, 25));
         BuscarIDTF.setPreferredSize(new Dimension(20, 25));
 
+        setContentPane(PanelBase);
+        ImageIcon icon = new ImageIcon(getClass().getResource("/Paciente.png"));
+        setIconImage(icon.getImage());
+        setLocationRelativeTo(null);
+        setTitle("Pacientes");
+        setSize(850, 600);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
         if (showAsWindow) {
-            setContentPane(PanelBase);
-            ImageIcon icon = new ImageIcon(getClass().getResource("/Paciente.png"));
-            setIconImage(icon.getImage());
-            setLocationRelativeTo(null);
-            setTitle("Pacientes");
-            setSize(850, 600);
-            setLocationRelativeTo(null);
-            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setVisible(true);
         }
     }
 
-    // Metodo estatico para generar un panel
     public static JPanel createPacientePanel(PacienteController pacienteController, PacienteTableModel tableModel, List<Paciente> pacientes) {
         PacienteView pacienteView = new PacienteView(pacienteController, tableModel, pacientes, false);
         return pacienteView.getPanelBase();
@@ -97,8 +93,6 @@ public class PacienteView extends JFrame{
         EliminarBTN.addActionListener(e -> onDelete());
         LimpiarBTN.addActionListener(e -> onClear());
         TablaMedicos.getSelectionModel().addListSelectionListener(this::onTableSelection);
-
-        // Búsqueda en tiempo real: filtra mientras se escribe por ID
         BuscarIDTF.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
@@ -168,18 +162,17 @@ public class PacienteView extends JFrame{
         }
     }
 
-    // Limpiar campos
     private void onClear(){
         ID_textfield.setText("");
         nombreTF.setText("");
         ApellidoTF.setText("");
-        FechaTF.setText("");
+        FechaDPicker.setDate(null);
         TelefonoTF.setText("");
         ID_textfield.requestFocus();
         try {
             pacienteTableModel.setRows(pacienteController.leerTodos());
         } catch (Exception ex) {
-            // ignorar
+            ex.printStackTrace();
         }
     }
 
@@ -194,7 +187,19 @@ public class PacienteView extends JFrame{
         ID_textfield.setText(String.valueOf(paciente.getID()));
         nombreTF.setText(paciente.getNombre());
         ApellidoTF.setText(paciente.getApellido());
-        FechaTF.setText(paciente.getFechaNacimiento());
+        
+        // Convertir String a LocalDate para el DatePicker
+        if (paciente.getFechaNacimiento() != null && !paciente.getFechaNacimiento().isEmpty()) {
+            try {
+                LocalDate fecha = LocalDate.parse(paciente.getFechaNacimiento());
+                FechaDPicker.setDate(fecha);
+            } catch (Exception ex) {
+                FechaDPicker.setDate(null);
+            }
+        } else {
+            FechaDPicker.setDate(null);
+        }
+        
         TelefonoTF.setText(paciente.getTelefono());
     }
 
@@ -215,7 +220,7 @@ public class PacienteView extends JFrame{
             }
             pacienteTableModel.setRows(filtered);
         } catch (Exception ex) {
-            showError("Error en búsqueda: " + ex.getMessage(), ex);
+            ex.printStackTrace();
         }
     }
 
@@ -228,7 +233,15 @@ public class PacienteView extends JFrame{
         d.ID = orDefault(parseInt(ID_textfield.getText()), -1);
         d.nombre = safe(nombreTF.getText());
         d.apellido = safe(ApellidoTF.getText());
-        d.fechaNacimiento = safe(FechaTF.getText());
+        
+        // Obtener fecha del DatePicker y convertir a String
+        LocalDate fecha = FechaDPicker.getDate();
+        if (fecha != null) {
+            d.fechaNacimiento = fecha.toString();
+        } else {
+            d.fechaNacimiento = "";
+        }
+        
         d.telefono = safe(TelefonoTF.getText());
 
         if (d.ID <= 0) throw new IllegalArgumentException("El ID debe ser mayor que 0.");

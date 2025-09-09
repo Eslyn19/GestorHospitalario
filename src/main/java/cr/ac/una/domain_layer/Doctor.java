@@ -13,9 +13,9 @@ public class Doctor extends Persona{
         super();
     }
     
-    public Doctor(int _ID, String _nombre, String _apellido, String _clave, String especialidad) {
+    public Doctor(int _ID, String _nombre, String _apellido, String _clave, String _especialidad) {
         super(_ID, _nombre, _apellido, _clave);
-        Especialidad = especialidad;
+        Especialidad = _especialidad;
     }
 
     // Setter & getter

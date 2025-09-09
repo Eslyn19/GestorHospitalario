@@ -28,9 +28,9 @@ public class MedicamentoService implements IService<Medicamento> {
         List<Medicamento> medicamentos = medicamentoFileStore.readAll();
         Medicamento removed = null;
         for (int i = 0; i < medicamentos.size(); i++) {
-            if (medicamentos.get(i).getCodigo().equals(String.valueOf(id))) { 
-                removed = medicamentos.remove(i); 
-                break; 
+            if (medicamentos.get(i).getCodigo().equals(String.valueOf(id))) {
+                removed = medicamentos.remove(i);
+                break;
             }
         }
         medicamentoFileStore.writeAll(medicamentos);
@@ -41,9 +41,9 @@ public class MedicamentoService implements IService<Medicamento> {
         List<Medicamento> medicamentos = medicamentoFileStore.readAll();
         Medicamento removed = null;
         for (int i = 0; i < medicamentos.size(); i++) {
-            if (medicamentos.get(i).getCodigo().equals(codigo)) { 
-                removed = medicamentos.remove(i); 
-                break; 
+            if (medicamentos.get(i).getCodigo().equals(codigo)) {
+                removed = medicamentos.remove(i);
+                break;
             }
         }
         medicamentoFileStore.writeAll(medicamentos);
@@ -64,9 +64,7 @@ public class MedicamentoService implements IService<Medicamento> {
     }
 
     @Override
-    public List<Medicamento> leerTodos() {
-        return medicamentoFileStore.readAll();
-    }
+    public List<Medicamento> leerTodos() { return medicamentoFileStore.readAll();}
 
     @Override
     public Medicamento leerPorId(int id) {
@@ -89,4 +87,5 @@ public class MedicamentoService implements IService<Medicamento> {
     private void notifyObservers(ChangeType type, Medicamento entity) {
         for (IServiceObserver<Medicamento> l : listenerMedicamentos) l.onDataChanged(type, entity);
     }
+
 }

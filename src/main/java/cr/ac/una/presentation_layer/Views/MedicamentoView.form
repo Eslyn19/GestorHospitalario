@@ -313,7 +313,7 @@
                         <properties>
                           <font name="Bell MT" size="16" style="0"/>
                           <foreground color="-1"/>
-                          <text value="ID"/>
+                          <text value="Codigo"/>
                         </properties>
                       </component>
                       <component id="e291e" class="javax.swing.JTextField" binding="BuscarIDTF">

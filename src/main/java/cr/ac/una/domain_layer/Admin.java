@@ -14,9 +14,9 @@ public class Admin {
     
     public Admin() {}
     
-    public Admin(int ID, String clave) {
-        this.ID = ID;
-        this.clave = clave;
+    public Admin(int _id, String _clave) {
+        this.ID = _id;
+        this.clave = _clave;
     }
     
     // Getters y Setters

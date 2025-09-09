@@ -1,6 +1,5 @@
 package cr.ac.una.data_access_layer;
 
-import cr.ac.una.domain_layer.Doctor;
 import cr.ac.una.domain_layer.Farmaceuta;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Marshaller;

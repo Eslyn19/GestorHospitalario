@@ -35,7 +35,6 @@ public class DoctorView extends JFrame{
     private JTable TablaMedicos;
     private JScrollPane JSrollPane;
     private JTextField BuscarIDTF;
-    // BuscarBTN eliminado
     private JButton CambiarClaveBTN;
     private JPanel BuscarMedicoPanel;
     private JPanel SpacePanel;
@@ -67,21 +66,20 @@ public class DoctorView extends JFrame{
         nombreTF.setPreferredSize(new Dimension(20, 25));
         ApellidoTF.setPreferredSize(new Dimension(20, 25));
         BuscarIDTF.setPreferredSize(new Dimension(20, 25));
-
+        setContentPane(PanelBase);
+        ImageIcon icon = new ImageIcon(getClass().getResource("/Doctores.png"));
+        setIconImage(icon.getImage());
+        setLocationRelativeTo(null);
+        setTitle("Doctores");
+        setSize(850, 600);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
         if (showAsWindow) {
-            setContentPane(PanelBase);
-            ImageIcon icon = new ImageIcon(getClass().getResource("/Doctores.png"));
-            setIconImage(icon.getImage());
-            setLocationRelativeTo(null);
-            setTitle("Doctores");
-            setSize(850, 600);
-            setLocationRelativeTo(null);
-            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setVisible(true);
         }
     }
 
-    // Metodo estatico para generar un panel
     public static JPanel createDoctorPanel(DoctorController doctorController, DoctorTableModel tableModel, List<Doctor> doctors) {
         DoctorView doctorView = new DoctorView(doctorController, tableModel, doctors, false);
         return doctorView.getPanelBase();
@@ -95,15 +93,13 @@ public class DoctorView extends JFrame{
         EliminarBTN.addActionListener(e -> onDelete());
         LimpiarBTN.addActionListener(e -> onClear());
         CambiarClaveBTN.addActionListener(e -> onCambiarClave());
-
-        // Búsqueda en tiempo real: filtra mientras se escribe por ID
+        // Búsqueda en tiempo real de tablas
         BuscarIDTF.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 onSearch();
             }
         });
-
         TablaMedicos.getSelectionModel().addListSelectionListener(this::onTableSelection);
     }
 
@@ -111,7 +107,7 @@ public class DoctorView extends JFrame{
         int selectedRow = TablaMedicos.getSelectedRow();
         if (selectedRow < 0) {
             JOptionPane.showMessageDialog(this,
-                    "Por favor seleccione un doctor de la tabla para cambiar su clave.",
+                    "Seleccione un doctor de la tabla.",
                     "Seleccionar Doctor",
                     JOptionPane.WARNING_MESSAGE);
             return;
