@@ -81,13 +81,7 @@ public class AgregarMedicamento extends JFrame {
 
     private void setupEventListeners() {
         AceptarBTN.addActionListener(e -> agregarMedicamento());
-        VolverBTN.addActionListener(e -> {
-            if (parentDialog != null) {
-                parentDialog.dispose();
-            } else {
-                dispose();
-            }
-        });
+        VolverBTN.addActionListener(e -> dispose());
 
         // Doble clic en la tabla para agregar medicamento
         TablaMedicamentos.addMouseListener(new java.awt.event.MouseAdapter() {
