@@ -4,7 +4,6 @@ import cr.ac.una.domain_layer.PrescripcionMedicamento;
 import cr.ac.una.domain_layer.Receta;
 import cr.ac.una.presentation_layer.Controller.RecetaController;
 import cr.ac.una.presentation_layer.Model.RecetaTableModel;
-import cr.ac.una.utilities.PrescripcionDialog;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -61,10 +60,10 @@ public class RecetaView extends JFrame{
         this.recetaController = recetaController;
         this.recetaTableModel = recetaTableModel;
         this.prescripcionesTemporales = new ArrayList<>();
-        
-        initializeComponents();
+
+        IniciarComponentes();
         ConfigurarComponentes();
-        setupEventListeners();
+        Listeners();
         CargarData(datos);
         
         if (isVisible) {
@@ -72,7 +71,7 @@ public class RecetaView extends JFrame{
         }
     }
 
-    private void initializeComponents() {
+    private void IniciarComponentes() {
         prescripcionesList = new JList<>();
         prescripcionesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         prescripcionesScrollPane = new JScrollPane(prescripcionesList);
@@ -116,7 +115,7 @@ public class RecetaView extends JFrame{
         ));
     }
 
-    private void setupEventListeners() {
+    private void Listeners() {
         AgregarPrescripcionBTN.addActionListener(e -> abrirDialogoPrescripcion());
         EliminarPrescripcionBTN.addActionListener(e -> eliminarPrescripcionSeleccionada());
         ConfeccionarRecetaBTN.addActionListener(e -> confeccionarReceta());
@@ -140,11 +139,11 @@ public class RecetaView extends JFrame{
     }
 
     private void abrirDialogoPrescripcion() {
-        PrescripcionDialog dialog = new PrescripcionDialog(this);
+        AgregarMedicamentoDialog dialog = new AgregarMedicamentoDialog(this);
         dialog.setVisible(true);
         
-        if (dialog.isPrescripcionAgregada()) {
-            PrescripcionMedicamento prescripcion = dialog.getPrescripcion();
+        if (dialog.isMedicamentoAgregado()) {
+            PrescripcionMedicamento prescripcion = dialog.getPrescripcionMedicamento();
             prescripcionesTemporales.add(prescripcion);
             actualizarListaPrescripciones();
         }

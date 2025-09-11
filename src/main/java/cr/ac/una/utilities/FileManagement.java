@@ -40,13 +40,7 @@ public class FileManagement {
     }
 
     @NotNull
-    public static IFileStore<cr.ac.una.domain_layer.PrescripcionMedicamento> getPrescripcionFileStore(String filename){
-        File prescripcionesXml = new File(basDir, filename);
-        return new PrescripcionFileStore(prescripcionesXml);
-    }
-
-    @NotNull
-    public static IFileStore<cr.ac.una.domain_layer.Receta> getRecetaFileStore(String filename){
+    public static IFileStore<Receta> getRecetaFileStore(String filename){
         File recetasXml = new File(basDir, filename);
         return new RecetaFileStore(recetasXml);
     }

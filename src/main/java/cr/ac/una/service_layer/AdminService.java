@@ -63,7 +63,7 @@ public class AdminService implements IService<Admin> {
         if (listener != null) ListenerAdmin.add(listener);
     }
 
-    // Método específico para autenticación
+    // Autenticar en registro
     public boolean autenticar(int id, String clave) {
         Admin admin = leerPorId(id);
         return admin != null && admin.getClave().equals(clave);

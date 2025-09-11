@@ -1,7 +1,6 @@
-package cr.ac.una.utilities;
+package cr.ac.una.presentation_layer.Views;
 
 import cr.ac.una.domain_layer.PrescripcionMedicamento;
-import cr.ac.una.presentation_layer.Views.AgregarMedicamento;
 
 import javax.swing.*;
 

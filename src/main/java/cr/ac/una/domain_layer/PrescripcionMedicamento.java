@@ -12,12 +12,7 @@ public class PrescripcionMedicamento {
     private String indicaciones;
     private String duracion;
 
-    public PrescripcionMedicamento() {
-        medicamento = "";
-        cantidad = 0;
-        indicaciones = "";
-        duracion = "";
-    }
+    public PrescripcionMedicamento() {}
 
     public PrescripcionMedicamento(String _medicamento, int _cantidad, String _indicaciones, String _duracion) {
         this.medicamento = _medicamento;
@@ -53,15 +48,5 @@ public class PrescripcionMedicamento {
     }
     public void setDuracion(String duracion) {
         this.duracion = duracion;
-    }
-
-    @Override
-    public String toString() {
-        return "PrescripcionMedicamento{" +
-                "medicamento='" + medicamento + '\'' +
-                ", cantidad=" + cantidad +
-                ", indicaciones='" + indicaciones + '\'' +
-                ", duracion='" + duracion + '\'' +
-                '}';
     }
 }

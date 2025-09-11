@@ -6,8 +6,6 @@ import cr.ac.una.domain_layer.PrescripcionMedicamento;
 import cr.ac.una.domain_layer.Receta;
 import cr.ac.una.presentation_layer.Controller.RecetaController;
 import cr.ac.una.presentation_layer.Model.RecetaTableModel;
-import cr.ac.una.utilities.AgregarMedicamentoDialog;
-import cr.ac.una.utilities.BuscarPacienteDialog;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;

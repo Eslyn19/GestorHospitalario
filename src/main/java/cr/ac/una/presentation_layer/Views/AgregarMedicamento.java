@@ -6,7 +6,6 @@ import cr.ac.una.presentation_layer.Controller.MedicamentoController;
 import cr.ac.una.presentation_layer.Model.MedicamentoTableModel;
 import cr.ac.una.service_layer.MedicamentoService;
 import cr.ac.una.data_access_layer.MedicamentoFileStore;
-import cr.ac.una.utilities.AgregarMedicamentoDialog;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -49,8 +48,8 @@ public class AgregarMedicamento extends JFrame {
         setResizable(false);
 
         // Inicializar el controlador y modelo antes de cargar medicamentos
-        initializeController();
-        setupEventListeners();
+        Controlador();
+        Listeners();
         cargarMedicamentos();
 
         CantidadSpinner.setPreferredSize(new Dimension(10, 20));
@@ -64,9 +63,9 @@ public class AgregarMedicamento extends JFrame {
         this.dialogCallback = dialogCallback;
     }
 
-    private void initializeController() {
+    private void Controlador() {
         TablaMedicamentos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        CantidadSpinner.setModel(new SpinnerNumberModel(1, 1, 999, 1));
+        CantidadSpinner.setModel(new SpinnerNumberModel(1, 1, 20, 1));
         DiasSpinner.setModel(new SpinnerNumberModel(1, 1, 365, 1));
         IndicacionesTF.setColumns(20);
 
@@ -79,11 +78,10 @@ public class AgregarMedicamento extends JFrame {
         }
     }
 
-    private void setupEventListeners() {
+    private void Listeners() {
         AceptarBTN.addActionListener(e -> agregarMedicamento());
         VolverBTN.addActionListener(e -> dispose());
 
-        // Doble clic en la tabla para agregar medicamento
         TablaMedicamentos.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {

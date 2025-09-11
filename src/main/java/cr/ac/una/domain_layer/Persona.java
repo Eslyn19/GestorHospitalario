@@ -51,22 +51,4 @@ public abstract class Persona {
     public void setClave(String clave) {
         this.clave = clave;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Persona)) return false;
-        Persona persona = (Persona) o;
-        return ID == (persona.ID);
-    }
-
-    @Override
-    public String toString() {
-        return "Persona{" +
-                "ID=" + ID +
-                ", nombre='" + nombre + '\'' +
-                ", apellido='" + apellido + '\'' +
-                ", clave='" + clave + '\'' +
-                '}';
-    }
 }

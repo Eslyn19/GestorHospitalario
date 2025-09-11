@@ -5,7 +5,6 @@ import cr.ac.una.presentation_layer.Controller.PacienteController;
 import cr.ac.una.presentation_layer.Model.PacienteTableModel;
 import cr.ac.una.service_layer.PacienteService;
 import cr.ac.una.data_access_layer.PacienteFileStore;
-import cr.ac.una.utilities.BuscarPacienteDialog;
 
 import javax.swing.*;
 import java.io.File;
