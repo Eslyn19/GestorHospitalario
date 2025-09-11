@@ -39,6 +39,8 @@ public class Registro extends JFrame {
         RegistrarseBTN.setPreferredSize(new Dimension(100, 30));
         RegistrarseBTN.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
+        userTypeCombo.setSelectedIndex(0); // Seleccionar el primer elemento por defecto
+
         RegistrarseBTN.addActionListener(e -> onLogin());
         UserTF.addActionListener(e -> onLogin());
         PasswordTF.addActionListener(e -> onLogin());
@@ -51,11 +53,25 @@ public class Registro extends JFrame {
         String password = new String(PasswordTF.getPassword());
         String userType = (String) userTypeCombo.getSelectedItem();
 
+        // Debug: mostrar valores
+        System.out.println("ID: " + idText);
+        System.out.println("Password: " + password);
+        System.out.println("UserType: " + userType);
+
         if (idText.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(this,
                 "Por favor complete todos los campos",
                 "Campos incompletos",
                 JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Verificar que los controladores estén inicializados
+        if (adminController == null || doctorController == null || farmaceutaController == null) {
+            JOptionPane.showMessageDialog(this,
+                "Error: Los controladores no están inicializados. Reinicie la aplicación.",
+                "Error del sistema",
+                JOptionPane.ERROR_MESSAGE);
             return;
         }
         

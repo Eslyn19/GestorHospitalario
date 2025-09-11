@@ -54,10 +54,10 @@ public class PacienteService implements IService<Paciente> {
             throw new IllegalArgumentException("No existe un paciente con el ID: " + entity.getID());
         }
         
-        boolean existeTelefonoEnOtro = pacientes.stream()
+        boolean existeTelefono = pacientes.stream()
             .anyMatch(p -> p.getID() != entity.getID() && p.getTelefono().equals(entity.getTelefono()));
-        if (existeTelefonoEnOtro) {
-            throw new IllegalArgumentException("Ya existe otro paciente con el teléfono: " + entity.getTelefono());
+        if (existeTelefono) {
+            throw new IllegalArgumentException("Ya existe otro paciente con el telefono: " + entity.getTelefono());
         }
         
         for (int i = 0; i < pacientes.size(); i++) {

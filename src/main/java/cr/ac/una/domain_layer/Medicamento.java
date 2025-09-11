@@ -36,21 +36,4 @@ public class Medicamento {
 
     public String getPresentacion() { return presentacion; }
     public void setPresentacion(String presentacion) { this.presentacion = presentacion; }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Medicamento)) return false;
-        Medicamento medicamento = (Medicamento) o;
-        return codigo != null && codigo.equals(medicamento.codigo);
-    }
-
-    @Override
-    public String toString() {
-        return "Medicamento{" +
-                "codigo='" + codigo + '\'' +
-                ", nombreMedic='" + nombreMedic + '\'' +
-                ", presentacion='" + presentacion + '\'' +
-                '}';
-    }
 }

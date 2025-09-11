@@ -47,23 +47,4 @@ public class Paciente {
     
     public String getTelefono() { return telefono; }
     public void setTelefono(String telefono) { this.telefono = telefono; }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Paciente)) return false;
-        Paciente paciente = (Paciente) o;
-        return ID == paciente.ID;
-    }
-
-    @Override
-    public String toString() {
-        return "Paciente{" +
-                "ID=" + ID +
-                ", nombre='" + nombre + '\'' +
-                ", apellido='" + apellido + '\'' +
-                ", fechaNacimiento='" + fechaNacimiento + '\'' +
-                ", telefono='" + telefono + '\'' +
-                '}';
-    }
 }

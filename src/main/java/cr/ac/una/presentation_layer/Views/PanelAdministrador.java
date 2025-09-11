@@ -11,6 +11,13 @@ import cr.ac.una.presentation_layer.Model.DoctorTableModel;
 import cr.ac.una.presentation_layer.Model.FarmaceutaTableModel;
 import cr.ac.una.presentation_layer.Model.MedicamentoTableModel;
 import cr.ac.una.presentation_layer.Model.PacienteTableModel;
+import cr.ac.una.service_layer.DoctorService;
+import cr.ac.una.service_layer.FarmaceutaService;
+import cr.ac.una.service_layer.MedicamentoService;
+import cr.ac.una.service_layer.PacienteService;
+import cr.ac.una.service_layer.RecetaService;
+import cr.ac.una.service_layer.IService;
+
 import cr.ac.una.service_layer.*;
 import cr.ac.una.utilities.FileManagement;
 
@@ -64,7 +71,8 @@ public class PanelAdministrador extends JFrame {
         ImageIcon bannerIcon = new ImageIcon(getClass().getResource("/Banner.png"));
         ImageIcon historicoIcon = new ImageIcon(getClass().getResource("/Historial.png"));
         ImageIcon graficoIcon = new ImageIcon(getClass().getResource("/Dashboard.png"));
-        ImageIcon graficoLinealIcon = new ImageIcon(getClass().getResource("/Dashboard.png")); // Usar el mismo icono por ahora
+        ImageIcon graficoLinealIcon = new ImageIcon(getClass().getResource("/GraficoLineal.png"));
+        ImageIcon graficoPastel = new ImageIcon(getClass().getResource("/GraficoPastel.png"));
 
         // Configurar imagenes con nuevo resize
         ImageIcon doctorResize = new ImageIcon(doctorIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
@@ -75,6 +83,7 @@ public class PanelAdministrador extends JFrame {
         ImageIcon historicoResize = new ImageIcon(historicoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
         ImageIcon graficoResize = new ImageIcon(graficoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
         ImageIcon graficoLinealResize = new ImageIcon(graficoLinealIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
+        ImageIcon graficoPastelResize = new ImageIcon(graficoPastel.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
 
         PanelTabs = new JTabbedPane();
 
@@ -85,7 +94,7 @@ public class PanelAdministrador extends JFrame {
         PanelTabs.addTab("Pacientes", pacienteResize, pacienteview.getPanelBase(), "Pacientes");
         PanelTabs.addTab("Medicamentos", medicamentoResize, medicamentoview.getPanelBase(), "Medicamentos");
         PanelTabs.addTab("Histórico Recetas", historicoResize, historicoRecetasView.getMainPanel(), "Histórico de recetas médicas");
-        PanelTabs.addTab("Gráfico Pastel", graficoResize, graficoPastelView.getMainPanel(), "Gráfico de pastel de estadísticas");
+        PanelTabs.addTab("Gráfico Pastel", graficoPastelResize, graficoPastelView.getMainPanel(), "Gráfico de pastel de estadísticas");
         PanelTabs.addTab("Gráfico Lineal", graficoLinealResize, graficoLinealView.getPanelPrincipal(), "Gráfico lineal de medicamentos por mes");
 
         PanelBase = new JPanel();

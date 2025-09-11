@@ -82,11 +82,12 @@ public class GraficoPastel implements IServiceObserver<Receta> {
         dataset.setValue("Sin datos", 1);
 
         JFreeChart chart = ChartFactory.createPieChart(
-                "Distribución de Recetas por Estado",
-                dataset,
-                true,
-                true,
-                false
+            "Distribución de Recetas por Estado",
+            dataset,
+            true,
+            true,
+            false
+
         );
 
         // Personalizar el gráfico

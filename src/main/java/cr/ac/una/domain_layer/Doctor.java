@@ -21,14 +21,4 @@ public class Doctor extends Persona{
     // Setter & getter
     public String getEspecialidad() { return Especialidad; }
     public void setEspecialidad(String especialidad) { Especialidad = especialidad; }
-
-    @Override
-    public String toString() {
-        return "Doctor{" +
-                "Especialidad='" + Especialidad + '\'' +
-                ", ID=" + getID() +
-                ", nombre='" + getNombre() + '\'' +
-                ", apellido='" + getApellido() +
-                '}';
-    }
 }

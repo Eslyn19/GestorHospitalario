@@ -12,7 +12,6 @@ import javax.swing.*;
 import java.io.File;
 import java.util.List;
 
-
 public class HistoricoRecetas implements IServiceObserver<Receta> {
     private JPanel MainPanel;
     private JTable TablaHistorico;
@@ -24,6 +23,22 @@ public class HistoricoRecetas implements IServiceObserver<Receta> {
 
     public HistoricoRecetas() {
         Inicializar();
+        CargarDatos();
+    }
+    
+    public HistoricoRecetas(RecetaService recetaService) {
+        this.recetaService = recetaService;
+        this.recetaController = new RecetaController(recetaService);
+        this.recetaTableModel = new RecetaTableModel();
+        
+        recetaService.addObserver(this);
+        recetaService.addObserver(recetaTableModel);
+        
+        // Configurar tabla
+        TablaHistorico.setModel(recetaTableModel);
+        TablaHistorico.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        MainScroller.setViewportView(TablaHistorico);
+        
         CargarDatos();
     }
 
@@ -48,10 +63,10 @@ public class HistoricoRecetas implements IServiceObserver<Receta> {
             recetaService = new RecetaService(new RecetaFileStore(new File("recetas.xml")));
             recetaController = new RecetaController(recetaService);
             recetaTableModel = new RecetaTableModel();
-
+            
             recetaService.addObserver(this);
             recetaService.addObserver(recetaTableModel);
-
+            
             // Configurar tabla
             TablaHistorico.setModel(recetaTableModel);
             TablaHistorico.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

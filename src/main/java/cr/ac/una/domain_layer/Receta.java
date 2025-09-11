@@ -70,9 +70,6 @@ public class Receta {
     public List<PrescripcionMedicamento> getPrescripciones() {
         return prescripciones;
     }
-    public void setPrescripciones(List<PrescripcionMedicamento> prescripciones) {
-        this.prescripciones = prescripciones != null ? prescripciones : new ArrayList<>();
-    }
 
     public LocalDate getFechaConfeccion() {
         return fechaConfeccion;
@@ -84,25 +81,7 @@ public class Receta {
     public LocalDate getFechaRetiro() {
         return fechaRetiro;
     }
-    public void setFechaRetiro(LocalDate fechaRetiro) {
-        this.fechaRetiro = fechaRetiro;
-    }
 
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
-
-    public void agregarPrescripcion(PrescripcionMedicamento prescripcion) {
-        if (prescripcion != null) {
-            this.prescripciones.add(prescripcion);
-        }
-    }
-
-    public void removerPrescripcion(PrescripcionMedicamento prescripcion) {
-        this.prescripciones.remove(prescripcion);
-    }
-
-    @Override
-    public String toString() {
-        return "Receta #" + id + " - " + paciente + " (" + estado + ")";
-    }
 }
