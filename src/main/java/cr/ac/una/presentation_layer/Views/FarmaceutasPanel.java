@@ -33,13 +33,13 @@ public class FarmaceutasPanel extends JFrame {
         // Crear servicios compartidos
         PacienteService pacienteService = new PacienteService(FileManagement.getPacientesFileStore("pacientes.xml"));
         RecetaService recetaService = new RecetaService(FileManagement.getRecetaFileStore("recetas.xml"));
-        
+
         // Crear vistas con servicios compartidos
         BannerView bannerView = new BannerView(this);
         HistoricoRecetas historicoRecetasView = new HistoricoRecetas(recetaService);
         GraficoPastel graficoPastelView = new GraficoPastel(recetaService);
         GraficoLineal graficoLinealView = new GraficoLineal(recetaService);
-        
+
         DespachoTableModel despachoTableModel = new DespachoTableModel();
         recetaService.addObserver(despachoTableModel);
         Despacho despachoView = new Despacho();
@@ -53,6 +53,7 @@ public class FarmaceutasPanel extends JFrame {
         ImageIcon despachoIcon = new ImageIcon(getClass().getResource("/Despacho.png"));
         ImageIcon graficoLinealIcon = new ImageIcon(getClass().getResource("/GraficoLineal.png"));
         ImageIcon graficoPastelIcon = new ImageIcon(getClass().getResource("/GraficoPastel.png"));
+
 
         ImageIcon BannerResized = new ImageIcon(bannerIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
         ImageIcon historicoResized = new ImageIcon(historicoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));

@@ -1,11 +1,8 @@
 package cr.ac.una.presentation_layer.Views;
 
 import cr.ac.una.presentation_layer.Controller.RecetaController;
-import cr.ac.una.presentation_layer.Controller.PrescripcionController;
 import cr.ac.una.presentation_layer.Model.RecetaTableModel;
-import cr.ac.una.presentation_layer.Model.PrescripcionTableModel;
 import cr.ac.una.service_layer.RecetaService;
-import cr.ac.una.service_layer.PrescripcionService;
 import cr.ac.una.utilities.FileManagement;
 
 import javax.swing.*;
@@ -36,7 +33,6 @@ public class DoctorPanel extends JFrame {
         RecetaController recetaController = new RecetaController(recetaService);
         RecetaTableModel recetaTableModel = new RecetaTableModel();
         recetaService.addObserver(recetaTableModel);
-        
         BannerView bannerView = new BannerView(this);
         HistoricoRecetas historicoRecetasView = new HistoricoRecetas(recetaService);
         GraficoPastel graficoPastelView = new GraficoPastel(recetaService);
@@ -51,12 +47,14 @@ public class DoctorPanel extends JFrame {
         historicoIcon = new ImageIcon(getClass().getResource("/Historial.png"));
         graficoIcon = new ImageIcon(getClass().getResource("/GraficoLineal.png"));
         ImageIcon graficoPastel = new ImageIcon(getClass().getResource("/GraficoPastel.png"));
+        graficoIcon = new ImageIcon(getClass().getResource("/Dashboard.png"));
         prescripcionIcon = new ImageIcon(getClass().getResource("/Prescripcion.png"));
 
         ImageIcon bannerResized = new ImageIcon(bannerIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
         ImageIcon historicoResized = new ImageIcon(historicoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
         ImageIcon linealResized = new ImageIcon(graficoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
         ImageIcon PastelResized = new ImageIcon(graficoPastel.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
+        ImageIcon graficoResized = new ImageIcon(graficoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
         ImageIcon prescripcionResized = new ImageIcon(prescripcionIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
 
         // Agregar pestañas

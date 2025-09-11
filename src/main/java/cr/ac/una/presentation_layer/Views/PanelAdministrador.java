@@ -17,6 +17,8 @@ import cr.ac.una.service_layer.MedicamentoService;
 import cr.ac.una.service_layer.PacienteService;
 import cr.ac.una.service_layer.RecetaService;
 import cr.ac.una.service_layer.IService;
+
+import cr.ac.una.service_layer.*;
 import cr.ac.una.utilities.FileManagement;
 
 import javax.swing.*;
@@ -55,7 +57,7 @@ public class PanelAdministrador extends JFrame {
 
         // Crear servicio de recetas compartido
         RecetaService recetaService = new RecetaService(FileManagement.getRecetaFileStore("recetas.xml"));
-        
+
         BannerView bannerView = new BannerView(this);
         HistoricoRecetas historicoRecetasView = new HistoricoRecetas(recetaService);
         GraficoPastel graficoPastelView = new GraficoPastel(recetaService);
@@ -71,7 +73,6 @@ public class PanelAdministrador extends JFrame {
         ImageIcon graficoIcon = new ImageIcon(getClass().getResource("/Dashboard.png"));
         ImageIcon graficoLinealIcon = new ImageIcon(getClass().getResource("/GraficoLineal.png"));
         ImageIcon graficoPastel = new ImageIcon(getClass().getResource("/GraficoPastel.png"));
-
 
         // Configurar imagenes con nuevo resize
         ImageIcon doctorResize = new ImageIcon(doctorIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));

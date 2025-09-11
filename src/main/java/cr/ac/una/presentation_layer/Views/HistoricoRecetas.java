@@ -16,7 +16,7 @@ public class HistoricoRecetas implements IServiceObserver<Receta> {
     private JPanel MainPanel;
     private JTable TablaHistorico;
     private JScrollPane MainScroller;
-    
+
     private RecetaController recetaController;
     private RecetaTableModel recetaTableModel;
     private RecetaService recetaService;
@@ -42,6 +42,22 @@ public class HistoricoRecetas implements IServiceObserver<Receta> {
         CargarDatos();
     }
 
+    public HistoricoRecetas(RecetaService recetaService) {
+        this.recetaService = recetaService;
+        this.recetaController = new RecetaController(recetaService);
+        this.recetaTableModel = new RecetaTableModel();
+
+        recetaService.addObserver(this);
+        recetaService.addObserver(recetaTableModel);
+
+        // Configurar tabla
+        TablaHistorico.setModel(recetaTableModel);
+        TablaHistorico.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        MainScroller.setViewportView(TablaHistorico);
+
+        CargarDatos();
+    }
+
     private void Inicializar() {
         try {
             recetaService = new RecetaService(new RecetaFileStore(new File("recetas.xml")));
@@ -55,12 +71,12 @@ public class HistoricoRecetas implements IServiceObserver<Receta> {
             TablaHistorico.setModel(recetaTableModel);
             TablaHistorico.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             MainScroller.setViewportView(TablaHistorico);
-            
+
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, 
-                "Error " + e.getMessage(),
-                "Error", 
-                JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "Error " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -71,10 +87,10 @@ public class HistoricoRecetas implements IServiceObserver<Receta> {
                 recetaTableModel.setRows(recetas);
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, 
-                "Error al cargar las recetas: " + e.getMessage(), 
-                "Error", 
-                JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "Error al cargar las recetas: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 

@@ -42,8 +42,10 @@ public class GraficoLineal implements IServiceObserver<Receta> {
     private JButton BorrarUnoBTN;
     private JButton BorrarTodosBTN;
     private JButton CrearGraficoBTN;
-    
-    // Servicios y controladores
+
+    private JPanel BasePanel;
+
+     // Servicios y controladores
     private RecetaService recetaService;
     private RecetaController recetaController;
     private DefaultTableModel tableModel;
