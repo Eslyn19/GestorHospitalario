@@ -15,6 +15,7 @@ import cr.ac.una.service_layer.DoctorService;
 import cr.ac.una.service_layer.FarmaceutaService;
 import cr.ac.una.service_layer.MedicamentoService;
 import cr.ac.una.service_layer.PacienteService;
+import cr.ac.una.service_layer.RecetaService;
 import cr.ac.una.service_layer.IService;
 import cr.ac.una.utilities.FileManagement;
 
@@ -52,9 +53,13 @@ public class PanelAdministrador extends JFrame {
         MedicamentoView medicamentoview = new MedicamentoView(medicamentocontroller, medicamentomodel, medicamentocontroller.leerTodos(), false);
         medicamentoservice.addObserver(medicamentomodel);
 
+        // Crear servicio de recetas compartido
+        RecetaService recetaService = new RecetaService(FileManagement.getRecetaFileStore("recetas.xml"));
+        
         BannerView bannerView = new BannerView(this);
-        HistoricoRecetas historicoRecetasView = new HistoricoRecetas();
-        GraficoPastel graficoPastelView = new GraficoPastel();
+        HistoricoRecetas historicoRecetasView = new HistoricoRecetas(recetaService);
+        GraficoPastel graficoPastelView = new GraficoPastel(recetaService);
+        GraficoLineal graficoLinealView = new GraficoLineal(recetaService);
 
         // Cargar imagenes
         ImageIcon doctorIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/Doctores.png")));
@@ -64,6 +69,7 @@ public class PanelAdministrador extends JFrame {
         ImageIcon bannerIcon = new ImageIcon(getClass().getResource("/Banner.png"));
         ImageIcon historicoIcon = new ImageIcon(getClass().getResource("/Historial.png"));
         ImageIcon graficoIcon = new ImageIcon(getClass().getResource("/Dashboard.png"));
+        ImageIcon graficoLinealIcon = new ImageIcon(getClass().getResource("/Dashboard.png"));
 
         // Configurar imagenes con nuevo resize
         ImageIcon doctorResize = new ImageIcon(doctorIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
@@ -73,6 +79,7 @@ public class PanelAdministrador extends JFrame {
         ImageIcon bannerResize = new ImageIcon(bannerIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
         ImageIcon historicoResize = new ImageIcon(historicoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
         ImageIcon graficoResize = new ImageIcon(graficoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
+        ImageIcon graficoLinealResize = new ImageIcon(graficoLinealIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
 
         PanelTabs = new JTabbedPane();
 
@@ -83,14 +90,15 @@ public class PanelAdministrador extends JFrame {
         PanelTabs.addTab("Pacientes", pacienteResize, pacienteview.getPanelBase(), "Pacientes");
         PanelTabs.addTab("Medicamentos", medicamentoResize, medicamentoview.getPanelBase(), "Medicamentos");
         PanelTabs.addTab("Histórico Recetas", historicoResize, historicoRecetasView.getMainPanel(), "Histórico de recetas médicas");
-        PanelTabs.addTab("Gráficos", graficoResize, graficoPastelView.getMainPanel(), "Gráficos de estadísticas de recetas");
+        PanelTabs.addTab("Gráfico Pastel", graficoResize, graficoPastelView.getMainPanel(), "Gráfico de pastel de estadísticas");
+        PanelTabs.addTab("Gráfico Lineal", graficoLinealResize, graficoLinealView.getPanelPrincipal(), "Gráfico lineal de medicamentos por mes");
 
         PanelBase = new JPanel();
         PanelBase.setLayout(new java.awt.BorderLayout());
         PanelBase.add(PanelTabs, java.awt.BorderLayout.CENTER);
 
         setTitle("Sistema de Gestión Hospitalaria (ADM)");
-        setSize(900, 710);
+        setSize(1100, 710);
         ImageIcon icon = new ImageIcon(getClass().getResource("/Admin.png"));
         setIconImage(icon.getImage());
         setLocationRelativeTo(null);

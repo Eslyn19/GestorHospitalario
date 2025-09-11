@@ -19,22 +19,26 @@ public class FarmaceutasPanel extends JFrame {
 
     public FarmaceutasPanel() {
         this.nombreFarmaceuta = "Farmacéutico";
-        initializeComponents();
-        setupUI();
+        Inicializar();
+        CargarVentana();
     }
 
     public FarmaceutasPanel(String nombreFarmaceuta) {
         this.nombreFarmaceuta = nombreFarmaceuta;
-        initializeComponents();
-        setupUI();
+        Inicializar();
+        CargarVentana();
     }
 
-    private void initializeComponents() {
-        BannerView bannerView = new BannerView(this);
-        HistoricoRecetas historicoRecetasView = new HistoricoRecetas();
-        GraficoPastel graficoPastelView = new GraficoPastel();
+    private void Inicializar() {
+        // Crear servicios compartidos
         PacienteService pacienteService = new PacienteService(FileManagement.getPacientesFileStore("pacientes.xml"));
         RecetaService recetaService = new RecetaService(FileManagement.getRecetaFileStore("recetas.xml"));
+        
+        // Crear vistas con servicios compartidos
+        BannerView bannerView = new BannerView(this);
+        HistoricoRecetas historicoRecetasView = new HistoricoRecetas(recetaService);
+        GraficoPastel graficoPastelView = new GraficoPastel(recetaService);
+        GraficoLineal graficoLinealView = new GraficoLineal(recetaService);
         
         DespachoTableModel despachoTableModel = new DespachoTableModel();
         recetaService.addObserver(despachoTableModel);
@@ -44,30 +48,24 @@ public class FarmaceutasPanel extends JFrame {
         PanelTabs = new JTabbedPane();
 
         // Cargar iconos
-        ImageIcon bannerIcon = null, historicoIcon = null, despachoIcon = null, graficoIcon = null;
-        try { bannerIcon = new ImageIcon(getClass().getResource("/Banner.png")); } catch (Exception ignore) {}
-        try { historicoIcon = new ImageIcon(getClass().getResource("/Historial.png")); } catch (Exception ignore) {}
-        try { despachoIcon = new ImageIcon(getClass().getResource("/Despacho.png")); } catch (Exception ignore) {}
-        try { graficoIcon = new ImageIcon(getClass().getResource("/Dashboard.png")); } catch (Exception ignore) {}
+        ImageIcon bannerIcon = new ImageIcon(getClass().getResource("/Banner.png"));
+        ImageIcon historicoIcon = new ImageIcon(getClass().getResource("/Historial.png"));
+        ImageIcon despachoIcon = new ImageIcon(getClass().getResource("/Despacho.png"));
+        ImageIcon graficoIcon = new ImageIcon(getClass().getResource("/Dashboard.png"));
+        ImageIcon graficoLinealIcon = new ImageIcon(getClass().getResource("/Dashboard.png")); // Usar el mismo icono por ahora
 
-        ImageIcon bannerIconScaled = (bannerIcon != null && bannerIcon.getImage() != null)
-                ? new ImageIcon(bannerIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
-                : null;
-        ImageIcon historicoIconScaled = (historicoIcon != null && historicoIcon.getImage() != null)
-                ? new ImageIcon(historicoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
-                : null;
-        ImageIcon despachoIconScaled = (despachoIcon != null && despachoIcon.getImage() != null)
-                ? new ImageIcon(despachoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
-                : null;
-        ImageIcon graficoIconScaled = (graficoIcon != null && graficoIcon.getImage() != null)
-                ? new ImageIcon(graficoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH))
-                : null;
+        ImageIcon BannerResized = new ImageIcon(bannerIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
+        ImageIcon historicoResized = new ImageIcon(historicoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
+        ImageIcon despachoResized = new ImageIcon(despachoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
+        ImageIcon graficoResized = new ImageIcon(graficoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
+        ImageIcon graficoLinealResized = new ImageIcon(graficoLinealIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
 
         // Agregar pestañas
-        PanelTabs.addTab("Inicio", bannerIconScaled, bannerView.getPanel(), "Página de inicio del sistema");
-        PanelTabs.addTab("Despacho", despachoIconScaled, despachoView.getPanel(), "Despacho de recetas");
-        PanelTabs.addTab("Histórico Recetas", historicoIconScaled, historicoRecetasView.getMainPanel(), "Histórico de recetas médicas");
-        PanelTabs.addTab("Gráficos", graficoIconScaled, graficoPastelView.getMainPanel(), "Gráficos de estadísticas de recetas");
+        PanelTabs.addTab("Inicio", BannerResized, bannerView.getPanel(), "Página de inicio del sistema");
+        PanelTabs.addTab("Despacho", historicoResized, despachoView.getPanel(), "Despacho de recetas");
+        PanelTabs.addTab("Histórico Recetas", despachoResized, historicoRecetasView.getMainPanel(), "Histórico de recetas médicas");
+        PanelTabs.addTab("Gráfico Pastel", graficoResized, graficoPastelView.getMainPanel(), "Gráfico de pastel de estadísticas");
+        PanelTabs.addTab("Gráfico Lineal", graficoLinealResized, graficoLinealView.getPanelPrincipal(), "Gráfico lineal de medicamentos por mes");
 
         // Configurar el panel base
         PanelBase = new JPanel();
@@ -75,7 +73,7 @@ public class FarmaceutasPanel extends JFrame {
         PanelBase.add(PanelTabs, BorderLayout.CENTER);
     }
 
-    private void setupUI() {
+    private void CargarVentana() {
         // Configure main window
         setTitle("Sistema de Gestión Hospitalaria - (FARM): " + nombreFarmaceuta);
         setSize(1000, 710);
@@ -86,13 +84,5 @@ public class FarmaceutasPanel extends JFrame {
 
         setContentPane(PanelBase);
         setVisible(true);
-    }
-
-    public JPanel getPanelBase() {
-        return PanelBase;
-    }
-
-    public String getNombreFarmaceuta() {
-        return nombreFarmaceuta;
     }
 }

@@ -3,6 +3,8 @@ package cr.ac.una.presentation_layer.Views;
 import cr.ac.una.domain_layer.Receta;
 import cr.ac.una.presentation_layer.Controller.RecetaController;
 import cr.ac.una.service_layer.RecetaService;
+import cr.ac.una.service_layer.IServiceObserver;
+import cr.ac.una.utilities.ChangeType;
 import cr.ac.una.utilities.FileManagement;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -17,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GraficoPastel {
+public class GraficoPastel implements IServiceObserver<Receta> {
     private JTable TablaEstado;
     private JPanel MainPanel;
     private JPanel PanelMedicamentos;
@@ -36,10 +38,20 @@ public class GraficoPastel {
         CargarData();
     }
     
+    public GraficoPastel(RecetaService recetaService) {
+        this.recetaService = recetaService;
+        this.recetaController = new RecetaController(recetaService);
+        recetaService.addObserver(this);
+        ConfigTabla();
+        CrearGrafico();
+        CargarData();
+    }
+    
     private void IniciarServicio() {
         try {
             recetaService = new RecetaService(FileManagement.getRecetaFileStore("recetas.xml"));
             recetaController = new RecetaController(recetaService);
+            recetaService.addObserver(this);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al inicializar servicios: " + e.getMessage(), 
                 "Error", JOptionPane.ERROR_MESSAGE);
@@ -47,12 +59,11 @@ public class GraficoPastel {
     }
     
     private void ConfigTabla() {
-        // Configurar el modelo de tabla
         String[] columnNames = {"Estado", "Cantidad", "Porcentaje"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Hacer la tabla de solo lectura
+                return false;
             }
         };
         
@@ -60,7 +71,6 @@ public class GraficoPastel {
         TablaEstado.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         TablaEstado.getTableHeader().setReorderingAllowed(false);
 
-        // Ancho de tablas
         TablaEstado.getColumnModel().getColumn(0).setPreferredWidth(150);
         TablaEstado.getColumnModel().getColumn(1).setPreferredWidth(80);
         TablaEstado.getColumnModel().getColumn(2).setPreferredWidth(80);
@@ -74,9 +84,9 @@ public class GraficoPastel {
         JFreeChart chart = ChartFactory.createPieChart(
             "Distribución de Recetas por Estado",
             dataset,
-            true, // legend
-            true, // tooltips
-            false // urls
+            true,
+            true,
+            false
         );
         
         // Personalizar el gráfico
@@ -177,6 +187,14 @@ public class GraficoPastel {
         
         // Actualizar
         chartPanel.setChart(chart);
+    }
+    
+    // Oserver
+    @Override
+    public void onDataChanged(ChangeType type, Receta receta) {
+        SwingUtilities.invokeLater(() -> {
+            CargarData();
+        });
     }
     
     public JPanel getMainPanel() { return MainPanel; }
