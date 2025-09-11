@@ -42,26 +42,23 @@ public class DoctorPanel extends JFrame {
         PanelTabs = new JTabbedPane();
 
         // Cargar iconos
-        ImageIcon bannerIcon = null, historicoIcon = null, graficoIcon = null, prescripcionIcon = null;
-        bannerIcon = new ImageIcon(getClass().getResource("/Banner.png"));
-        historicoIcon = new ImageIcon(getClass().getResource("/Historial.png"));
-        graficoIcon = new ImageIcon(getClass().getResource("/GraficoLineal.png"));
-        ImageIcon graficoPastel = new ImageIcon(getClass().getResource("/GraficoPastel.png"));
-        graficoIcon = new ImageIcon(getClass().getResource("/Dashboard.png"));
-        prescripcionIcon = new ImageIcon(getClass().getResource("/Prescripcion.png"));
+        ImageIcon bannerIcon = new ImageIcon(getClass().getResource("/Banner.png"));
+        ImageIcon historicoIcon = new ImageIcon(getClass().getResource("/Historial.png"));
+        ImageIcon graficoLinealIcon = new ImageIcon(getClass().getResource("/GraficoLineal.png"));
+        ImageIcon graficoPastelIcon = new ImageIcon(getClass().getResource("/GraficoPastel.png"));
+        ImageIcon prescripcionIcon = new ImageIcon(getClass().getResource("/Prescripcion.png"));
 
         ImageIcon bannerResized = new ImageIcon(bannerIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
         ImageIcon historicoResized = new ImageIcon(historicoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
-        ImageIcon linealResized = new ImageIcon(graficoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
-        ImageIcon PastelResized = new ImageIcon(graficoPastel.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
-        ImageIcon graficoResized = new ImageIcon(graficoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
+        ImageIcon linealResized = new ImageIcon(graficoLinealIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
+        ImageIcon pastelResized = new ImageIcon(graficoPastelIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
         ImageIcon prescripcionResized = new ImageIcon(prescripcionIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
 
         // Agregar pestañas
         PanelTabs.addTab("Inicio", bannerResized, bannerView.getPanel(), "Página de inicio del sistema");
         PanelTabs.addTab("Prescripción", prescripcionResized, prescripcionView.getMainPanel(), "Crear y gestionar recetas médicas");
         PanelTabs.addTab("Histórico Recetas", historicoResized, historicoRecetasView.getMainPanel(), "Histórico de recetas médicas");
-        PanelTabs.addTab("Gráfico Pastel", PastelResized, graficoPastelView.getMainPanel(), "Gráfico de pastel de estadísticas");
+        PanelTabs.addTab("Gráfico Pastel", pastelResized, graficoPastelView.getMainPanel(), "Gráfico de pastel de estadísticas");
         PanelTabs.addTab("Gráfico Lineal", linealResized, graficoLinealView.getPanelPrincipal(), "Gráfico lineal de medicamentos por mes");
 
         // Configurar el panel base

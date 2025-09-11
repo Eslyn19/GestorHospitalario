@@ -25,22 +25,6 @@ public class HistoricoRecetas implements IServiceObserver<Receta> {
         Inicializar();
         CargarDatos();
     }
-    
-    public HistoricoRecetas(RecetaService recetaService) {
-        this.recetaService = recetaService;
-        this.recetaController = new RecetaController(recetaService);
-        this.recetaTableModel = new RecetaTableModel();
-        
-        recetaService.addObserver(this);
-        recetaService.addObserver(recetaTableModel);
-        
-        // Configurar tabla
-        TablaHistorico.setModel(recetaTableModel);
-        TablaHistorico.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        MainScroller.setViewportView(TablaHistorico);
-        
-        CargarDatos();
-    }
 
     public HistoricoRecetas(RecetaService recetaService) {
         this.recetaService = recetaService;

@@ -54,7 +54,6 @@ public class FarmaceutasPanel extends JFrame {
         ImageIcon graficoLinealIcon = new ImageIcon(getClass().getResource("/GraficoLineal.png"));
         ImageIcon graficoPastelIcon = new ImageIcon(getClass().getResource("/GraficoPastel.png"));
 
-
         ImageIcon BannerResized = new ImageIcon(bannerIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
         ImageIcon historicoResized = new ImageIcon(historicoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
         ImageIcon despachoResized = new ImageIcon(despachoIcon.getImage().getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH));
@@ -63,8 +62,8 @@ public class FarmaceutasPanel extends JFrame {
 
         // Agregar pestañas
         PanelTabs.addTab("Inicio", BannerResized, bannerView.getPanel(), "Página de inicio del sistema");
-        PanelTabs.addTab("Despacho", historicoResized, despachoView.getPanel(), "Despacho de recetas");
-        PanelTabs.addTab("Histórico Recetas", despachoResized, historicoRecetasView.getMainPanel(), "Histórico de recetas médicas");
+        PanelTabs.addTab("Despacho", despachoResized, despachoView.getPanel(), "Despacho de recetas");
+        PanelTabs.addTab("Histórico Recetas", historicoResized, historicoRecetasView.getMainPanel(), "Histórico de recetas médicas");
         PanelTabs.addTab("Gráfico Pastel", pastelResized, graficoPastelView.getMainPanel(), "Gráfico de pastel de estadísticas");
         PanelTabs.addTab("Gráfico Lineal", graficoLinealResized, graficoLinealView.getPanelPrincipal(), "Gráfico lineal de medicamentos por mes");
 
