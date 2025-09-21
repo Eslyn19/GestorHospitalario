@@ -1,7 +1,0 @@
-<usuarios>
-    <!-- Administrador -->
-    <usuario>
-        <id>admin</id>
-        <clave>root</clave>
-    </usuario>
-</usuarios>
